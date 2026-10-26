@@ -1,0 +1,974 @@
+{
+  "generated": "2026-10-26 12:08",
+  "n_questions": 9855,
+  "train_sources": [
+    "yahya2012",
+    "mohammed2020",
+    "sangodiah2017",
+    "gani2023",
+    "scaria2024",
+    "indian_engineering"
+  ],
+  "test_only_sources": [
+    "indian_boards"
+  ],
+  "drop": {
+    "bloomlex": {
+      "indomain": 0.754,
+      "transfer_mean": 0.522,
+      "drop": 0.232
+    },
+    "embed_lr": {
+      "indomain": 0.638,
+      "transfer_mean": 0.359,
+      "drop": 0.279
+    },
+    "embedlex": {
+      "indomain": 0.764,
+      "transfer_mean": 0.524,
+      "drop": 0.239
+    },
+    "lexicon_rule": {
+      "indomain": 0.624,
+      "transfer_mean": 0.624,
+      "drop": -0.0
+    },
+    "pos_tfidf_svm": {
+      "indomain": 0.743,
+      "transfer_mean": 0.435,
+      "drop": 0.307
+    },
+    "tfidf_svm": {
+      "indomain": 0.732,
+      "transfer_mean": 0.413,
+      "drop": 0.32
+    }
+  },
+  "loso_mean": {
+    "bloomlex": {
+      "weighted_f1": 0.632,
+      "macro_f1": 0.6,
+      "qwk": 0.686,
+      "within_one": 0.829,
+      "ece": 0.126
+    },
+    "embed_lr": {
+      "weighted_f1": 0.502,
+      "macro_f1": 0.472,
+      "qwk": 0.472,
+      "within_one": 0.739,
+      "ece": 0.112
+    },
+    "embedlex": {
+      "weighted_f1": 0.641,
+      "macro_f1": 0.608,
+      "qwk": 0.701,
+      "within_one": 0.838,
+      "ece": 0.116
+    },
+    "lexicon_rule": {
+      "weighted_f1": 0.624,
+      "macro_f1": 0.594,
+      "qwk": 0.613,
+      "within_one": 0.793,
+      "ece": 0.152
+    },
+    "pos_tfidf_svm": {
+      "weighted_f1": 0.59,
+      "macro_f1": 0.564,
+      "qwk": 0.568,
+      "within_one": 0.788,
+      "ece": 0.162
+    },
+    "tfidf_svm": {
+      "weighted_f1": 0.589,
+      "macro_f1": 0.559,
+      "qwk": 0.577,
+      "within_one": 0.788,
+      "ece": 0.151
+    }
+  },
+  "heldout": {
+    "lexicon_rule": {
+      "weighted_f1": 0.551,
+      "macro_f1": 0.322,
+      "qwk": 0.28,
+      "within_one": 0.739
+    },
+    "tfidf_svm": {
+      "weighted_f1": 0.599,
+      "macro_f1": 0.326,
+      "qwk": 0.331,
+      "within_one": 0.802
+    },
+    "pos_tfidf_svm": {
+      "weighted_f1": 0.599,
+      "macro_f1": 0.332,
+      "qwk": 0.349,
+      "within_one": 0.814
+    },
+    "bloomlex": {
+      "weighted_f1": 0.584,
+      "macro_f1": 0.325,
+      "qwk": 0.358,
+      "within_one": 0.799
+    },
+    "embed_lr": {
+      "weighted_f1": 0.593,
+      "macro_f1": 0.306,
+      "qwk": 0.326,
+      "within_one": 0.815
+    },
+    "embedlex": {
+      "weighted_f1": 0.63,
+      "macro_f1": 0.385,
+      "qwk": 0.39,
+      "within_one": 0.822
+    }
+  },
+  "embedlex_vs_tfidf_svm": {
+    "diff": 0.05089521944588783,
+    "ci": [
+      0.04110874898306845,
+      0.060235070374941746
+    ],
+    "p_a_not_better": 0.0
+  },
+  "risk_coverage": {
+    "model": "embedlex",
+    "rows": [
+      {
+        "threshold": 0.0,
+        "coverage": 1.0,
+        "accuracy": 0.55,
+        "within_one": 0.847
+      },
+      {
+        "threshold": 0.05,
+        "coverage": 1.0,
+        "accuracy": 0.55,
+        "within_one": 0.847
+      },
+      {
+        "threshold": 0.1,
+        "coverage": 1.0,
+        "accuracy": 0.55,
+        "within_one": 0.847
+      },
+      {
+        "threshold": 0.15,
+        "coverage": 1.0,
+        "accuracy": 0.55,
+        "within_one": 0.847
+      },
+      {
+        "threshold": 0.2,
+        "coverage": 1.0,
+        "accuracy": 0.55,
+        "within_one": 0.847
+      },
+      {
+        "threshold": 0.25,
+        "coverage": 0.999,
+        "accuracy": 0.55,
+        "within_one": 0.847
+      },
+      {
+        "threshold": 0.3,
+        "coverage": 0.995,
+        "accuracy": 0.551,
+        "within_one": 0.848
+      },
+      {
+        "threshold": 0.35,
+        "coverage": 0.977,
+        "accuracy": 0.557,
+        "within_one": 0.853
+      },
+      {
+        "threshold": 0.4,
+        "coverage": 0.942,
+        "accuracy": 0.566,
+        "within_one": 0.859
+      },
+      {
+        "threshold": 0.45,
+        "coverage": 0.893,
+        "accuracy": 0.577,
+        "within_one": 0.863
+      },
+      {
+        "threshold": 0.5,
+        "coverage": 0.834,
+        "accuracy": 0.592,
+        "within_one": 0.871
+      },
+      {
+        "threshold": 0.55,
+        "coverage": 0.776,
+        "accuracy": 0.606,
+        "within_one": 0.879
+      },
+      {
+        "threshold": 0.6,
+        "coverage": 0.722,
+        "accuracy": 0.615,
+        "within_one": 0.885
+      },
+      {
+        "threshold": 0.65,
+        "coverage": 0.668,
+        "accuracy": 0.62,
+        "within_one": 0.89
+      },
+      {
+        "threshold": 0.7,
+        "coverage": 0.615,
+        "accuracy": 0.627,
+        "within_one": 0.894
+      },
+      {
+        "threshold": 0.75,
+        "coverage": 0.558,
+        "accuracy": 0.629,
+        "within_one": 0.899
+      },
+      {
+        "threshold": 0.8,
+        "coverage": 0.493,
+        "accuracy": 0.631,
+        "within_one": 0.898
+      },
+      {
+        "threshold": 0.85,
+        "coverage": 0.417,
+        "accuracy": 0.638,
+        "within_one": 0.899
+      },
+      {
+        "threshold": 0.9,
+        "coverage": 0.319,
+        "accuracy": 0.636,
+        "within_one": 0.899
+      },
+      {
+        "threshold": 0.95,
+        "coverage": 0.166,
+        "accuracy": 0.657,
+        "within_one": 0.911
+      }
+    ]
+  },
+  "ablation": {
+    "- delexicalised text": {
+      "weighted_f1": 0.632,
+      "macro_f1": 0.599,
+      "qwk": 0.681
+    },
+    "- lexicon prior": {
+      "weighted_f1": 0.621,
+      "macro_f1": 0.587,
+      "qwk": 0.663
+    },
+    "- ordinal": {
+      "weighted_f1": 0.618,
+      "macro_f1": 0.588,
+      "qwk": 0.656
+    },
+    "- raw words": {
+      "weighted_f1": 0.622,
+      "macro_f1": 0.589,
+      "qwk": 0.662
+    },
+    "- source balancing": {
+      "weighted_f1": 0.603,
+      "macro_f1": 0.576,
+      "qwk": 0.657
+    },
+    "bloomlex (full)": {
+      "weighted_f1": 0.632,
+      "macro_f1": 0.6,
+      "qwk": 0.686
+    }
+  },
+  "adapt": {
+    "bloomlex|gani2023": {
+      "0": 0.718,
+      "10": 0.728,
+      "25": 0.747,
+      "50": 0.763,
+      "100": 0.792
+    },
+    "bloomlex|indian_boards": {
+      "0": 0.578,
+      "10": 0.609,
+      "25": 0.615,
+      "50": 0.648,
+      "100": 0.674
+    },
+    "bloomlex|indian_engineering": {
+      "0": 0.435,
+      "10": 0.451,
+      "25": 0.474,
+      "50": 0.505,
+      "100": 0.527
+    },
+    "bloomlex|mohammed2020": {
+      "0": 0.634,
+      "10": 0.632,
+      "25": 0.664,
+      "50": 0.674,
+      "100": NaN
+    },
+    "bloomlex|sangodiah2017": {
+      "0": 0.702,
+      "10": 0.707,
+      "25": 0.713,
+      "50": 0.72,
+      "100": 0.724
+    },
+    "bloomlex|scaria2024": {
+      "0": 0.68,
+      "10": 0.694,
+      "25": 0.718,
+      "50": 0.731,
+      "100": 0.752
+    },
+    "bloomlex|yahya2012": {
+      "0": 0.644,
+      "10": 0.655,
+      "25": 0.663,
+      "50": 0.675,
+      "100": 0.695
+    }
+  },
+  "probes": {
+    "rule": {
+      "contrast_accuracy": 0.966,
+      "ladder_spearman": 1.0,
+      "by_category": {
+        "ladder": 1.0,
+        "math_sense": 1.0,
+        "multi_task": 1.0,
+        "negation": 1.0,
+        "no_verb": 0.75,
+        "verb_trap": 1.0
+      },
+      "format_flip": 0.022,
+      "topic_flip": 0.005,
+      "verb_raised": 0.948
+    },
+    "tfidf_svm": {
+      "contrast_accuracy": 0.776,
+      "ladder_spearman": 0.93,
+      "by_category": {
+        "ladder": 0.93,
+        "math_sense": 0.33,
+        "multi_task": 0.67,
+        "negation": 1.0,
+        "no_verb": 0.5,
+        "verb_trap": 0.6
+      },
+      "format_flip": 0.025,
+      "topic_flip": 0.123,
+      "verb_raised": 0.828
+    },
+    "pos_tfidf_svm": {
+      "contrast_accuracy": 0.741,
+      "ladder_spearman": 0.977,
+      "by_category": {
+        "ladder": 0.93,
+        "math_sense": 0.33,
+        "multi_task": 1.0,
+        "negation": 1.0,
+        "no_verb": 0.62,
+        "verb_trap": 0.2
+      },
+      "format_flip": 0.013,
+      "topic_flip": 0.145,
+      "verb_raised": 0.934
+    },
+    "bloomlex": {
+      "contrast_accuracy": 0.897,
+      "ladder_spearman": 0.997,
+      "by_category": {
+        "ladder": 0.97,
+        "math_sense": 1.0,
+        "multi_task": 0.67,
+        "negation": 1.0,
+        "no_verb": 0.62,
+        "verb_trap": 0.9
+      },
+      "format_flip": 0.03,
+      "topic_flip": 0.115,
+      "verb_raised": 0.967
+    },
+    "embed_lr": {
+      "contrast_accuracy": 0.672,
+      "ladder_spearman": 0.695,
+      "by_category": {
+        "ladder": 0.73,
+        "math_sense": 0.67,
+        "multi_task": 1.0,
+        "negation": 0.75,
+        "no_verb": 0.62,
+        "verb_trap": 0.4
+      },
+      "format_flip": 0.06,
+      "topic_flip": 0.241,
+      "verb_raised": 0.537
+    },
+    "embedlex": {
+      "contrast_accuracy": 0.897,
+      "ladder_spearman": 0.997,
+      "by_category": {
+        "ladder": 0.97,
+        "math_sense": 1.0,
+        "multi_task": 0.67,
+        "negation": 1.0,
+        "no_verb": 0.62,
+        "verb_trap": 0.9
+      },
+      "format_flip": 0.037,
+      "topic_flip": 0.135,
+      "verb_raised": 0.96
+    }
+  },
+  "llm": {
+    "per_source": 60,
+    "loso_mean_same_items": {
+      "bloomlex": {
+        "weighted_f1": 0.651,
+        "macro_f1": 0.599,
+        "qwk": 0.675
+      },
+      "embed_lr": {
+        "weighted_f1": 0.512,
+        "macro_f1": 0.471,
+        "qwk": 0.474
+      },
+      "embedlex": {
+        "weighted_f1": 0.665,
+        "macro_f1": 0.611,
+        "qwk": 0.699
+      },
+      "lexicon_rule": {
+        "weighted_f1": 0.629,
+        "macro_f1": 0.593,
+        "qwk": 0.639
+      },
+      "llm[qwen3:4b]-0shot": {
+        "weighted_f1": 0.446,
+        "macro_f1": 0.431,
+        "qwk": 0.569
+      },
+      "llm[qwen3:4b]-6shot": {
+        "weighted_f1": 0.508,
+        "macro_f1": 0.473,
+        "qwk": 0.607
+      },
+      "llm[qwen3:4b]-6shot-cot": {
+        "weighted_f1": 0.621,
+        "macro_f1": 0.588,
+        "qwk": 0.696
+      },
+      "pos_tfidf_svm": {
+        "weighted_f1": 0.592,
+        "macro_f1": 0.569,
+        "qwk": 0.604
+      },
+      "tfidf_svm": {
+        "weighted_f1": 0.596,
+        "macro_f1": 0.555,
+        "qwk": 0.578
+      }
+    },
+    "heldout_same_items": {
+      "llm[qwen3:4b]-0shot": {
+        "weighted_f1": 0.329,
+        "qwk": 0.234
+      },
+      "llm[qwen3:4b]-6shot": {
+        "weighted_f1": 0.333,
+        "qwk": 0.053
+      },
+      "llm[qwen3:4b]-6shot-cot": {
+        "weighted_f1": 0.582,
+        "qwk": 0.275
+      },
+      "bloomlex": {
+        "weighted_f1": 0.449,
+        "qwk": 0.318
+      },
+      "embed_lr": {
+        "weighted_f1": 0.555,
+        "qwk": 0.204
+      },
+      "embedlex": {
+        "weighted_f1": 0.543,
+        "qwk": 0.279
+      },
+      "lexicon_rule": {
+        "weighted_f1": 0.453,
+        "qwk": 0.122
+      },
+      "pos_tfidf_svm": {
+        "weighted_f1": 0.584,
+        "qwk": 0.426
+      },
+      "tfidf_svm": {
+        "weighted_f1": 0.498,
+        "qwk": 0.256
+      }
+    },
+    "sec_per_question": {
+      "llm[qwen3:4b]-0shot": 0.0,
+      "llm[qwen3:4b]-6shot": 0.04,
+      "llm[qwen3:4b]-6shot-cot": 0.79
+    },
+    "contrast": {
+      "zero": 0.724,
+      "rag": 0.776,
+      "rag-cot": 0.914
+    },
+    "sycophancy_followed_hint": {
+      "zero": 0.31,
+      "rag": 0.466,
+      "rag-cot": 0.293
+    }
+  },
+  "arbiter": {
+    "n": 418,
+    "table": {
+      "Lexis only": {
+        "weighted_f1": 0.64,
+        "macro_f1": 0.646,
+        "qwk": 0.701,
+        "within_one": 0.835,
+        "ece": 0.074,
+        "llm_calls": 0.0
+      },
+      "Lexis + Archivist, geometric 0.3": {
+        "weighted_f1": 0.643,
+        "macro_f1": 0.652,
+        "qwk": 0.718,
+        "within_one": 0.842,
+        "ece": 0.099,
+        "llm_calls": 0.0
+      },
+      "Lexis + Archivist, linear 0.3": {
+        "weighted_f1": 0.643,
+        "macro_f1": 0.65,
+        "qwk": 0.719,
+        "within_one": 0.84,
+        "ece": 0.073,
+        "llm_calls": 0.0
+      },
+      "LLM zero only": {
+        "weighted_f1": 0.422,
+        "macro_f1": 0.436,
+        "qwk": 0.585,
+        "within_one": 0.701,
+        "ece": 0.494,
+        "llm_calls": 1.0
+      },
+      "linear Lexis+LLM-zero w=0.2": {
+        "weighted_f1": 0.643,
+        "macro_f1": 0.649,
+        "qwk": 0.715,
+        "within_one": 0.835,
+        "ece": 0.061,
+        "llm_calls": 1.0
+      },
+      "geometric Lexis+LLM-zero w=0.2": {
+        "weighted_f1": 0.626,
+        "macro_f1": 0.639,
+        "qwk": 0.755,
+        "within_one": 0.828,
+        "ece": 0.167,
+        "llm_calls": 1.0
+      },
+      "linear Lexis+LLM-zero w=0.3": {
+        "weighted_f1": 0.63,
+        "macro_f1": 0.639,
+        "qwk": 0.715,
+        "within_one": 0.83,
+        "ece": 0.05,
+        "llm_calls": 1.0
+      },
+      "geometric Lexis+LLM-zero w=0.3": {
+        "weighted_f1": 0.605,
+        "macro_f1": 0.623,
+        "qwk": 0.737,
+        "within_one": 0.811,
+        "ece": 0.207,
+        "llm_calls": 1.0
+      },
+      "linear Lexis+LLM-zero w=0.5": {
+        "weighted_f1": 0.633,
+        "macro_f1": 0.639,
+        "qwk": 0.725,
+        "within_one": 0.823,
+        "ece": 0.045,
+        "llm_calls": 1.0
+      },
+      "geometric Lexis+LLM-zero w=0.5": {
+        "weighted_f1": 0.537,
+        "macro_f1": 0.559,
+        "qwk": 0.694,
+        "within_one": 0.77,
+        "ece": 0.321,
+        "llm_calls": 1.0
+      },
+      "linear Lexis+LLM-zero w=1.0": {
+        "weighted_f1": 0.463,
+        "macro_f1": 0.477,
+        "qwk": 0.625,
+        "within_one": 0.734,
+        "ece": 0.2,
+        "llm_calls": 1.0
+      },
+      "geometric Lexis+LLM-zero w=1.0": {
+        "weighted_f1": 0.488,
+        "macro_f1": 0.511,
+        "qwk": 0.64,
+        "within_one": 0.742,
+        "ece": 0.427,
+        "llm_calls": 1.0
+      },
+      "cascade linear Lexis+LLM-zero w=0.3": {
+        "weighted_f1": 0.63,
+        "macro_f1": 0.639,
+        "qwk": 0.715,
+        "within_one": 0.83,
+        "ece": 0.076,
+        "llm_calls": 0.691
+      },
+      "cascade linear Lexis+LLM-zero w=0.5": {
+        "weighted_f1": 0.636,
+        "macro_f1": 0.641,
+        "qwk": 0.727,
+        "within_one": 0.825,
+        "ece": 0.07,
+        "llm_calls": 0.691
+      },
+      "cascade geometric Lexis+Archivist+LLM-zero w=0.5": {
+        "weighted_f1": 0.588,
+        "macro_f1": 0.604,
+        "qwk": 0.714,
+        "within_one": 0.794,
+        "ece": 0.281,
+        "llm_calls": 0.691
+      },
+      "LLM rag only": {
+        "weighted_f1": 0.47,
+        "macro_f1": 0.487,
+        "qwk": 0.618,
+        "within_one": 0.732,
+        "ece": 0.466,
+        "llm_calls": 1.0
+      },
+      "linear Lexis+LLM-rag w=0.2": {
+        "weighted_f1": 0.654,
+        "macro_f1": 0.664,
+        "qwk": 0.707,
+        "within_one": 0.84,
+        "ece": 0.052,
+        "llm_calls": 1.0
+      },
+      "geometric Lexis+LLM-rag w=0.2": {
+        "weighted_f1": 0.628,
+        "macro_f1": 0.645,
+        "qwk": 0.718,
+        "within_one": 0.809,
+        "ece": 0.189,
+        "llm_calls": 1.0
+      },
+      "linear Lexis+LLM-rag w=0.3": {
+        "weighted_f1": 0.657,
+        "macro_f1": 0.668,
+        "qwk": 0.717,
+        "within_one": 0.837,
+        "ece": 0.079,
+        "llm_calls": 1.0
+      },
+      "geometric Lexis+LLM-rag w=0.3": {
+        "weighted_f1": 0.614,
+        "macro_f1": 0.634,
+        "qwk": 0.723,
+        "within_one": 0.801,
+        "ece": 0.24,
+        "llm_calls": 1.0
+      },
+      "linear Lexis+LLM-rag w=0.5": {
+        "weighted_f1": 0.648,
+        "macro_f1": 0.661,
+        "qwk": 0.739,
+        "within_one": 0.835,
+        "ece": 0.051,
+        "llm_calls": 1.0
+      },
+      "geometric Lexis+LLM-rag w=0.5": {
+        "weighted_f1": 0.575,
+        "macro_f1": 0.593,
+        "qwk": 0.693,
+        "within_one": 0.775,
+        "ece": 0.331,
+        "llm_calls": 1.0
+      },
+      "linear Lexis+LLM-rag w=1.0": {
+        "weighted_f1": 0.503,
+        "macro_f1": 0.517,
+        "qwk": 0.647,
+        "within_one": 0.754,
+        "ece": 0.2,
+        "llm_calls": 1.0
+      },
+      "geometric Lexis+LLM-rag w=1.0": {
+        "weighted_f1": 0.548,
+        "macro_f1": 0.566,
+        "qwk": 0.678,
+        "within_one": 0.768,
+        "ece": 0.404,
+        "llm_calls": 1.0
+      },
+      "cascade linear Lexis+LLM-rag w=0.3": {
+        "weighted_f1": 0.659,
+        "macro_f1": 0.671,
+        "qwk": 0.719,
+        "within_one": 0.84,
+        "ece": 0.084,
+        "llm_calls": 0.691
+      },
+      "cascade linear Lexis+LLM-rag w=0.5": {
+        "weighted_f1": 0.648,
+        "macro_f1": 0.661,
+        "qwk": 0.74,
+        "within_one": 0.837,
+        "ece": 0.059,
+        "llm_calls": 0.691
+      },
+      "cascade geometric Lexis+Archivist+LLM-rag w=0.5": {
+        "weighted_f1": 0.616,
+        "macro_f1": 0.634,
+        "qwk": 0.721,
+        "within_one": 0.809,
+        "ece": 0.278,
+        "llm_calls": 0.691
+      },
+      "LLM rag-cot only": {
+        "weighted_f1": 0.608,
+        "macro_f1": 0.626,
+        "qwk": 0.706,
+        "within_one": 0.801,
+        "ece": 0.392,
+        "llm_calls": 1.0
+      },
+      "linear Lexis+LLM-rag-cot w=0.2": {
+        "weighted_f1": 0.674,
+        "macro_f1": 0.68,
+        "qwk": 0.716,
+        "within_one": 0.844,
+        "ece": 0.055,
+        "llm_calls": 1.0
+      },
+      "geometric Lexis+LLM-rag-cot w=0.2": {
+        "weighted_f1": 0.65,
+        "macro_f1": 0.67,
+        "qwk": 0.722,
+        "within_one": 0.818,
+        "ece": 0.222,
+        "llm_calls": 1.0
+      },
+      "linear Lexis+LLM-rag-cot w=0.3": {
+        "weighted_f1": 0.674,
+        "macro_f1": 0.683,
+        "qwk": 0.728,
+        "within_one": 0.844,
+        "ece": 0.085,
+        "llm_calls": 1.0
+      },
+      "geometric Lexis+LLM-rag-cot w=0.3": {
+        "weighted_f1": 0.646,
+        "macro_f1": 0.669,
+        "qwk": 0.711,
+        "within_one": 0.813,
+        "ece": 0.297,
+        "llm_calls": 1.0
+      },
+      "linear Lexis+LLM-rag-cot w=0.5": {
+        "weighted_f1": 0.684,
+        "macro_f1": 0.699,
+        "qwk": 0.749,
+        "within_one": 0.84,
+        "ece": 0.069,
+        "llm_calls": 1.0
+      },
+      "geometric Lexis+LLM-rag-cot w=0.5": {
+        "weighted_f1": 0.625,
+        "macro_f1": 0.646,
+        "qwk": 0.709,
+        "within_one": 0.806,
+        "ece": 0.366,
+        "llm_calls": 1.0
+      },
+      "linear Lexis+LLM-rag-cot w=1.0": {
+        "weighted_f1": 0.611,
+        "macro_f1": 0.628,
+        "qwk": 0.706,
+        "within_one": 0.801,
+        "ece": 0.16,
+        "llm_calls": 1.0
+      },
+      "geometric Lexis+LLM-rag-cot w=1.0": {
+        "weighted_f1": 0.611,
+        "macro_f1": 0.628,
+        "qwk": 0.706,
+        "within_one": 0.801,
+        "ece": 0.381,
+        "llm_calls": 1.0
+      },
+      "cascade linear Lexis+LLM-rag-cot w=0.3": {
+        "weighted_f1": 0.674,
+        "macro_f1": 0.683,
+        "qwk": 0.728,
+        "within_one": 0.844,
+        "ece": 0.074,
+        "llm_calls": 0.691
+      },
+      "cascade linear Lexis+LLM-rag-cot w=0.5": {
+        "weighted_f1": 0.684,
+        "macro_f1": 0.7,
+        "qwk": 0.75,
+        "within_one": 0.842,
+        "ece": 0.064,
+        "llm_calls": 0.691
+      },
+      "cascade geometric Lexis+Archivist+LLM-rag-cot w=0.5": {
+        "weighted_f1": 0.657,
+        "macro_f1": 0.675,
+        "qwk": 0.726,
+        "within_one": 0.818,
+        "ece": 0.314,
+        "llm_calls": 0.691
+      }
+    },
+    "nested": {
+      "any rule": {
+        "weighted_f1": 0.682,
+        "chosen": {
+          "gani2023": "cascade linear Lexis+LLM-rag-cot w=0.5",
+          "indian_boards": "linear Lexis+LLM-rag-cot w=0.5",
+          "indian_engineering": "cascade linear Lexis+LLM-rag-cot w=0.5",
+          "mohammed2020": "cascade linear Lexis+LLM-rag-cot w=0.5",
+          "sangodiah2017": "cascade linear Lexis+LLM-rag-cot w=0.5",
+          "scaria2024": "cascade linear Lexis+LLM-rag-cot w=0.5",
+          "yahya2012": "cascade linear Lexis+LLM-rag-cot w=0.5"
+        },
+        "vs_lexis": {
+          "diff": 0.04151210631028364,
+          "ci": [
+            0.005434274795041794,
+            0.07798356385728272
+          ],
+          "p_a_not_better": 0.01
+        }
+      },
+      "rules without the LLM": {
+        "weighted_f1": 0.625,
+        "chosen": {
+          "gani2023": "Lexis + Archivist, geometric 0.3",
+          "indian_boards": "Lexis only",
+          "indian_engineering": "Lexis + Archivist, linear 0.3",
+          "mohammed2020": "Lexis only",
+          "sangodiah2017": "Lexis + Archivist, linear 0.3",
+          "scaria2024": "Lexis + Archivist, linear 0.3",
+          "yahya2012": "Lexis + Archivist, geometric 0.3"
+        },
+        "vs_lexis": {
+          "diff": -0.015799724053616265,
+          "ci": [
+            -0.033369577157451404,
+            0.0011571123284510516
+          ],
+          "p_a_not_better": 0.963
+        }
+      },
+      "rules with LLM-rag": {
+        "weighted_f1": 0.645,
+        "chosen": {
+          "gani2023": "cascade linear Lexis+LLM-rag w=0.3",
+          "indian_boards": "linear Lexis+LLM-rag w=0.2",
+          "indian_engineering": "cascade linear Lexis+LLM-rag w=0.3",
+          "mohammed2020": "cascade linear Lexis+LLM-rag w=0.3",
+          "sangodiah2017": "linear Lexis+LLM-rag w=0.3",
+          "scaria2024": "cascade linear Lexis+LLM-rag w=0.3",
+          "yahya2012": "linear Lexis+LLM-rag w=0.2"
+        },
+        "vs_lexis": {
+          "diff": 0.004141712289096467,
+          "ci": [
+            -0.021024571167681486,
+            0.028482483451091997
+          ],
+          "p_a_not_better": 0.38
+        }
+      }
+    },
+    "top_vs_lexis": {
+      "cascade linear Lexis+LLM-rag-cot w=0.5": {
+        "diff": 0.04394853863683379,
+        "ci": [
+          0.008345980527712172,
+          0.07928421016711447
+        ],
+        "p_a_not_better": 0.009
+      },
+      "linear Lexis+LLM-rag-cot w=0.5": {
+        "diff": 0.04376598818229815,
+        "ci": [
+          0.007585437055104573,
+          0.07964311547091402
+        ],
+        "p_a_not_better": 0.006
+      },
+      "cascade linear Lexis+LLM-rag-cot w=0.3": {
+        "diff": 0.03352169975967665,
+        "ci": [
+          0.0054534338291433535,
+          0.06121002563872925
+        ],
+        "p_a_not_better": 0.009
+      },
+      "linear Lexis+LLM-rag-cot w=0.3": {
+        "diff": 0.03352169975967665,
+        "ci": [
+          0.0054534338291433535,
+          0.06121002563872925
+        ],
+        "p_a_not_better": 0.009
+      },
+      "linear Lexis+LLM-rag-cot w=0.2": {
+        "diff": 0.0333622712344833,
+        "ci": [
+          0.011164076751009864,
+          0.05802297777724559
+        ],
+        "p_a_not_better": 0.001
+      }
+    }
+  },
+  "rewrite": {
+    "n": 40,
+    "accepted_rate": 0.925,
+    "first_try_rate": 0.8,
+    "mean_attempts": 1.3,
+    "first_try_failures": {
+      "topic": 4,
+      "student": 3,
+      "level": 1
+    },
+    "student_rejected_any": 4,
+    "mean_seconds": 4.5
+  }
+}

@@ -1,0 +1,987 @@
+{
+  "rule": {
+    "contrast": {
+      "accuracy": 0.9655172413793104,
+      "by_category": [
+        {
+          "category": "ladder",
+          "accuracy": 1.0,
+          "n": 30
+        },
+        {
+          "category": "math_sense",
+          "accuracy": 1.0,
+          "n": 3
+        },
+        {
+          "category": "multi_task",
+          "accuracy": 1.0,
+          "n": 3
+        },
+        {
+          "category": "negation",
+          "accuracy": 1.0,
+          "n": 4
+        },
+        {
+          "category": "no_verb",
+          "accuracy": 0.75,
+          "n": 8
+        },
+        {
+          "category": "verb_trap",
+          "accuracy": 1.0,
+          "n": 10
+        }
+      ],
+      "ladder_mean_spearman": 1.0,
+      "ladders": [
+        {
+          "topic": "deadlock",
+          "spearman": 1.0,
+          "exact": 1.0
+        },
+        {
+          "topic": "demand",
+          "spearman": 1.0,
+          "exact": 1.0
+        },
+        {
+          "topic": "judiciary",
+          "spearman": 1.0,
+          "exact": 1.0
+        },
+        {
+          "topic": "photosynthesis",
+          "spearman": 1.0,
+          "exact": 1.0
+        },
+        {
+          "topic": "search",
+          "spearman": 1.0,
+          "exact": 1.0
+        }
+      ],
+      "errors": [
+        {
+          "id": "v04",
+          "category": "no_verb",
+          "level": "Evaluate",
+          "pred": "Understand",
+          "question": "In your opinion, is nuclear power a good choice for India's energy future? Give reasons."
+        },
+        {
+          "id": "v05",
+          "category": "no_verb",
+          "level": "Evaluate",
+          "pred": "Remember",
+          "question": "Which of the two given sorting algorithms is more suitable for a device with very little memory?"
+        }
+      ]
+    },
+    "behaviour": {
+      "n": 400,
+      "inv_format_flip_rate": 0.0225,
+      "inv_topic_flip_rate": 0.005012531328320802,
+      "inv_topic_n": 399,
+      "dir_verb_n": 269,
+      "dir_verb_raised": 0.9479553903345725,
+      "dir_verb_lowered": 0.03717472118959108,
+      "examples": {
+        "format": [
+          "Discuss THREE mechanisms of vegetative reproduction that make certain weeds successful in establishment ?",
+          "WHAT IS A SOLAR COLLECTOR?",
+          "Q5. (d) What are the salient features of vegetable market building. [5 Marks]"
+        ],
+        "topic": [
+          "Discuss THREE mechanisms of vegetative reproduction that make certain weeds successful in the combination.",
+          "What is suitable driver circuit?",
+          "What are the salient features of the double rotations."
+        ],
+        "raised": [
+          "Analyze THREE mechanisms of vegetative reproduction that make certain weeds successful in establishment.",
+          "Analyze with neat diagram how is Lissajous pattern used for phase measurement?",
+          "Evaluate types of queues. Write any one in detail."
+        ]
+      }
+    }
+  },
+  "tfidf_svm": {
+    "contrast": {
+      "accuracy": 0.7758620689655172,
+      "by_category": [
+        {
+          "category": "ladder",
+          "accuracy": 0.9333333333333333,
+          "n": 30
+        },
+        {
+          "category": "math_sense",
+          "accuracy": 0.3333333333333333,
+          "n": 3
+        },
+        {
+          "category": "multi_task",
+          "accuracy": 0.6666666666666666,
+          "n": 3
+        },
+        {
+          "category": "negation",
+          "accuracy": 1.0,
+          "n": 4
+        },
+        {
+          "category": "no_verb",
+          "accuracy": 0.5,
+          "n": 8
+        },
+        {
+          "category": "verb_trap",
+          "accuracy": 0.6,
+          "n": 10
+        }
+      ],
+      "ladder_mean_spearman": 0.9304694903218957,
+      "ladders": [
+        {
+          "topic": "deadlock",
+          "spearman": 1.0,
+          "exact": 1.0
+        },
+        {
+          "topic": "demand",
+          "spearman": 1.0,
+          "exact": 1.0
+        },
+        {
+          "topic": "judiciary",
+          "spearman": 0.753702346348183,
+          "exact": 0.8333333333333334
+        },
+        {
+          "topic": "photosynthesis",
+          "spearman": 1.0,
+          "exact": 1.0
+        },
+        {
+          "topic": "search",
+          "spearman": 0.8986451052612952,
+          "exact": 0.8333333333333334
+        }
+      ],
+      "errors": [
+        {
+          "id": "t02",
+          "category": "verb_trap",
+          "level": "Understand",
+          "pred": "Evaluate",
+          "question": "Explain how engineers evaluate the safety of an old bridge."
+        },
+        {
+          "id": "t04",
+          "category": "verb_trap",
+          "level": "Remember",
+          "pred": "Analyze",
+          "question": "Name two tools that are used to analyze network traffic."
+        },
+        {
+          "id": "t06",
+          "category": "verb_trap",
+          "level": "Remember",
+          "pred": "Evaluate",
+          "question": "Define what it means to evaluate an expression in a programming language."
+        },
+        {
+          "id": "t10",
+          "category": "verb_trap",
+          "level": "Remember",
+          "pred": "Understand",
+          "question": "What are the four stages that a designer goes through when creating a prototype?"
+        },
+        {
+          "id": "v01",
+          "category": "no_verb",
+          "level": "Remember",
+          "pred": "Create",
+          "question": "Who proposed the theory of natural selection?"
+        },
+        {
+          "id": "v04",
+          "category": "no_verb",
+          "level": "Evaluate",
+          "pred": "Understand",
+          "question": "In your opinion, is nuclear power a good choice for India's energy future? Give reasons."
+        },
+        {
+          "id": "v05",
+          "category": "no_verb",
+          "level": "Evaluate",
+          "pred": "Remember",
+          "question": "Which of the two given sorting algorithms is more suitable for a device with very little memory?"
+        },
+        {
+          "id": "v08",
+          "category": "no_verb",
+          "level": "Understand",
+          "pred": "Remember",
+          "question": "How does a refrigerator keep food cold?"
+        },
+        {
+          "id": "m01",
+          "category": "math_sense",
+          "level": "Apply",
+          "pred": "Evaluate",
+          "question": "Evaluate the integral of 2x from 0 to 3."
+        },
+        {
+          "id": "m02",
+          "category": "math_sense",
+          "level": "Apply",
+          "pred": "Evaluate",
+          "question": "Evaluate the limit of sin(x)/x as x approaches 0."
+        },
+        {
+          "id": "k01",
+          "category": "multi_task",
+          "level": "Create",
+          "pred": "Understand",
+          "question": "Define a stack and design a stack-based algorithm to check whether brackets in an expression are balanced."
+        },
+        {
+          "id": "p22",
+          "category": "ladder",
+          "level": "Analyze",
+          "pred": "Understand",
+          "question": "Examine why binary search is slower than hashing for repeated look-ups."
+        },
+        {
+          "id": "p26",
+          "category": "ladder",
+          "level": "Understand",
+          "pred": "Evaluate",
+          "question": "Summarize the role of judicial review in the Indian Constitution."
+        }
+      ]
+    },
+    "behaviour": {
+      "n": 400,
+      "inv_format_flip_rate": 0.025,
+      "inv_topic_flip_rate": 0.12280701754385964,
+      "inv_topic_n": 399,
+      "dir_verb_n": 274,
+      "dir_verb_raised": 0.8284671532846716,
+      "dir_verb_lowered": 0.010948905109489052,
+      "examples": {
+        "format": [
+          "Discuss THREE mechanisms of vegetative reproduction that make certain weeds successful in establishment ?",
+          "WHAT IS A SOLAR COLLECTOR?",
+          "Q5. (d) What are the salient features of vegetable market building. [5 Marks]"
+        ],
+        "topic": [
+          "Discuss THREE mechanisms of vegetative reproduction that make certain weeds successful in the combination.",
+          "What is suitable driver circuit?",
+          "What are the salient features of the double rotations."
+        ],
+        "raised": [
+          "Analyze THREE mechanisms of vegetative reproduction that make certain weeds successful in establishment.",
+          "Apply with neat diagram how is Lissajous pattern used for phase measurement?",
+          "Apply types of queues. Write any one in detail."
+        ]
+      }
+    }
+  },
+  "pos_tfidf_svm": {
+    "contrast": {
+      "accuracy": 0.7413793103448276,
+      "by_category": [
+        {
+          "category": "ladder",
+          "accuracy": 0.9333333333333333,
+          "n": 30
+        },
+        {
+          "category": "math_sense",
+          "accuracy": 0.3333333333333333,
+          "n": 3
+        },
+        {
+          "category": "multi_task",
+          "accuracy": 1.0,
+          "n": 3
+        },
+        {
+          "category": "negation",
+          "accuracy": 1.0,
+          "n": 4
+        },
+        {
+          "category": "no_verb",
+          "accuracy": 0.625,
+          "n": 8
+        },
+        {
+          "category": "verb_trap",
+          "accuracy": 0.2,
+          "n": 10
+        }
+      ],
+      "ladder_mean_spearman": 0.9768511731740915,
+      "ladders": [
+        {
+          "topic": "deadlock",
+          "spearman": 0.8986451052612952,
+          "exact": 0.8333333333333334
+        },
+        {
+          "topic": "demand",
+          "spearman": 1.0,
+          "exact": 1.0
+        },
+        {
+          "topic": "judiciary",
+          "spearman": 1.0,
+          "exact": 1.0
+        },
+        {
+          "topic": "photosynthesis",
+          "spearman": 0.9856107606091623,
+          "exact": 0.8333333333333334
+        },
+        {
+          "topic": "search",
+          "spearman": 1.0,
+          "exact": 1.0
+        }
+      ],
+      "errors": [
+        {
+          "id": "t01",
+          "category": "verb_trap",
+          "level": "Remember",
+          "pred": "Create",
+          "question": "List the steps a team follows to design a relational database."
+        },
+        {
+          "id": "t02",
+          "category": "verb_trap",
+          "level": "Understand",
+          "pred": "Evaluate",
+          "question": "Explain how engineers evaluate the safety of an old bridge."
+        },
+        {
+          "id": "t03",
+          "category": "verb_trap",
+          "level": "Remember",
+          "pred": "Apply",
+          "question": "State the formula used to calculate compound interest."
+        },
+        {
+          "id": "t04",
+          "category": "verb_trap",
+          "level": "Remember",
+          "pred": "Analyze",
+          "question": "Name two tools that are used to analyze network traffic."
+        },
+        {
+          "id": "t05",
+          "category": "verb_trap",
+          "level": "Understand",
+          "pred": "Remember",
+          "question": "Describe how a compiler creates its symbol table."
+        },
+        {
+          "id": "t06",
+          "category": "verb_trap",
+          "level": "Remember",
+          "pred": "Evaluate",
+          "question": "Define what it means to evaluate an expression in a programming language."
+        },
+        {
+          "id": "t08",
+          "category": "verb_trap",
+          "level": "Understand",
+          "pred": "Evaluate",
+          "question": "Summarize how historians judge the reliability of a primary source."
+        },
+        {
+          "id": "t10",
+          "category": "verb_trap",
+          "level": "Remember",
+          "pred": "Understand",
+          "question": "What are the four stages that a designer goes through when creating a prototype?"
+        },
+        {
+          "id": "v01",
+          "category": "no_verb",
+          "level": "Remember",
+          "pred": "Create",
+          "question": "Who proposed the theory of natural selection?"
+        },
+        {
+          "id": "v04",
+          "category": "no_verb",
+          "level": "Evaluate",
+          "pred": "Create",
+          "question": "In your opinion, is nuclear power a good choice for India's energy future? Give reasons."
+        },
+        {
+          "id": "v05",
+          "category": "no_verb",
+          "level": "Evaluate",
+          "pred": "Apply",
+          "question": "Which of the two given sorting algorithms is more suitable for a device with very little memory?"
+        },
+        {
+          "id": "m01",
+          "category": "math_sense",
+          "level": "Apply",
+          "pred": "Evaluate",
+          "question": "Evaluate the integral of 2x from 0 to 3."
+        },
+        {
+          "id": "m02",
+          "category": "math_sense",
+          "level": "Apply",
+          "pred": "Evaluate",
+          "question": "Evaluate the limit of sin(x)/x as x approaches 0."
+        },
+        {
+          "id": "p03",
+          "category": "ladder",
+          "level": "Apply",
+          "pred": "Evaluate",
+          "question": "Use the banker's algorithm to decide whether the given system state is safe."
+        },
+        {
+          "id": "p07",
+          "category": "ladder",
+          "level": "Remember",
+          "pred": "Understand",
+          "question": "State the word equation for photosynthesis."
+        }
+      ]
+    },
+    "behaviour": {
+      "n": 400,
+      "inv_format_flip_rate": 0.0125,
+      "inv_topic_flip_rate": 0.14536340852130325,
+      "inv_topic_n": 399,
+      "dir_verb_n": 272,
+      "dir_verb_raised": 0.9338235294117647,
+      "dir_verb_lowered": 0.007352941176470588,
+      "examples": {
+        "format": [
+          "Discuss THREE mechanisms of vegetative reproduction that make certain weeds successful in establishment ?",
+          "WHAT IS A SOLAR COLLECTOR?",
+          "Q5. (d) What are the salient features of vegetable market building. [5 Marks]"
+        ],
+        "topic": [
+          "Discuss THREE mechanisms of vegetative reproduction that make certain weeds successful in the combination.",
+          "What is suitable driver circuit?",
+          "What are the salient features of the double rotations."
+        ],
+        "raised": [
+          "Analyze THREE mechanisms of vegetative reproduction that make certain weeds successful in establishment.",
+          "Apply with neat diagram how is Lissajous pattern used for phase measurement?",
+          "Apply types of queues. Write any one in detail."
+        ]
+      }
+    }
+  },
+  "bloomlex": {
+    "contrast": {
+      "accuracy": 0.896551724137931,
+      "by_category": [
+        {
+          "category": "ladder",
+          "accuracy": 0.9666666666666667,
+          "n": 30
+        },
+        {
+          "category": "math_sense",
+          "accuracy": 1.0,
+          "n": 3
+        },
+        {
+          "category": "multi_task",
+          "accuracy": 0.6666666666666666,
+          "n": 3
+        },
+        {
+          "category": "negation",
+          "accuracy": 1.0,
+          "n": 4
+        },
+        {
+          "category": "no_verb",
+          "accuracy": 0.625,
+          "n": 8
+        },
+        {
+          "category": "verb_trap",
+          "accuracy": 0.9,
+          "n": 10
+        }
+      ],
+      "ladder_mean_spearman": 0.9971221521218325,
+      "ladders": [
+        {
+          "topic": "deadlock",
+          "spearman": 1.0,
+          "exact": 1.0
+        },
+        {
+          "topic": "demand",
+          "spearman": 1.0,
+          "exact": 1.0
+        },
+        {
+          "topic": "judiciary",
+          "spearman": 1.0,
+          "exact": 1.0
+        },
+        {
+          "topic": "photosynthesis",
+          "spearman": 1.0,
+          "exact": 1.0
+        },
+        {
+          "topic": "search",
+          "spearman": 0.9856107606091623,
+          "exact": 0.8333333333333334
+        }
+      ],
+      "errors": [
+        {
+          "id": "t06",
+          "category": "verb_trap",
+          "level": "Remember",
+          "pred": "Understand",
+          "question": "Define what it means to evaluate an expression in a programming language."
+        },
+        {
+          "id": "v04",
+          "category": "no_verb",
+          "level": "Evaluate",
+          "pred": "Understand",
+          "question": "In your opinion, is nuclear power a good choice for India's energy future? Give reasons."
+        },
+        {
+          "id": "v05",
+          "category": "no_verb",
+          "level": "Evaluate",
+          "pred": "Remember",
+          "question": "Which of the two given sorting algorithms is more suitable for a device with very little memory?"
+        },
+        {
+          "id": "v08",
+          "category": "no_verb",
+          "level": "Understand",
+          "pred": "Analyze",
+          "question": "How does a refrigerator keep food cold?"
+        },
+        {
+          "id": "k02",
+          "category": "multi_task",
+          "level": "Understand",
+          "pred": "Remember",
+          "question": "List the layers of the OSI model and explain the function of each."
+        },
+        {
+          "id": "p21",
+          "category": "ladder",
+          "level": "Apply",
+          "pred": "Analyze",
+          "question": "Trace binary search for the key 42 on the given sorted array."
+        }
+      ]
+    },
+    "behaviour": {
+      "n": 400,
+      "inv_format_flip_rate": 0.03,
+      "inv_topic_flip_rate": 0.11528822055137844,
+      "inv_topic_n": 399,
+      "dir_verb_n": 272,
+      "dir_verb_raised": 0.9669117647058824,
+      "dir_verb_lowered": 0.022058823529411766,
+      "examples": {
+        "format": [
+          "Discuss THREE mechanisms of vegetative reproduction that make certain weeds successful in establishment ?",
+          "WHAT IS A SOLAR COLLECTOR?",
+          "Q5. (d) What are the salient features of vegetable market building. [5 Marks]"
+        ],
+        "topic": [
+          "Discuss THREE mechanisms of vegetative reproduction that make certain weeds successful in the combination.",
+          "What is suitable driver circuit?",
+          "What are the salient features of the double rotations."
+        ],
+        "raised": [
+          "Analyze THREE mechanisms of vegetative reproduction that make certain weeds successful in establishment.",
+          "Evaluate with neat diagram how is Lissajous pattern used for phase measurement?",
+          "Apply types of queues. Write any one in detail."
+        ]
+      }
+    }
+  },
+  "embed_lr": {
+    "contrast": {
+      "accuracy": 0.6724137931034483,
+      "by_category": [
+        {
+          "category": "ladder",
+          "accuracy": 0.7333333333333333,
+          "n": 30
+        },
+        {
+          "category": "math_sense",
+          "accuracy": 0.6666666666666666,
+          "n": 3
+        },
+        {
+          "category": "multi_task",
+          "accuracy": 1.0,
+          "n": 3
+        },
+        {
+          "category": "negation",
+          "accuracy": 0.75,
+          "n": 4
+        },
+        {
+          "category": "no_verb",
+          "accuracy": 0.625,
+          "n": 8
+        },
+        {
+          "category": "verb_trap",
+          "accuracy": 0.4,
+          "n": 10
+        }
+      ],
+      "ladder_mean_spearman": 0.6948588542415137,
+      "ladders": [
+        {
+          "topic": "deadlock",
+          "spearman": 0.8986451052612952,
+          "exact": 0.8333333333333334
+        },
+        {
+          "topic": "demand",
+          "spearman": 1.0,
+          "exact": 1.0
+        },
+        {
+          "topic": "judiciary",
+          "spearman": -0.3086066999241839,
+          "exact": 0.3333333333333333
+        },
+        {
+          "topic": "photosynthesis",
+          "spearman": 0.9856107606091623,
+          "exact": 0.8333333333333334
+        },
+        {
+          "topic": "search",
+          "spearman": 0.8986451052612952,
+          "exact": 0.6666666666666666
+        }
+      ],
+      "errors": [
+        {
+          "id": "t01",
+          "category": "verb_trap",
+          "level": "Remember",
+          "pred": "Create",
+          "question": "List the steps a team follows to design a relational database."
+        },
+        {
+          "id": "t02",
+          "category": "verb_trap",
+          "level": "Understand",
+          "pred": "Analyze",
+          "question": "Explain how engineers evaluate the safety of an old bridge."
+        },
+        {
+          "id": "t05",
+          "category": "verb_trap",
+          "level": "Understand",
+          "pred": "Remember",
+          "question": "Describe how a compiler creates its symbol table."
+        },
+        {
+          "id": "t06",
+          "category": "verb_trap",
+          "level": "Remember",
+          "pred": "Evaluate",
+          "question": "Define what it means to evaluate an expression in a programming language."
+        },
+        {
+          "id": "t07",
+          "category": "verb_trap",
+          "level": "Remember",
+          "pred": "Create",
+          "question": "Recall the procedure for designing a controlled experiment."
+        },
+        {
+          "id": "t08",
+          "category": "verb_trap",
+          "level": "Understand",
+          "pred": "Analyze",
+          "question": "Summarize how historians judge the reliability of a primary source."
+        },
+        {
+          "id": "n02",
+          "category": "negation",
+          "level": "Analyze",
+          "pred": "Evaluate",
+          "question": "Without listing the features, compare Python and Java as first programming languages."
+        },
+        {
+          "id": "v03",
+          "category": "no_verb",
+          "level": "Understand",
+          "pred": "Remember",
+          "question": "Why does ice float on water?"
+        },
+        {
+          "id": "v05",
+          "category": "no_verb",
+          "level": "Evaluate",
+          "pred": "Remember",
+          "question": "Which of the two given sorting algorithms is more suitable for a device with very little memory?"
+        },
+        {
+          "id": "v08",
+          "category": "no_verb",
+          "level": "Understand",
+          "pred": "Remember",
+          "question": "How does a refrigerator keep food cold?"
+        },
+        {
+          "id": "m02",
+          "category": "math_sense",
+          "level": "Apply",
+          "pred": "Evaluate",
+          "question": "Evaluate the limit of sin(x)/x as x approaches 0."
+        },
+        {
+          "id": "p03",
+          "category": "ladder",
+          "level": "Apply",
+          "pred": "Evaluate",
+          "question": "Use the banker's algorithm to decide whether the given system state is safe."
+        },
+        {
+          "id": "p07",
+          "category": "ladder",
+          "level": "Remember",
+          "pred": "Understand",
+          "question": "State the word equation for photosynthesis."
+        },
+        {
+          "id": "p21",
+          "category": "ladder",
+          "level": "Apply",
+          "pred": "Analyze",
+          "question": "Trace binary search for the key 42 on the given sorted array."
+        },
+        {
+          "id": "p22",
+          "category": "ladder",
+          "level": "Analyze",
+          "pred": "Understand",
+          "question": "Examine why binary search is slower than hashing for repeated look-ups."
+        },
+        {
+          "id": "p25",
+          "category": "ladder",
+          "level": "Remember",
+          "pred": "Analyze",
+          "question": "Name the article of the Indian Constitution that deals with the Supreme Court's original jurisdiction."
+        },
+        {
+          "id": "p26",
+          "category": "ladder",
+          "level": "Understand",
+          "pred": "Evaluate",
+          "question": "Summarize the role of judicial review in the Indian Constitution."
+        },
+        {
+          "id": "p27",
+          "category": "ladder",
+          "level": "Apply",
+          "pred": "Evaluate",
+          "question": "Apply the basic structure doctrine to decide whether the given amendment is valid."
+        },
+        {
+          "id": "p30",
+          "category": "ladder",
+          "level": "Create",
+          "pred": "Apply",
+          "question": "Formulate a proposal to reduce the backlog of cases in Indian district courts."
+        }
+      ]
+    },
+    "behaviour": {
+      "n": 400,
+      "inv_format_flip_rate": 0.06,
+      "inv_topic_flip_rate": 0.24060150375939848,
+      "inv_topic_n": 399,
+      "dir_verb_n": 281,
+      "dir_verb_raised": 0.5373665480427047,
+      "dir_verb_lowered": 0.05338078291814947,
+      "examples": {
+        "format": [
+          "Discuss THREE mechanisms of vegetative reproduction that make certain weeds successful in establishment ?",
+          "WHAT IS A SOLAR COLLECTOR?",
+          "Q5. (d) What are the salient features of vegetable market building. [5 Marks]"
+        ],
+        "topic": [
+          "Discuss THREE mechanisms of vegetative reproduction that make certain weeds successful in the combination.",
+          "What is suitable driver circuit?",
+          "What are the salient features of the double rotations."
+        ],
+        "raised": [
+          "Analyze THREE mechanisms of vegetative reproduction that make certain weeds successful in establishment.",
+          "Apply with neat diagram how is Lissajous pattern used for phase measurement?",
+          "Analyze types of queues. Write any one in detail."
+        ]
+      }
+    }
+  },
+  "embedlex": {
+    "contrast": {
+      "accuracy": 0.896551724137931,
+      "by_category": [
+        {
+          "category": "ladder",
+          "accuracy": 0.9666666666666667,
+          "n": 30
+        },
+        {
+          "category": "math_sense",
+          "accuracy": 1.0,
+          "n": 3
+        },
+        {
+          "category": "multi_task",
+          "accuracy": 0.6666666666666666,
+          "n": 3
+        },
+        {
+          "category": "negation",
+          "accuracy": 1.0,
+          "n": 4
+        },
+        {
+          "category": "no_verb",
+          "accuracy": 0.625,
+          "n": 8
+        },
+        {
+          "category": "verb_trap",
+          "accuracy": 0.9,
+          "n": 10
+        }
+      ],
+      "ladder_mean_spearman": 0.9971221521218325,
+      "ladders": [
+        {
+          "topic": "deadlock",
+          "spearman": 1.0,
+          "exact": 1.0
+        },
+        {
+          "topic": "demand",
+          "spearman": 1.0,
+          "exact": 1.0
+        },
+        {
+          "topic": "judiciary",
+          "spearman": 1.0,
+          "exact": 1.0
+        },
+        {
+          "topic": "photosynthesis",
+          "spearman": 1.0,
+          "exact": 1.0
+        },
+        {
+          "topic": "search",
+          "spearman": 0.9856107606091623,
+          "exact": 0.8333333333333334
+        }
+      ],
+      "errors": [
+        {
+          "id": "t06",
+          "category": "verb_trap",
+          "level": "Remember",
+          "pred": "Understand",
+          "question": "Define what it means to evaluate an expression in a programming language."
+        },
+        {
+          "id": "v04",
+          "category": "no_verb",
+          "level": "Evaluate",
+          "pred": "Understand",
+          "question": "In your opinion, is nuclear power a good choice for India's energy future? Give reasons."
+        },
+        {
+          "id": "v05",
+          "category": "no_verb",
+          "level": "Evaluate",
+          "pred": "Remember",
+          "question": "Which of the two given sorting algorithms is more suitable for a device with very little memory?"
+        },
+        {
+          "id": "v08",
+          "category": "no_verb",
+          "level": "Understand",
+          "pred": "Apply",
+          "question": "How does a refrigerator keep food cold?"
+        },
+        {
+          "id": "k02",
+          "category": "multi_task",
+          "level": "Understand",
+          "pred": "Remember",
+          "question": "List the layers of the OSI model and explain the function of each."
+        },
+        {
+          "id": "p21",
+          "category": "ladder",
+          "level": "Apply",
+          "pred": "Analyze",
+          "question": "Trace binary search for the key 42 on the given sorted array."
+        }
+      ]
+    },
+    "behaviour": {
+      "n": 400,
+      "inv_format_flip_rate": 0.0375,
+      "inv_topic_flip_rate": 0.13533834586466165,
+      "inv_topic_n": 399,
+      "dir_verb_n": 274,
+      "dir_verb_raised": 0.9598540145985401,
+      "dir_verb_lowered": 0.01824817518248175,
+      "examples": {
+        "format": [
+          "Discuss THREE mechanisms of vegetative reproduction that make certain weeds successful in establishment ?",
+          "WHAT IS A SOLAR COLLECTOR?",
+          "Q5. (d) What are the salient features of vegetable market building. [5 Marks]"
+        ],
+        "topic": [
+          "Discuss THREE mechanisms of vegetative reproduction that make certain weeds successful in the combination.",
+          "What is suitable driver circuit?",
+          "What are the salient features of the double rotations."
+        ],
+        "raised": [
+          "Analyze THREE mechanisms of vegetative reproduction that make certain weeds successful in establishment.",
+          "Evaluate with neat diagram how is Lissajous pattern used for phase measurement?",
+          "Apply types of queues. Write any one in detail."
+        ]
+      }
+    }
+  }
+}
