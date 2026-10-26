@@ -1,0 +1,14 @@
+ABC College of Engineering
+B.E. Semester IV, Database Management Systems (CS402)          Max. Marks: 40
+
+PART - A
+Q.1 a) Define a primary key. [2] CO1 BT1
+    b) What is a foreign key? [2] CO1 BT1
+    c) List the ACID properties. [2] CO2 BT1
+    d) What is a view? [2] CO1 BT1
+    e) State the purpose of normalization. [2] CO3 BT1
+
+PART - B
+Q2. Explain the three-schema architecture of a DBMS. (10 Marks) CO1 BT2
+Q3. Describe two-phase locking with an example. (10 Marks) CO2 BT2
+Q4. Write short notes on B+ tree indexing. (10 Marks) CO3 BT1

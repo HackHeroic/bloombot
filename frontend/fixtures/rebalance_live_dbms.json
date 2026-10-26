@@ -1,0 +1,3322 @@
+{
+ "id": "59f89e97da87",
+ "kind": "rebalance",
+ "status": "done",
+ "created_at": "2026-10-26T09:46:02.297544Z",
+ "finished_at": "2026-10-26T09:47:04.002369Z",
+ "result": {
+  "before": {
+   "paper": {
+    "title": "dbms_paper",
+    "questions": [
+     {
+      "id": "1a",
+      "number": "Q1 (a)",
+      "text": "Define a primary key.",
+      "context": null,
+      "marks": 2.0,
+      "section": "A",
+      "group": null,
+      "option": null,
+      "course_outcome": "CO1",
+      "tagged_level": "Remember",
+      "locked": false
+     },
+     {
+      "id": "1b",
+      "number": "Q1 (b)",
+      "text": "What is a foreign key?",
+      "context": null,
+      "marks": 2.0,
+      "section": "A",
+      "group": null,
+      "option": null,
+      "course_outcome": "CO1",
+      "tagged_level": "Remember",
+      "locked": false
+     },
+     {
+      "id": "1c",
+      "number": "Q1 (c)",
+      "text": "List the ACID properties.",
+      "context": null,
+      "marks": 2.0,
+      "section": "A",
+      "group": null,
+      "option": null,
+      "course_outcome": "CO2",
+      "tagged_level": "Remember",
+      "locked": false
+     },
+     {
+      "id": "1d",
+      "number": "Q1 (d)",
+      "text": "What is a view?",
+      "context": null,
+      "marks": 2.0,
+      "section": "A",
+      "group": null,
+      "option": null,
+      "course_outcome": "CO1",
+      "tagged_level": "Remember",
+      "locked": false
+     },
+     {
+      "id": "1e",
+      "number": "Q1 (e)",
+      "text": "State the purpose of normalization.",
+      "context": null,
+      "marks": 2.0,
+      "section": "A",
+      "group": null,
+      "option": null,
+      "course_outcome": "CO3",
+      "tagged_level": "Remember",
+      "locked": false
+     },
+     {
+      "id": "2",
+      "number": "Q2",
+      "text": "Explain the three-schema architecture of a DBMS.",
+      "context": null,
+      "marks": 10.0,
+      "section": "B",
+      "group": null,
+      "option": null,
+      "course_outcome": "CO1",
+      "tagged_level": "Understand",
+      "locked": false
+     },
+     {
+      "id": "3",
+      "number": "Q3",
+      "text": "Describe two-phase locking with an example.",
+      "context": null,
+      "marks": 10.0,
+      "section": "B",
+      "group": null,
+      "option": null,
+      "course_outcome": "CO2",
+      "tagged_level": "Understand",
+      "locked": false
+     },
+     {
+      "id": "4",
+      "number": "Q4",
+      "text": "Write short notes on B+ tree indexing.",
+      "context": null,
+      "marks": 10.0,
+      "section": "B",
+      "group": null,
+      "option": null,
+      "course_outcome": "CO3",
+      "tagged_level": "Remember",
+      "locked": false
+     }
+    ],
+    "total_marks": 40.0,
+    "warnings": []
+   },
+   "items": [
+    {
+     "question": {
+      "id": "1a",
+      "number": "Q1 (a)",
+      "text": "Define a primary key.",
+      "context": null,
+      "marks": 2.0,
+      "section": "A",
+      "group": null,
+      "option": null,
+      "course_outcome": "CO1",
+      "tagged_level": "Remember",
+      "locked": false
+     },
+     "prediction": {
+      "question": "Define a primary key.",
+      "level": "Remember",
+      "level_id": 1,
+      "confidence": 0.9063616844527617,
+      "proba": {
+       "Remember": 0.9064,
+       "Understand": 0.082,
+       "Apply": 0.0068,
+       "Analyze": 0.0019,
+       "Evaluate": 0.0016,
+       "Create": 0.0015
+      },
+      "needs_review": false,
+      "lower_order": true,
+      "directives": [
+       {
+        "verb": "define",
+        "kind": "imperative",
+        "phrase": null,
+        "negated": false
+       }
+      ],
+      "frame": null,
+      "evidence": "directive",
+      "votes": [
+       {
+        "agent": "Lexis",
+        "level": "Remember",
+        "confidence": 0.9063616844527617,
+        "proba": [
+         0.9064,
+         0.082,
+         0.0068,
+         0.0019,
+         0.0016,
+         0.0015
+        ],
+        "reasoning": null
+       },
+       {
+        "agent": "Archivist",
+        "level": "Remember",
+        "confidence": 0.48065425615993235,
+        "proba": [
+         0.4807,
+         0.1168,
+         0.2333,
+         0.1333,
+         0.0179,
+         0.0179
+        ],
+        "reasoning": null
+       }
+      ],
+      "neighbours": [
+       {
+        "question": "Suppose there are two relation r and s such that the foreign key B of r references the primary key A of s.",
+        "level": "Apply",
+        "similarity": 0.731,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "Explain following term related to distributed database system.",
+        "level": "Remember",
+        "similarity": 0.716,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "Differentiate between Symmetric and Asymmetric Key Cryptography.",
+        "level": "Analyze",
+        "similarity": 0.7,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "Explain basic concept of Hash table?",
+        "level": "Understand",
+        "similarity": 0.693,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "Define schemas.",
+        "level": "Remember",
+        "similarity": 0.686,
+        "source": "gani2023"
+       }
+      ],
+      "explanation": []
+     }
+    },
+    {
+     "question": {
+      "id": "1b",
+      "number": "Q1 (b)",
+      "text": "What is a foreign key?",
+      "context": null,
+      "marks": 2.0,
+      "section": "A",
+      "group": null,
+      "option": null,
+      "course_outcome": "CO1",
+      "tagged_level": "Remember",
+      "locked": false
+     },
+     "prediction": {
+      "question": "What is a foreign key?",
+      "level": "Remember",
+      "level_id": 1,
+      "confidence": 0.9798052872639127,
+      "proba": {
+       "Remember": 0.9798,
+       "Understand": 0.0052,
+       "Apply": 0.0076,
+       "Analyze": 0.0043,
+       "Evaluate": 0.0015,
+       "Create": 0.0015
+      },
+      "needs_review": false,
+      "lower_order": true,
+      "directives": [],
+      "frame": "what_is",
+      "evidence": "frame",
+      "votes": [
+       {
+        "agent": "Lexis",
+        "level": "Remember",
+        "confidence": 0.9798052872639127,
+        "proba": [
+         0.9798,
+         0.0052,
+         0.0076,
+         0.0043,
+         0.0015,
+         0.0015
+        ],
+        "reasoning": null
+       },
+       {
+        "agent": "Archivist",
+        "level": "Remember",
+        "confidence": 0.4785041693249584,
+        "proba": [
+         0.4785,
+         0.118,
+         0.2565,
+         0.0197,
+         0.1075,
+         0.0197
+        ],
+        "reasoning": null
+       }
+      ],
+      "neighbours": [
+       {
+        "question": "Suppose there are two relation r and s such that the foreign key B of r references the primary key A of s.",
+        "level": "Apply",
+        "similarity": 0.697,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "Consider following relational table.",
+        "level": "Remember",
+        "similarity": 0.654,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "Explain Different type of join with suitable example.",
+        "level": "Remember",
+        "similarity": 0.653,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "Explain basic concept of Hash table?",
+        "level": "Understand",
+        "similarity": 0.653,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "Explain following term related to distributed database system.",
+        "level": "Remember",
+        "similarity": 0.647,
+        "source": "indian_engineering"
+       }
+      ],
+      "explanation": []
+     }
+    },
+    {
+     "question": {
+      "id": "1c",
+      "number": "Q1 (c)",
+      "text": "List the ACID properties.",
+      "context": null,
+      "marks": 2.0,
+      "section": "A",
+      "group": null,
+      "option": null,
+      "course_outcome": "CO2",
+      "tagged_level": "Remember",
+      "locked": false
+     },
+     "prediction": {
+      "question": "List the ACID properties.",
+      "level": "Remember",
+      "level_id": 1,
+      "confidence": 0.985330886037278,
+      "proba": {
+       "Remember": 0.9853,
+       "Understand": 0.0112,
+       "Apply": 0.0009,
+       "Analyze": 0.0019,
+       "Evaluate": 0.0005,
+       "Create": 0.0002
+      },
+      "needs_review": false,
+      "lower_order": true,
+      "directives": [
+       {
+        "verb": "list",
+        "kind": "imperative",
+        "phrase": null,
+        "negated": false
+       }
+      ],
+      "frame": null,
+      "evidence": "directive",
+      "votes": [
+       {
+        "agent": "Lexis",
+        "level": "Remember",
+        "confidence": 0.9779963992700877,
+        "proba": [
+         0.978,
+         0.0168,
+         0.0014,
+         0.0028,
+         0.0008,
+         0.0002
+        ],
+        "reasoning": null
+       },
+       {
+        "agent": "Archivist",
+        "level": "Apply",
+        "confidence": 0.46631576479260284,
+        "proba": [
+         0.2066,
+         0.1619,
+         0.4663,
+         0.1106,
+         0.0272,
+         0.0272
+        ],
+        "reasoning": null
+       },
+       {
+        "agent": "Socrates",
+        "level": "Remember",
+        "confidence": 0.9999998595716583,
+        "proba": [
+         1.0,
+         0.0,
+         0.0,
+         0.0,
+         0.0,
+         0.0
+        ],
+        "reasoning": "The question asks for a list of properties, which involves retrieving specific characteristics from memory. It does not require interpretation, analysis, application, evaluation, or creation. Simply recalling a list of properties (such as those of acids) falls under the cognitive level of remembering. Even though 'properties' may imply some understanding, the instruction 'list' indicates a recall task, not an explanation or application. Therefore, this is a Remember-level question."
+       }
+      ],
+      "neighbours": [
+       {
+        "question": "List properties of light.",
+        "level": "Apply",
+        "similarity": 0.78,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "List the properties of probability.",
+        "level": "Apply",
+        "similarity": 0.726,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "Write down chemical characteristics of packaging.",
+        "level": "Remember",
+        "similarity": 0.719,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "List the properties of distribution function.",
+        "level": "Understand",
+        "similarity": 0.717,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "Distinguish among acidic, saline and sodic soils.",
+        "level": "Analyze",
+        "similarity": 0.711,
+        "source": "gani2023"
+       }
+      ],
+      "explanation": []
+     }
+    },
+    {
+     "question": {
+      "id": "1d",
+      "number": "Q1 (d)",
+      "text": "What is a view?",
+      "context": null,
+      "marks": 2.0,
+      "section": "A",
+      "group": null,
+      "option": null,
+      "course_outcome": "CO1",
+      "tagged_level": "Remember",
+      "locked": false
+     },
+     "prediction": {
+      "question": "What is a view?",
+      "level": "Remember",
+      "level_id": 1,
+      "confidence": 0.9552697400217474,
+      "proba": {
+       "Remember": 0.9553,
+       "Understand": 0.0279,
+       "Apply": 0.0,
+       "Analyze": 0.0,
+       "Evaluate": 0.0149,
+       "Create": 0.002
+      },
+      "needs_review": false,
+      "lower_order": true,
+      "directives": [],
+      "frame": "what_is",
+      "evidence": "frame",
+      "votes": [
+       {
+        "agent": "Lexis",
+        "level": "Remember",
+        "confidence": 0.9552697400217474,
+        "proba": [
+         0.9553,
+         0.0279,
+         0.0,
+         0.0,
+         0.0149,
+         0.002
+        ],
+        "reasoning": null
+       },
+       {
+        "agent": "Archivist",
+        "level": "Remember",
+        "confidence": 0.5579464469886906,
+        "proba": [
+         0.5579,
+         0.1999,
+         0.0753,
+         0.1121,
+         0.0274,
+         0.0274
+        ],
+        "reasoning": null
+       }
+      ],
+      "neighbours": [
+       {
+        "question": "What is perspective projection?",
+        "level": "Remember",
+        "similarity": 0.77,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "Determine the authors point of view",
+        "level": "Understand",
+        "similarity": 0.709,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "Conduct an investigation to produce information to support a view.",
+        "level": "Analyze",
+        "similarity": 0.703,
+        "source": "yahya2012"
+       },
+       {
+        "question": "What is projection?",
+        "level": "Remember",
+        "similarity": 0.698,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "Determine the author's point of view",
+        "level": "Understand",
+        "similarity": 0.697,
+        "source": "yahya2012"
+       }
+      ],
+      "explanation": []
+     }
+    },
+    {
+     "question": {
+      "id": "1e",
+      "number": "Q1 (e)",
+      "text": "State the purpose of normalization.",
+      "context": null,
+      "marks": 2.0,
+      "section": "A",
+      "group": null,
+      "option": null,
+      "course_outcome": "CO3",
+      "tagged_level": "Remember",
+      "locked": false
+     },
+     "prediction": {
+      "question": "State the purpose of normalization.",
+      "level": "Remember",
+      "level_id": 1,
+      "confidence": 0.7681318311114299,
+      "proba": {
+       "Remember": 0.7681,
+       "Understand": 0.2166,
+       "Apply": 0.0068,
+       "Analyze": 0.0006,
+       "Evaluate": 0.007,
+       "Create": 0.0009
+      },
+      "needs_review": false,
+      "lower_order": true,
+      "directives": [
+       {
+        "verb": "state",
+        "kind": "imperative",
+        "phrase": null,
+        "negated": false
+       }
+      ],
+      "frame": null,
+      "evidence": "directive",
+      "votes": [
+       {
+        "agent": "Lexis",
+        "level": "Remember",
+        "confidence": 0.7681318311114299,
+        "proba": [
+         0.7681,
+         0.2166,
+         0.0068,
+         0.0006,
+         0.007,
+         0.0009
+        ],
+        "reasoning": null
+       },
+       {
+        "agent": "Archivist",
+        "level": "Remember",
+        "confidence": 0.6955251782419927,
+        "proba": [
+         0.6955,
+         0.0781,
+         0.0719,
+         0.0722,
+         0.0411,
+         0.0411
+        ],
+        "reasoning": null
+       }
+      ],
+      "neighbours": [
+       {
+        "question": "What do you mean by normalization?",
+        "level": "Remember",
+        "similarity": 0.843,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "State the properties and applications of",
+        "level": "Remember",
+        "similarity": 0.727,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "State the purposes of risk assessment.",
+        "level": "Remember",
+        "similarity": 0.72,
+        "source": "gani2023"
+       },
+       {
+        "question": "Explain the purposes of scaling.",
+        "level": "Understand",
+        "similarity": 0.713,
+        "source": "gani2023"
+       },
+       {
+        "question": "State different objective of D.",
+        "level": "Remember",
+        "similarity": 0.711,
+        "source": "indian_engineering"
+       }
+      ],
+      "explanation": []
+     }
+    },
+    {
+     "question": {
+      "id": "2",
+      "number": "Q2",
+      "text": "Explain the three-schema architecture of a DBMS.",
+      "context": null,
+      "marks": 10.0,
+      "section": "B",
+      "group": null,
+      "option": null,
+      "course_outcome": "CO1",
+      "tagged_level": "Understand",
+      "locked": false
+     },
+     "prediction": {
+      "question": "Explain the three-schema architecture of a DBMS.",
+      "level": "Understand",
+      "level_id": 2,
+      "confidence": 0.7115751190113417,
+      "proba": {
+       "Remember": 0.2136,
+       "Understand": 0.7116,
+       "Apply": 0.0183,
+       "Analyze": 0.049,
+       "Evaluate": 0.0039,
+       "Create": 0.0037
+      },
+      "needs_review": false,
+      "lower_order": true,
+      "directives": [
+       {
+        "verb": "explain",
+        "kind": "imperative",
+        "phrase": null,
+        "negated": false
+       }
+      ],
+      "frame": null,
+      "evidence": "directive",
+      "votes": [
+       {
+        "agent": "Lexis",
+        "level": "Understand",
+        "confidence": 0.5673626789529671,
+        "proba": [
+         0.3204,
+         0.5674,
+         0.0275,
+         0.0734,
+         0.0058,
+         0.0055
+        ],
+        "reasoning": null
+       },
+       {
+        "agent": "Archivist",
+        "level": "Remember",
+        "confidence": 0.45115917781648107,
+        "proba": [
+         0.4512,
+         0.0874,
+         0.069,
+         0.3492,
+         0.0216,
+         0.0216
+        ],
+        "reasoning": null
+       },
+       {
+        "agent": "Socrates",
+        "level": "Understand",
+        "confidence": 0.9999999991280915,
+        "proba": [
+         0.0,
+         1.0,
+         0.0,
+         0.0,
+         0.0,
+         0.0
+        ],
+        "reasoning": "The question asks the student to 'explain' the three-schema architecture of a DBMS. This requires the student to construct meaning by interpreting and describing the components (internal, conceptual, external) and their relationships. While recalling definitions is involved, the task goes beyond simple recall—it involves organizing and explaining how the schemas relate to each other and function within a DBMS. This aligns with the cognitive process of 'understanding' as defined in the revised Bloom's taxonomy (Anderson & Krathwohl, 2001). There is no requirement to apply, analyze, evaluate, or create a new structure. Simply explaining the architecture involves interpreting and structuring known concepts to convey their meaning. Therefore, the level is 2."
+       }
+      ],
+      "neighbours": [
+       {
+        "question": "Explain Architecture of Distributed database system.",
+        "level": "Analyze",
+        "similarity": 0.857,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "Explain Architecture of parallel databases.",
+        "level": "Remember",
+        "similarity": 0.833,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "Explain any two parallel Database System Architecture in detail.",
+        "level": "Remember",
+        "similarity": 0.821,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "Define schemas.",
+        "level": "Remember",
+        "similarity": 0.802,
+        "source": "gani2023"
+       },
+       {
+        "question": "List and Explain any one Architecture of Parallel databases with neat diagram.",
+        "level": "Analyze",
+        "similarity": 0.79,
+        "source": "indian_engineering"
+       }
+      ],
+      "explanation": []
+     }
+    },
+    {
+     "question": {
+      "id": "3",
+      "number": "Q3",
+      "text": "Describe two-phase locking with an example.",
+      "context": null,
+      "marks": 10.0,
+      "section": "B",
+      "group": null,
+      "option": null,
+      "course_outcome": "CO2",
+      "tagged_level": "Understand",
+      "locked": false
+     },
+     "prediction": {
+      "question": "Describe two-phase locking with an example.",
+      "level": "Understand",
+      "level_id": 2,
+      "confidence": 0.6393487665980585,
+      "proba": {
+       "Remember": 0.3395,
+       "Understand": 0.6393,
+       "Apply": 0.014,
+       "Analyze": 0.0059,
+       "Evaluate": 0.0009,
+       "Create": 0.0004
+      },
+      "needs_review": false,
+      "lower_order": true,
+      "directives": [
+       {
+        "verb": "describe",
+        "kind": "imperative",
+        "phrase": null,
+        "negated": false
+       }
+      ],
+      "frame": null,
+      "evidence": "directive",
+      "votes": [
+       {
+        "agent": "Lexis",
+        "level": "Remember",
+        "confidence": 0.5092866347672904,
+        "proba": [
+         0.5093,
+         0.459,
+         0.021,
+         0.0088,
+         0.0013,
+         0.0006
+        ],
+        "reasoning": null
+       },
+       {
+        "agent": "Archivist",
+        "level": "Remember",
+        "confidence": 0.46957246725489726,
+        "proba": [
+         0.4696,
+         0.3876,
+         0.0148,
+         0.0984,
+         0.0148,
+         0.0148
+        ],
+        "reasoning": null
+       },
+       {
+        "agent": "Socrates",
+        "level": "Understand",
+        "confidence": 0.9999999971957022,
+        "proba": [
+         0.0,
+         1.0,
+         0.0,
+         0.0,
+         0.0,
+         0.0
+        ],
+        "reasoning": "The question asks the student to 'describe' a concept (two-phase locking) and provide an example. Describing involves constructing meaning—interpreting and explaining the concept in a clear, structured way. While it includes an example, the core task is not to apply a procedure, analyze relationships, evaluate, or create something new. Rather, it is to understand and explain a concept. Therefore, this falls under the cognitive level of 'Understand' (level 2)."
+       }
+      ],
+      "neighbours": [
+       {
+        "question": "Explain the concept of circular queue with an example.",
+        "level": "Understand",
+        "similarity": 0.777,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "Recall the following pictoral example of an implementation of some queue operations",
+        "level": "Remember",
+        "similarity": 0.771,
+        "source": "yahya2012"
+       },
+       {
+        "question": "Explain Linear queue and Circular queue with suitable example.",
+        "level": "Understand",
+        "similarity": 0.754,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "Explain two position and floating control mode in brief with neat sketch.",
+        "level": "Remember",
+        "similarity": 0.754,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "State and explain the conditions for deadlock to occur.",
+        "level": "Remember",
+        "similarity": 0.749,
+        "source": "indian_engineering"
+       }
+      ],
+      "explanation": []
+     }
+    },
+    {
+     "question": {
+      "id": "4",
+      "number": "Q4",
+      "text": "Write short notes on B+ tree indexing.",
+      "context": null,
+      "marks": 10.0,
+      "section": "B",
+      "group": null,
+      "option": null,
+      "course_outcome": "CO3",
+      "tagged_level": "Remember",
+      "locked": false
+     },
+     "prediction": {
+      "question": "Write short notes on B+ tree indexing.",
+      "level": "Remember",
+      "level_id": 1,
+      "confidence": 0.6152175391382413,
+      "proba": {
+       "Remember": 0.6152,
+       "Understand": 0.3246,
+       "Apply": 0.0293,
+       "Analyze": 0.0163,
+       "Evaluate": 0.005,
+       "Create": 0.0096
+      },
+      "needs_review": false,
+      "lower_order": true,
+      "directives": [
+       {
+        "verb": "write",
+        "kind": "imperative",
+        "phrase": "write note",
+        "negated": false
+       }
+      ],
+      "frame": null,
+      "evidence": "directive",
+      "votes": [
+       {
+        "agent": "Lexis",
+        "level": "Remember",
+        "confidence": 0.6152175391382413,
+        "proba": [
+         0.6152,
+         0.3246,
+         0.0293,
+         0.0163,
+         0.005,
+         0.0096
+        ],
+        "reasoning": null
+       },
+       {
+        "agent": "Archivist",
+        "level": "Remember",
+        "confidence": 0.8399609764977987,
+        "proba": [
+         0.84,
+         0.0151,
+         0.0998,
+         0.0151,
+         0.0151,
+         0.0151
+        ],
+        "reasoning": null
+       }
+      ],
+      "neighbours": [
+       {
+        "question": "Write short notes on the following.",
+        "level": "Remember",
+        "similarity": 0.829,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "Write short note on index cutting process.",
+        "level": "Remember",
+        "similarity": 0.821,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "Write an algorithm of B tree deletion.",
+        "level": "Remember",
+        "similarity": 0.815,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "Write short note Principal Component Analysis.",
+        "level": "Remember",
+        "similarity": 0.801,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "Write short note on Data Types in C.",
+        "level": "Remember",
+        "similarity": 0.799,
+        "source": "indian_engineering"
+       }
+      ],
+      "explanation": []
+     }
+    }
+   ],
+   "distribution": {
+    "Remember": 0.5,
+    "Understand": 0.5,
+    "Apply": 0.0,
+    "Analyze": 0.0,
+    "Evaluate": 0.0,
+    "Create": 0.0
+   },
+   "weight_by": "marks",
+   "checks": [
+    {
+     "bound": {
+      "levels": [
+       "Remember",
+       "Understand"
+      ],
+      "min_share": null,
+      "max_share": 0.4,
+      "label": "Lower order (Remember + Understand)"
+     },
+     "description": "Lower order (Remember + Understand) <= 40% of marks",
+     "share": 1.0,
+     "ok": false,
+     "gap": -0.6
+    },
+    {
+     "bound": {
+      "levels": [
+       "Apply",
+       "Analyze"
+      ],
+      "min_share": 0.4,
+      "max_share": null,
+      "label": "Apply + Analyze"
+     },
+     "description": "Apply + Analyze >= 40% of marks",
+     "share": 0.0,
+     "ok": false,
+     "gap": 0.4
+    },
+    {
+     "bound": {
+      "levels": [
+       "Evaluate",
+       "Create"
+      ],
+      "min_share": 0.1,
+      "max_share": null,
+      "label": "Higher order (Evaluate + Create)"
+     },
+     "description": "Higher order (Evaluate + Create) >= 10% of marks",
+     "share": 0.0,
+     "ok": false,
+     "gap": 0.1
+    }
+   ],
+   "compliant": false,
+   "needs_review": []
+  },
+  "plan": [
+   {
+    "question_id": "2",
+    "original": "Explain the three-schema architecture of a DBMS.",
+    "from_level": "Understand",
+    "to_level": "Apply",
+    "marks": 10.0,
+    "reason": "Lower order (Remember + Understand) <= 40% of marks: currently 100%"
+   },
+   {
+    "question_id": "3",
+    "original": "Describe two-phase locking with an example.",
+    "from_level": "Understand",
+    "to_level": "Apply",
+    "marks": 10.0,
+    "reason": "Lower order (Remember + Understand) <= 40% of marks: currently 75%"
+   },
+   {
+    "question_id": "4",
+    "original": "Write short notes on B+ tree indexing.",
+    "from_level": "Remember",
+    "to_level": "Apply",
+    "marks": 10.0,
+    "reason": "Lower order (Remember + Understand) <= 40% of marks: currently 50%"
+   },
+   {
+    "question_id": "1c",
+    "original": "List the ACID properties.",
+    "from_level": "Remember",
+    "to_level": "Evaluate",
+    "marks": 2.0,
+    "reason": "Higher order (Evaluate + Create) >= 10% of marks: currently 0%"
+   },
+   {
+    "question_id": "1b",
+    "original": "What is a foreign key?",
+    "from_level": "Remember",
+    "to_level": "Evaluate",
+    "marks": 2.0,
+    "reason": "Higher order (Evaluate + Create) >= 10% of marks: currently 5%"
+   }
+  ],
+  "rewrites": [
+   {
+    "job": {
+     "question_id": "2",
+     "original": "Explain the three-schema architecture of a DBMS.",
+     "from_level": "Understand",
+     "to_level": "Apply",
+     "marks": 10.0,
+     "reason": "Lower order (Remember + Understand) <= 40% of marks: currently 100%"
+    },
+    "accepted": true,
+    "final_question": "Apply the three-schema architecture to design a database for a university library system, specifying how each schema (external, conceptual, internal) would be structured to support user queries, book management, and storage efficiency.",
+    "attempts": [
+     {
+      "number": 1,
+      "question": "Apply the three-schema architecture to design a database for a university library system, specifying how each schema (external, conceptual, internal) would be structured to support user queries, book management, and storage efficiency.",
+      "composer": "llm",
+      "rationale": "This question requires the candidate to implement the three-schema architecture in a real-world scenario, demonstrating practical application of the concept through structured design decisions.",
+      "checks": [
+       {
+        "name": "level",
+        "passed": true,
+        "detail": "classified as Apply (P(Apply)=0.81)",
+        "score": 0.807
+       },
+       {
+        "name": "form",
+        "passed": true,
+        "detail": "32 words",
+        "score": null
+       },
+       {
+        "name": "topic",
+        "passed": true,
+        "detail": "content-word overlap 0.67, similarity 0.82",
+        "score": 0.667
+       },
+       {
+        "name": "not_duplicate",
+        "passed": true,
+        "detail": "similarity to original 0.82, to other questions 0.58",
+        "score": 0.823
+       }
+      ],
+      "passed": true,
+      "predicted_level": "Apply"
+     }
+    ],
+    "needs_teacher": false
+   },
+   {
+    "job": {
+     "question_id": "3",
+     "original": "Describe two-phase locking with an example.",
+     "from_level": "Understand",
+     "to_level": "Apply",
+     "marks": 10.0,
+     "reason": "Lower order (Remember + Understand) <= 40% of marks: currently 75%"
+    },
+    "accepted": true,
+    "final_question": "Apply two-phase locking to a database transaction involving two concurrent updates to account balances, showing the lock acquisition and release sequence in a real-time scenario.",
+    "attempts": [
+     {
+      "number": 1,
+      "question": "Apply two-phase locking to a database transaction involving two concurrent updates to account balances, showing the lock acquisition and release sequence in a real-time scenario.",
+      "composer": "llm",
+      "rationale": "This question requires the student to execute the two-phase locking protocol in a concrete, real-time situation, demonstrating procedural application rather than just describing it.",
+      "checks": [
+       {
+        "name": "level",
+        "passed": true,
+        "detail": "classified as Apply (P(Apply)=0.98)",
+        "score": 0.976
+       },
+       {
+        "name": "form",
+        "passed": true,
+        "detail": "25 words",
+        "score": null
+       },
+       {
+        "name": "topic",
+        "passed": true,
+        "detail": "content-word overlap 1.00, similarity 0.77",
+        "score": 1.0
+       },
+       {
+        "name": "not_duplicate",
+        "passed": true,
+        "detail": "similarity to original 0.77, to other questions 0.62",
+        "score": 0.771
+       }
+      ],
+      "passed": true,
+      "predicted_level": "Apply"
+     }
+    ],
+    "needs_teacher": false
+   },
+   {
+    "job": {
+     "question_id": "4",
+     "original": "Write short notes on B+ tree indexing.",
+     "from_level": "Remember",
+     "to_level": "Apply",
+     "marks": 10.0,
+     "reason": "Lower order (Remember + Understand) <= 40% of marks: currently 50%"
+    },
+    "accepted": true,
+    "final_question": "Apply B+ tree indexing to design a database query execution plan for retrieving all records from a large table of 1 million rows, given that the table is sorted by a key field and the query selects only a subset of rows based on that key.",
+    "attempts": [
+     {
+      "number": 1,
+      "question": "Apply B+ tree indexing to design a database query execution plan for retrieving all records from a large table of 1 million rows, given that the table is sorted by a key field and the query selects only a subset of rows based on that key.",
+      "composer": "llm",
+      "rationale": "This question requires the candidate to implement B+ tree indexing in a real scenario, demonstrating application of the concept to a specific database query, aligning with the 'Apply' level of Bloom's taxonomy.",
+      "checks": [
+       {
+        "name": "level",
+        "passed": true,
+        "detail": "classified as Apply (P(Apply)=0.96)",
+        "score": 0.958
+       },
+       {
+        "name": "form",
+        "passed": true,
+        "detail": "46 words",
+        "score": null
+       },
+       {
+        "name": "topic",
+        "passed": true,
+        "detail": "content-word overlap 1.00, similarity 0.73",
+        "score": 1.0
+       },
+       {
+        "name": "not_duplicate",
+        "passed": true,
+        "detail": "similarity to original 0.73, to other questions 0.68",
+        "score": 0.732
+       }
+      ],
+      "passed": true,
+      "predicted_level": "Apply"
+     }
+    ],
+    "needs_teacher": false
+   },
+   {
+    "job": {
+     "question_id": "1c",
+     "original": "List the ACID properties.",
+     "from_level": "Remember",
+     "to_level": "Evaluate",
+     "marks": 2.0,
+     "reason": "Higher order (Evaluate + Create) >= 10% of marks: currently 0%"
+    },
+    "accepted": true,
+    "final_question": "Evaluate which of the ACID properties is most critical for ensuring data reliability in a high-traffic online banking system, justifying your choice with considerations of transaction integrity and system recovery under failure.",
+    "attempts": [
+     {
+      "number": 1,
+      "question": "Critique the ACID properties in the context of database transaction management, assessing which property is most critical for ensuring data consistency in high-traffic systems and justify your evaluation with specific performance and reliability considerations.",
+      "composer": "llm",
+      "rationale": "This question requires students to evaluate, not just recall, by applying criteria to judge the relative importance of each ACID property in a real-world scenario, demanding reasoned justification and critical analysis.",
+      "checks": [
+       {
+        "name": "level",
+        "passed": true,
+        "detail": "classified as Evaluate (P(Evaluate)=0.99)",
+        "score": 0.993
+       },
+       {
+        "name": "form",
+        "passed": true,
+        "detail": "34 words",
+        "score": null
+       },
+       {
+        "name": "topic",
+        "passed": true,
+        "detail": "content-word overlap 1.00, similarity 0.66",
+        "score": 1.0
+       },
+       {
+        "name": "not_duplicate",
+        "passed": true,
+        "detail": "similarity to original 0.66, to other questions 0.69",
+        "score": 0.693
+       },
+       {
+        "name": "student",
+        "passed": false,
+        "detail": "The question asks for a critique of the ACID properties, an assessment of which is most critical for high-traffic systems, and a justification with performance and reliability considerations. This requires analysis, judgment, and synthesis of concepts—such as evaluating trade-offs between atomicity,",
+        "score": null
+       }
+      ],
+      "passed": false,
+      "predicted_level": "Evaluate"
+     },
+     {
+      "number": 2,
+      "question": "Evaluate which of the ACID properties is most critical for ensuring data reliability in a high-traffic online banking system, justifying your choice with considerations of transaction integrity and system recovery under failure.",
+      "composer": "llm",
+      "rationale": "This question requires students to judge among ACID properties based on real-world performance and reliability criteria, demanding evaluation with reasoned justification—aligning with the highest level of Bloom's taxonomy.",
+      "checks": [
+       {
+        "name": "level",
+        "passed": true,
+        "detail": "classified as Evaluate (P(Evaluate)=0.99)",
+        "score": 0.994
+       },
+       {
+        "name": "form",
+        "passed": true,
+        "detail": "32 words",
+        "score": null
+       },
+       {
+        "name": "topic",
+        "passed": true,
+        "detail": "content-word overlap 1.00, similarity 0.62",
+        "score": 1.0
+       },
+       {
+        "name": "not_duplicate",
+        "passed": true,
+        "detail": "similarity to original 0.62, to other questions 0.61",
+        "score": 0.617
+       },
+       {
+        "name": "student",
+        "passed": true,
+        "detail": "",
+        "score": null
+       }
+      ],
+      "passed": true,
+      "predicted_level": "Evaluate"
+     }
+    ],
+    "needs_teacher": false
+   },
+   {
+    "job": {
+     "question_id": "1b",
+     "original": "What is a foreign key?",
+     "from_level": "Remember",
+     "to_level": "Evaluate",
+     "marks": 2.0,
+     "reason": "Higher order (Evaluate + Create) >= 10% of marks: currently 5%"
+    },
+    "accepted": true,
+    "final_question": "Evaluate whether the use of a foreign key in a database schema is more beneficial than problematic for ensuring data integrity in a multinational company's customer relationship management system, considering scalability, consistency, and potential performance issues.",
+    "attempts": [
+     {
+      "number": 1,
+      "question": "Evaluate whether the use of a foreign key in a database schema is more beneficial than problematic for ensuring data integrity in a multinational company's customer relationship management system, considering scalability, consistency, and potential performance issues.",
+      "composer": "llm",
+      "rationale": "This question requires students to assess a database concept (foreign key) against specific criteria (data integrity, scalability, consistency, performance) and justify their judgment with reasoned evaluation, aligning with the 'Evaluate' level of Bloom's taxonomy.",
+      "checks": [
+       {
+        "name": "level",
+        "passed": true,
+        "detail": "classified as Evaluate (P(Evaluate)=0.98)",
+        "score": 0.982
+       },
+       {
+        "name": "form",
+        "passed": true,
+        "detail": "36 words",
+        "score": null
+       },
+       {
+        "name": "topic",
+        "passed": true,
+        "detail": "content-word overlap 1.00, similarity 0.75",
+        "score": 1.0
+       },
+       {
+        "name": "not_duplicate",
+        "passed": true,
+        "detail": "similarity to original 0.75, to other questions 0.76",
+        "score": 0.764
+       },
+       {
+        "name": "student",
+        "passed": true,
+        "detail": "",
+        "score": null
+       }
+      ],
+      "passed": true,
+      "predicted_level": "Evaluate"
+     }
+    ],
+    "needs_teacher": false
+   }
+  ],
+  "after": {
+   "paper": {
+    "title": "dbms_paper",
+    "questions": [
+     {
+      "id": "1a",
+      "number": "Q1 (a)",
+      "text": "Define a primary key.",
+      "context": null,
+      "marks": 2.0,
+      "section": "A",
+      "group": null,
+      "option": null,
+      "course_outcome": "CO1",
+      "tagged_level": "Remember",
+      "locked": false
+     },
+     {
+      "id": "1b",
+      "number": "Q1 (b)",
+      "text": "Evaluate whether the use of a foreign key in a database schema is more beneficial than problematic for ensuring data integrity in a multinational company's customer relationship management system, considering scalability, consistency, and potential performance issues.",
+      "context": null,
+      "marks": 2.0,
+      "section": "A",
+      "group": null,
+      "option": null,
+      "course_outcome": "CO1",
+      "tagged_level": "Remember",
+      "locked": false
+     },
+     {
+      "id": "1c",
+      "number": "Q1 (c)",
+      "text": "Evaluate which of the ACID properties is most critical for ensuring data reliability in a high-traffic online banking system, justifying your choice with considerations of transaction integrity and system recovery under failure.",
+      "context": null,
+      "marks": 2.0,
+      "section": "A",
+      "group": null,
+      "option": null,
+      "course_outcome": "CO2",
+      "tagged_level": "Remember",
+      "locked": false
+     },
+     {
+      "id": "1d",
+      "number": "Q1 (d)",
+      "text": "What is a view?",
+      "context": null,
+      "marks": 2.0,
+      "section": "A",
+      "group": null,
+      "option": null,
+      "course_outcome": "CO1",
+      "tagged_level": "Remember",
+      "locked": false
+     },
+     {
+      "id": "1e",
+      "number": "Q1 (e)",
+      "text": "State the purpose of normalization.",
+      "context": null,
+      "marks": 2.0,
+      "section": "A",
+      "group": null,
+      "option": null,
+      "course_outcome": "CO3",
+      "tagged_level": "Remember",
+      "locked": false
+     },
+     {
+      "id": "2",
+      "number": "Q2",
+      "text": "Apply the three-schema architecture to design a database for a university library system, specifying how each schema (external, conceptual, internal) would be structured to support user queries, book management, and storage efficiency.",
+      "context": null,
+      "marks": 10.0,
+      "section": "B",
+      "group": null,
+      "option": null,
+      "course_outcome": "CO1",
+      "tagged_level": "Understand",
+      "locked": false
+     },
+     {
+      "id": "3",
+      "number": "Q3",
+      "text": "Apply two-phase locking to a database transaction involving two concurrent updates to account balances, showing the lock acquisition and release sequence in a real-time scenario.",
+      "context": null,
+      "marks": 10.0,
+      "section": "B",
+      "group": null,
+      "option": null,
+      "course_outcome": "CO2",
+      "tagged_level": "Understand",
+      "locked": false
+     },
+     {
+      "id": "4",
+      "number": "Q4",
+      "text": "Apply B+ tree indexing to design a database query execution plan for retrieving all records from a large table of 1 million rows, given that the table is sorted by a key field and the query selects only a subset of rows based on that key.",
+      "context": null,
+      "marks": 10.0,
+      "section": "B",
+      "group": null,
+      "option": null,
+      "course_outcome": "CO3",
+      "tagged_level": "Remember",
+      "locked": false
+     }
+    ],
+    "total_marks": 40.0,
+    "warnings": []
+   },
+   "items": [
+    {
+     "question": {
+      "id": "1a",
+      "number": "Q1 (a)",
+      "text": "Define a primary key.",
+      "context": null,
+      "marks": 2.0,
+      "section": "A",
+      "group": null,
+      "option": null,
+      "course_outcome": "CO1",
+      "tagged_level": "Remember",
+      "locked": false
+     },
+     "prediction": {
+      "question": "Define a primary key.",
+      "level": "Remember",
+      "level_id": 1,
+      "confidence": 0.9063616844527617,
+      "proba": {
+       "Remember": 0.9064,
+       "Understand": 0.082,
+       "Apply": 0.0068,
+       "Analyze": 0.0019,
+       "Evaluate": 0.0016,
+       "Create": 0.0015
+      },
+      "needs_review": false,
+      "lower_order": true,
+      "directives": [
+       {
+        "verb": "define",
+        "kind": "imperative",
+        "phrase": null,
+        "negated": false
+       }
+      ],
+      "frame": null,
+      "evidence": "directive",
+      "votes": [
+       {
+        "agent": "Lexis",
+        "level": "Remember",
+        "confidence": 0.9063616844527617,
+        "proba": [
+         0.9064,
+         0.082,
+         0.0068,
+         0.0019,
+         0.0016,
+         0.0015
+        ],
+        "reasoning": null
+       },
+       {
+        "agent": "Archivist",
+        "level": "Remember",
+        "confidence": 0.48065425615993235,
+        "proba": [
+         0.4807,
+         0.1168,
+         0.2333,
+         0.1333,
+         0.0179,
+         0.0179
+        ],
+        "reasoning": null
+       }
+      ],
+      "neighbours": [
+       {
+        "question": "Suppose there are two relation r and s such that the foreign key B of r references the primary key A of s.",
+        "level": "Apply",
+        "similarity": 0.731,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "Explain following term related to distributed database system.",
+        "level": "Remember",
+        "similarity": 0.716,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "Differentiate between Symmetric and Asymmetric Key Cryptography.",
+        "level": "Analyze",
+        "similarity": 0.7,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "Explain basic concept of Hash table?",
+        "level": "Understand",
+        "similarity": 0.693,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "Define schemas.",
+        "level": "Remember",
+        "similarity": 0.686,
+        "source": "gani2023"
+       }
+      ],
+      "explanation": []
+     }
+    },
+    {
+     "question": {
+      "id": "1b",
+      "number": "Q1 (b)",
+      "text": "Evaluate whether the use of a foreign key in a database schema is more beneficial than problematic for ensuring data integrity in a multinational company's customer relationship management system, considering scalability, consistency, and potential performance issues.",
+      "context": null,
+      "marks": 2.0,
+      "section": "A",
+      "group": null,
+      "option": null,
+      "course_outcome": "CO1",
+      "tagged_level": "Remember",
+      "locked": false
+     },
+     "prediction": {
+      "question": "Evaluate whether the use of a foreign key in a database schema is more beneficial than problematic for ensuring data integrity in a multinational company's customer relationship management system, considering scalability, consistency, and potential performance issues.",
+      "level": "Evaluate",
+      "level_id": 5,
+      "confidence": 0.9880280916394426,
+      "proba": {
+       "Remember": 0.0001,
+       "Understand": 0.0009,
+       "Apply": 0.005,
+       "Analyze": 0.0018,
+       "Evaluate": 0.988,
+       "Create": 0.0041
+      },
+      "needs_review": false,
+      "lower_order": false,
+      "directives": [
+       {
+        "verb": "evaluate",
+        "kind": "imperative",
+        "phrase": null,
+        "negated": false
+       }
+      ],
+      "frame": null,
+      "evidence": "directive",
+      "votes": [
+       {
+        "agent": "Lexis",
+        "level": "Evaluate",
+        "confidence": 0.9820421402665145,
+        "proba": [
+         0.0002,
+         0.0013,
+         0.0075,
+         0.0027,
+         0.982,
+         0.0062
+        ],
+        "reasoning": null
+       },
+       {
+        "agent": "Archivist",
+        "level": "Apply",
+        "confidence": 0.2280444631934237,
+        "proba": [
+         0.2238,
+         0.2034,
+         0.228,
+         0.0175,
+         0.2106,
+         0.1166
+        ],
+        "reasoning": null
+       },
+       {
+        "agent": "Socrates",
+        "level": "Evaluate",
+        "confidence": 0.9999999943852986,
+        "proba": [
+         0.0,
+         0.0,
+         0.0,
+         0.0,
+         1.0,
+         0.0
+        ],
+        "reasoning": "The question asks the student to make a judgement (evaluate) based on specific criteria—scalability, consistency, and performance—about the benefits and drawbacks of using a foreign key in a real-world scenario. It requires comparing and assessing different aspects, weighing pros and cons, and forming a reasoned conclusion. This involves critical analysis and evaluation of trade-offs, which aligns with the highest level of the revised Bloom's taxonomy. Although the question involves understanding and applying database concepts, the core cognitive demand is not just recalling or explaining, but judging the relative merits and drawbacks based on defined standards. Therefore, it requires evaluation, not just analysis or application."
+       }
+      ],
+      "neighbours": [
+       {
+        "question": "Consider following Database.",
+        "level": "Apply",
+        "similarity": 0.759,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "Consider following relational table.",
+        "level": "Remember",
+        "similarity": 0.732,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "Critically evaluate the JDBC and pooling method in the context of database connections.",
+        "level": "Evaluate",
+        "similarity": 0.725,
+        "source": "sangodiah2017"
+       },
+       {
+        "question": "Justify your choice of data structure.",
+        "level": "Create",
+        "similarity": 0.722,
+        "source": "yahya2012"
+       },
+       {
+        "question": "Identify and explain the possible consequences of connecting a database with a web application without using database pooling method.",
+        "level": "Understand",
+        "similarity": 0.721,
+        "source": "sangodiah2017"
+       }
+      ],
+      "explanation": []
+     }
+    },
+    {
+     "question": {
+      "id": "1c",
+      "number": "Q1 (c)",
+      "text": "Evaluate which of the ACID properties is most critical for ensuring data reliability in a high-traffic online banking system, justifying your choice with considerations of transaction integrity and system recovery under failure.",
+      "context": null,
+      "marks": 2.0,
+      "section": "A",
+      "group": null,
+      "option": null,
+      "course_outcome": "CO2",
+      "tagged_level": "Remember",
+      "locked": false
+     },
+     "prediction": {
+      "question": "Evaluate which of the ACID properties is most critical for ensuring data reliability in a high-traffic online banking system, justifying your choice with considerations of transaction integrity and system recovery under failure.",
+      "level": "Evaluate",
+      "level_id": 5,
+      "confidence": 0.9935140575164667,
+      "proba": {
+       "Remember": 0.0011,
+       "Understand": 0.0014,
+       "Apply": 0.0018,
+       "Analyze": 0.0,
+       "Evaluate": 0.9935,
+       "Create": 0.0023
+      },
+      "needs_review": false,
+      "lower_order": false,
+      "directives": [
+       {
+        "verb": "evaluate",
+        "kind": "imperative",
+        "phrase": null,
+        "negated": false
+       }
+      ],
+      "frame": null,
+      "evidence": "directive",
+      "votes": [
+       {
+        "agent": "Lexis",
+        "level": "Evaluate",
+        "confidence": 0.9935140575164667,
+        "proba": [
+         0.0011,
+         0.0014,
+         0.0018,
+         0.0,
+         0.9935,
+         0.0023
+        ],
+        "reasoning": null
+       },
+       {
+        "agent": "Archivist",
+        "level": "Evaluate",
+        "confidence": 0.3127785939497488,
+        "proba": [
+         0.1025,
+         0.1869,
+         0.0923,
+         0.0152,
+         0.3128,
+         0.2902
+        ],
+        "reasoning": null
+       }
+      ],
+      "neighbours": [
+       {
+        "question": "Provide justifications as to why integrity and reliability is important in a company's annual report and accounts (ARAS) from corporate governance point of view.",
+        "level": "Evaluate",
+        "similarity": 0.686,
+        "source": "gani2023"
+       },
+       {
+        "question": "design a cost effective strategy to generate reliable data.",
+        "level": "Create",
+        "similarity": 0.685,
+        "source": "yahya2012"
+       },
+       {
+        "question": "Critically evaluate the JDBC and pooling method in the context of database connections.",
+        "level": "Evaluate",
+        "similarity": 0.663,
+        "source": "sangodiah2017"
+       },
+       {
+        "question": "Justify your choice of data structure.",
+        "level": "Create",
+        "similarity": 0.655,
+        "source": "yahya2012"
+       },
+       {
+        "question": "Explain, using appropriate examples, FIVE (5) possible sources of data pollution in implementing data warehouse in the bank.",
+        "level": "Understand",
+        "similarity": 0.653,
+        "source": "sangodiah2017"
+       }
+      ],
+      "explanation": []
+     }
+    },
+    {
+     "question": {
+      "id": "1d",
+      "number": "Q1 (d)",
+      "text": "What is a view?",
+      "context": null,
+      "marks": 2.0,
+      "section": "A",
+      "group": null,
+      "option": null,
+      "course_outcome": "CO1",
+      "tagged_level": "Remember",
+      "locked": false
+     },
+     "prediction": {
+      "question": "What is a view?",
+      "level": "Remember",
+      "level_id": 1,
+      "confidence": 0.9552697400217474,
+      "proba": {
+       "Remember": 0.9553,
+       "Understand": 0.0279,
+       "Apply": 0.0,
+       "Analyze": 0.0,
+       "Evaluate": 0.0149,
+       "Create": 0.002
+      },
+      "needs_review": false,
+      "lower_order": true,
+      "directives": [],
+      "frame": "what_is",
+      "evidence": "frame",
+      "votes": [
+       {
+        "agent": "Lexis",
+        "level": "Remember",
+        "confidence": 0.9552697400217474,
+        "proba": [
+         0.9553,
+         0.0279,
+         0.0,
+         0.0,
+         0.0149,
+         0.002
+        ],
+        "reasoning": null
+       },
+       {
+        "agent": "Archivist",
+        "level": "Remember",
+        "confidence": 0.5579464469886906,
+        "proba": [
+         0.5579,
+         0.1999,
+         0.0753,
+         0.1121,
+         0.0274,
+         0.0274
+        ],
+        "reasoning": null
+       }
+      ],
+      "neighbours": [
+       {
+        "question": "What is perspective projection?",
+        "level": "Remember",
+        "similarity": 0.77,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "Determine the authors point of view",
+        "level": "Understand",
+        "similarity": 0.709,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "Conduct an investigation to produce information to support a view.",
+        "level": "Analyze",
+        "similarity": 0.703,
+        "source": "yahya2012"
+       },
+       {
+        "question": "What is projection?",
+        "level": "Remember",
+        "similarity": 0.698,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "Determine the author's point of view",
+        "level": "Understand",
+        "similarity": 0.697,
+        "source": "yahya2012"
+       }
+      ],
+      "explanation": []
+     }
+    },
+    {
+     "question": {
+      "id": "1e",
+      "number": "Q1 (e)",
+      "text": "State the purpose of normalization.",
+      "context": null,
+      "marks": 2.0,
+      "section": "A",
+      "group": null,
+      "option": null,
+      "course_outcome": "CO3",
+      "tagged_level": "Remember",
+      "locked": false
+     },
+     "prediction": {
+      "question": "State the purpose of normalization.",
+      "level": "Remember",
+      "level_id": 1,
+      "confidence": 0.7681318311114299,
+      "proba": {
+       "Remember": 0.7681,
+       "Understand": 0.2166,
+       "Apply": 0.0068,
+       "Analyze": 0.0006,
+       "Evaluate": 0.007,
+       "Create": 0.0009
+      },
+      "needs_review": false,
+      "lower_order": true,
+      "directives": [
+       {
+        "verb": "state",
+        "kind": "imperative",
+        "phrase": null,
+        "negated": false
+       }
+      ],
+      "frame": null,
+      "evidence": "directive",
+      "votes": [
+       {
+        "agent": "Lexis",
+        "level": "Remember",
+        "confidence": 0.7681318311114299,
+        "proba": [
+         0.7681,
+         0.2166,
+         0.0068,
+         0.0006,
+         0.007,
+         0.0009
+        ],
+        "reasoning": null
+       },
+       {
+        "agent": "Archivist",
+        "level": "Remember",
+        "confidence": 0.6955251782419927,
+        "proba": [
+         0.6955,
+         0.0781,
+         0.0719,
+         0.0722,
+         0.0411,
+         0.0411
+        ],
+        "reasoning": null
+       }
+      ],
+      "neighbours": [
+       {
+        "question": "What do you mean by normalization?",
+        "level": "Remember",
+        "similarity": 0.843,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "State the properties and applications of",
+        "level": "Remember",
+        "similarity": 0.727,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "State the purposes of risk assessment.",
+        "level": "Remember",
+        "similarity": 0.72,
+        "source": "gani2023"
+       },
+       {
+        "question": "Explain the purposes of scaling.",
+        "level": "Understand",
+        "similarity": 0.713,
+        "source": "gani2023"
+       },
+       {
+        "question": "State different objective of D.",
+        "level": "Remember",
+        "similarity": 0.711,
+        "source": "indian_engineering"
+       }
+      ],
+      "explanation": []
+     }
+    },
+    {
+     "question": {
+      "id": "2",
+      "number": "Q2",
+      "text": "Apply the three-schema architecture to design a database for a university library system, specifying how each schema (external, conceptual, internal) would be structured to support user queries, book management, and storage efficiency.",
+      "context": null,
+      "marks": 10.0,
+      "section": "B",
+      "group": null,
+      "option": null,
+      "course_outcome": "CO1",
+      "tagged_level": "Understand",
+      "locked": false
+     },
+     "prediction": {
+      "question": "Apply the three-schema architecture to design a database for a university library system, specifying how each schema (external, conceptual, internal) would be structured to support user queries, book management, and storage efficiency.",
+      "level": "Apply",
+      "level_id": 3,
+      "confidence": 0.5380889697861354,
+      "proba": {
+       "Remember": 0.0006,
+       "Understand": 0.0004,
+       "Apply": 0.5381,
+       "Analyze": 0.0,
+       "Evaluate": 0.0536,
+       "Create": 0.4073
+      },
+      "needs_review": true,
+      "lower_order": true,
+      "directives": [
+       {
+        "verb": "apply",
+        "kind": "imperative",
+        "phrase": null,
+        "negated": false
+       }
+      ],
+      "frame": null,
+      "evidence": "directive",
+      "votes": [
+       {
+        "agent": "Lexis",
+        "level": "Apply",
+        "confidence": 0.8071334546749263,
+        "proba": [
+         0.0009,
+         0.0006,
+         0.8071,
+         0.0,
+         0.0805,
+         0.1109
+        ],
+        "reasoning": null
+       },
+       {
+        "agent": "Archivist",
+        "level": "Create",
+        "confidence": 0.37536298010009844,
+        "proba": [
+         0.2639,
+         0.013,
+         0.105,
+         0.2296,
+         0.013,
+         0.3754
+        ],
+        "reasoning": null
+       },
+       {
+        "agent": "Socrates",
+        "level": "Create",
+        "confidence": 0.9999999955466841,
+        "proba": [
+         0.0,
+         0.0,
+         0.0,
+         0.0,
+         0.0,
+         1.0
+        ],
+        "reasoning": "The question asks the student to apply the three-schema architecture to a specific real-world system (university library), and to specify how each schema (external, conceptual, internal) would be structured to support specific functional requirements (user queries, book management, storage efficiency). This involves not just recalling definitions, but actively using the architecture in a practical, structured way to design a database system. The student must make decisions about how to organize data at different levels, relate them, and ensure they meet functional and efficiency goals. This requires planning, integration, and creation of a coherent, tailored solution — going beyond simple recall or explanation. Therefore, the cognitive process is not merely remembering or understanding, nor just applying a known method, but synthesizing and constructing a new, original design based on a framework. This aligns with the highest level of the revised Bloom's taxonomy."
+       }
+      ],
+      "neighbours": [
+       {
+        "question": "Rearrange it to design the correct schema that is suitable for the system implementation.",
+        "level": "Create",
+        "similarity": 0.735,
+        "source": "sangodiah2017"
+       },
+       {
+        "question": "Define schemas.",
+        "level": "Remember",
+        "similarity": 0.733,
+        "source": "gani2023"
+       },
+       {
+        "question": "Explain Architecture of Distributed database system.",
+        "level": "Analyze",
+        "similarity": 0.732,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "Design the architecture of the software system based on the requirements defined in the Software Requirement Specification document",
+        "level": "Create",
+        "similarity": 0.722,
+        "source": "yahya2012"
+       },
+       {
+        "question": "Explain Architecture of parallel databases.",
+        "level": "Remember",
+        "similarity": 0.713,
+        "source": "indian_engineering"
+       }
+      ],
+      "explanation": []
+     }
+    },
+    {
+     "question": {
+      "id": "3",
+      "number": "Q3",
+      "text": "Apply two-phase locking to a database transaction involving two concurrent updates to account balances, showing the lock acquisition and release sequence in a real-time scenario.",
+      "context": null,
+      "marks": 10.0,
+      "section": "B",
+      "group": null,
+      "option": null,
+      "course_outcome": "CO2",
+      "tagged_level": "Understand",
+      "locked": false
+     },
+     "prediction": {
+      "question": "Apply two-phase locking to a database transaction involving two concurrent updates to account balances, showing the lock acquisition and release sequence in a real-time scenario.",
+      "level": "Apply",
+      "level_id": 3,
+      "confidence": 0.9838884967094654,
+      "proba": {
+       "Remember": 0.001,
+       "Understand": 0.007,
+       "Apply": 0.9839,
+       "Analyze": 0.0032,
+       "Evaluate": 0.0,
+       "Create": 0.0049
+      },
+      "needs_review": false,
+      "lower_order": true,
+      "directives": [
+       {
+        "verb": "apply",
+        "kind": "imperative",
+        "phrase": null,
+        "negated": false
+       }
+      ],
+      "frame": null,
+      "evidence": "directive",
+      "votes": [
+       {
+        "agent": "Lexis",
+        "level": "Apply",
+        "confidence": 0.975902866932609,
+        "proba": [
+         0.0016,
+         0.0104,
+         0.9759,
+         0.0048,
+         0.0,
+         0.0074
+        ],
+        "reasoning": null
+       },
+       {
+        "agent": "Archivist",
+        "level": "Remember",
+        "confidence": 0.7300337643963316,
+        "proba": [
+         0.73,
+         0.1014,
+         0.0145,
+         0.1252,
+         0.0145,
+         0.0145
+        ],
+        "reasoning": null
+       },
+       {
+        "agent": "Socrates",
+        "level": "Apply",
+        "confidence": 0.9998597562631782,
+        "proba": [
+         0.0,
+         0.0,
+         0.9999,
+         0.0001,
+         0.0,
+         0.0
+        ],
+        "reasoning": "The question asks the student to apply a specific protocol (two-phase locking) to a real-time scenario involving concurrent database transactions. This requires the student to simulate or demonstrate the step-by-step lock acquisition and release process in a practical, dynamic context. This involves understanding the mechanism, applying it to a scenario, and showing the sequence of actions — which goes beyond simple recall or explanation. It requires executing a procedural method in a given situation, which aligns with the 'Apply' level in the revised Bloom's taxonomy. Although 'explain' is used, the core task is not just explaining but implementing the protocol in a scenario. Therefore, the cognitive demand is not merely understanding or recalling, but carrying out a procedure in a specific context."
+       }
+      ],
+      "neighbours": [
+       {
+        "question": "Explain any two parallel Database System Architecture in detail.",
+        "level": "Remember",
+        "similarity": 0.718,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "What is concurrency control?",
+        "level": "Remember",
+        "similarity": 0.712,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "Explain deadlock prevention and Recovery.",
+        "level": "Remember",
+        "similarity": 0.703,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "Explain Deferred database modification.",
+        "level": "Analyze",
+        "similarity": 0.696,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "Explain deferred database modification and immediate database modification and there difference in the context of recovery.",
+        "level": "Remember",
+        "similarity": 0.69,
+        "source": "indian_engineering"
+       }
+      ],
+      "explanation": []
+     }
+    },
+    {
+     "question": {
+      "id": "4",
+      "number": "Q4",
+      "text": "Apply B+ tree indexing to design a database query execution plan for retrieving all records from a large table of 1 million rows, given that the table is sorted by a key field and the query selects only a subset of rows based on that key.",
+      "context": null,
+      "marks": 10.0,
+      "section": "B",
+      "group": null,
+      "option": null,
+      "course_outcome": "CO3",
+      "tagged_level": "Remember",
+      "locked": false
+     },
+     "prediction": {
+      "question": "Apply B+ tree indexing to design a database query execution plan for retrieving all records from a large table of 1 million rows, given that the table is sorted by a key field and the query selects only a subset of rows based on that key.",
+      "level": "Apply",
+      "level_id": 3,
+      "confidence": 0.9719868035964186,
+      "proba": {
+       "Remember": 0.0012,
+       "Understand": 0.0015,
+       "Apply": 0.972,
+       "Analyze": 0.0,
+       "Evaluate": 0.0004,
+       "Create": 0.0249
+      },
+      "needs_review": false,
+      "lower_order": true,
+      "directives": [
+       {
+        "verb": "apply",
+        "kind": "imperative",
+        "phrase": null,
+        "negated": false
+       }
+      ],
+      "frame": null,
+      "evidence": "directive",
+      "votes": [
+       {
+        "agent": "Lexis",
+        "level": "Apply",
+        "confidence": 0.9579804572324165,
+        "proba": [
+         0.0018,
+         0.0023,
+         0.958,
+         0.0,
+         0.0005,
+         0.0374
+        ],
+        "reasoning": null
+       },
+       {
+        "agent": "Archivist",
+        "level": "Remember",
+        "confidence": 0.6360990420008203,
+        "proba": [
+         0.6361,
+         0.0122,
+         0.3152,
+         0.0122,
+         0.0122,
+         0.0122
+        ],
+        "reasoning": null
+       },
+       {
+        "agent": "Socrates",
+        "level": "Apply",
+        "confidence": 0.9999994963244234,
+        "proba": [
+         0.0,
+         0.0,
+         1.0,
+         0.0,
+         0.0,
+         0.0
+        ],
+        "reasoning": "The question asks the student to apply a specific data structure (B+ tree indexing) to design a query execution plan for a real-world scenario. This involves using a known procedure (B+ tree indexing) in a given context (large sorted table with subset selection). The student must implement or execute the indexing strategy within a database query plan. This is not merely recalling a definition or listing advantages, nor is it creating something entirely new. It requires using a known method in a practical situation. Therefore, the cognitive process is 'Apply' — carrying out a procedure in a given situation. Even though 'design' is involved, the core task is applying a known technique (B+ tree indexing) to a specific database query scenario. Thus, the highest required cognitive level is Apply."
+       }
+      ],
+      "neighbours": [
+       {
+        "question": "Explain advantages of indexing over sequential file.",
+        "level": "Remember",
+        "similarity": 0.715,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "What is indexing?",
+        "level": "Remember",
+        "similarity": 0.71,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "What is table overflow and how it is handled using extendible hashing?",
+        "level": "Remember",
+        "similarity": 0.71,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "Explain Architecture of parallel databases.",
+        "level": "Remember",
+        "similarity": 0.703,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "Consider following Database.",
+        "level": "Apply",
+        "similarity": 0.699,
+        "source": "indian_engineering"
+       }
+      ],
+      "explanation": []
+     }
+    }
+   ],
+   "distribution": {
+    "Remember": 0.15,
+    "Understand": 0.0,
+    "Apply": 0.75,
+    "Analyze": 0.0,
+    "Evaluate": 0.1,
+    "Create": 0.0
+   },
+   "weight_by": "marks",
+   "checks": [
+    {
+     "bound": {
+      "levels": [
+       "Remember",
+       "Understand"
+      ],
+      "min_share": null,
+      "max_share": 0.4,
+      "label": "Lower order (Remember + Understand)"
+     },
+     "description": "Lower order (Remember + Understand) <= 40% of marks",
+     "share": 0.15,
+     "ok": true,
+     "gap": 0.0
+    },
+    {
+     "bound": {
+      "levels": [
+       "Apply",
+       "Analyze"
+      ],
+      "min_share": 0.4,
+      "max_share": null,
+      "label": "Apply + Analyze"
+     },
+     "description": "Apply + Analyze >= 40% of marks",
+     "share": 0.75,
+     "ok": true,
+     "gap": 0.0
+    },
+    {
+     "bound": {
+      "levels": [
+       "Evaluate",
+       "Create"
+      ],
+      "min_share": 0.1,
+      "max_share": null,
+      "label": "Higher order (Evaluate + Create)"
+     },
+     "description": "Higher order (Evaluate + Create) >= 10% of marks",
+     "share": 0.1,
+     "ok": true,
+     "gap": 0.0
+    }
+   ],
+   "compliant": true,
+   "needs_review": [
+    "2"
+   ]
+  },
+  "final_paper": {
+   "title": "dbms_paper",
+   "questions": [
+    {
+     "id": "1a",
+     "number": "Q1 (a)",
+     "text": "Define a primary key.",
+     "context": null,
+     "marks": 2.0,
+     "section": "A",
+     "group": null,
+     "option": null,
+     "course_outcome": "CO1",
+     "tagged_level": "Remember",
+     "locked": false
+    },
+    {
+     "id": "1b",
+     "number": "Q1 (b)",
+     "text": "Evaluate whether the use of a foreign key in a database schema is more beneficial than problematic for ensuring data integrity in a multinational company's customer relationship management system, considering scalability, consistency, and potential performance issues.",
+     "context": null,
+     "marks": 2.0,
+     "section": "A",
+     "group": null,
+     "option": null,
+     "course_outcome": "CO1",
+     "tagged_level": "Remember",
+     "locked": false
+    },
+    {
+     "id": "1c",
+     "number": "Q1 (c)",
+     "text": "Evaluate which of the ACID properties is most critical for ensuring data reliability in a high-traffic online banking system, justifying your choice with considerations of transaction integrity and system recovery under failure.",
+     "context": null,
+     "marks": 2.0,
+     "section": "A",
+     "group": null,
+     "option": null,
+     "course_outcome": "CO2",
+     "tagged_level": "Remember",
+     "locked": false
+    },
+    {
+     "id": "1d",
+     "number": "Q1 (d)",
+     "text": "What is a view?",
+     "context": null,
+     "marks": 2.0,
+     "section": "A",
+     "group": null,
+     "option": null,
+     "course_outcome": "CO1",
+     "tagged_level": "Remember",
+     "locked": false
+    },
+    {
+     "id": "1e",
+     "number": "Q1 (e)",
+     "text": "State the purpose of normalization.",
+     "context": null,
+     "marks": 2.0,
+     "section": "A",
+     "group": null,
+     "option": null,
+     "course_outcome": "CO3",
+     "tagged_level": "Remember",
+     "locked": false
+    },
+    {
+     "id": "2",
+     "number": "Q2",
+     "text": "Apply the three-schema architecture to design a database for a university library system, specifying how each schema (external, conceptual, internal) would be structured to support user queries, book management, and storage efficiency.",
+     "context": null,
+     "marks": 10.0,
+     "section": "B",
+     "group": null,
+     "option": null,
+     "course_outcome": "CO1",
+     "tagged_level": "Understand",
+     "locked": false
+    },
+    {
+     "id": "3",
+     "number": "Q3",
+     "text": "Apply two-phase locking to a database transaction involving two concurrent updates to account balances, showing the lock acquisition and release sequence in a real-time scenario.",
+     "context": null,
+     "marks": 10.0,
+     "section": "B",
+     "group": null,
+     "option": null,
+     "course_outcome": "CO2",
+     "tagged_level": "Understand",
+     "locked": false
+    },
+    {
+     "id": "4",
+     "number": "Q4",
+     "text": "Apply B+ tree indexing to design a database query execution plan for retrieving all records from a large table of 1 million rows, given that the table is sorted by a key field and the query selects only a subset of rows based on that key.",
+     "context": null,
+     "marks": 10.0,
+     "section": "B",
+     "group": null,
+     "option": null,
+     "course_outcome": "CO3",
+     "tagged_level": "Remember",
+     "locked": false
+    }
+   ],
+   "total_marks": 40.0,
+   "warnings": []
+  }
+ },
+ "error": null,
+ "trace": [
+  {
+   "at": "2026-10-26T09:46:02.340839Z",
+   "agent": "Lexis",
+   "action": "classified",
+   "detail": {
+    "n": 8,
+    "model": "embedlex"
+   },
+   "ms": 43.22629200760275
+  },
+  {
+   "at": "2026-10-26T09:46:02.352329Z",
+   "agent": "Archivist",
+   "action": "retrieved neighbours",
+   "detail": {
+    "k": 8
+   },
+   "ms": 11.45245903171599
+  },
+  {
+   "at": "2026-10-26T09:46:06.923056Z",
+   "agent": "Socrates",
+   "action": "answered",
+   "detail": {
+    "question": "List the ACID properties.",
+    "level": "Remember",
+    "confidence": 1.0
+   },
+   "ms": 4570.636332966387
+  },
+  {
+   "at": "2026-10-26T09:46:11.141583Z",
+   "agent": "Socrates",
+   "action": "answered",
+   "detail": {
+    "question": "Describe two-phase locking with an example.",
+    "level": "Understand",
+    "confidence": 1.0
+   },
+   "ms": 8789.13658298552
+  },
+  {
+   "at": "2026-10-26T09:46:17.265110Z",
+   "agent": "Socrates",
+   "action": "answered",
+   "detail": {
+    "question": "Explain the three-schema architecture of a DBMS.",
+    "level": "Understand",
+    "confidence": 1.0
+   },
+   "ms": 14912.609707913361
+  },
+  {
+   "at": "2026-10-26T09:46:17.265833Z",
+   "agent": "Socrates",
+   "action": "reasoned votes",
+   "detail": {
+    "n": 3,
+    "model": "qwen3:4b-instruct-2507-q4_K_M"
+   },
+   "ms": 14913.361165905371
+  },
+  {
+   "at": "2026-10-26T09:46:17.267801Z",
+   "agent": "Arbiter",
+   "action": "pooled votes",
+   "detail": {
+    "n": 8,
+    "sent_to_llm": 3,
+    "needs_review": 0
+   },
+   "ms": 1.8929160432890058
+  },
+  {
+   "at": "2026-10-26T09:46:17.268098Z",
+   "agent": "Conductor",
+   "action": "assessed paper",
+   "detail": {
+    "questions": 8,
+    "compliant": false,
+    "needs_review": 0
+   },
+   "ms": 14970.395125099458
+  },
+  {
+   "at": "2026-10-26T09:46:17.268605Z",
+   "agent": "Architect",
+   "action": "planned rewrites",
+   "detail": {
+    "jobs": 5,
+    "blueprint": "balanced-ug"
+   },
+   "ms": 0.4533750470727682
+  },
+  {
+   "at": "2026-10-26T09:46:17.268680Z",
+   "agent": "Composer",
+   "action": "drafting",
+   "detail": {
+    "question_id": "2",
+    "attempt": 1,
+    "from_level": "Understand",
+    "to_level": "Apply",
+    "feedback": []
+   },
+   "ms": 0.005207955837249756
+  },
+  {
+   "at": "2026-10-26T09:46:19.095902Z",
+   "agent": "Composer",
+   "action": "drafted",
+   "detail": {
+    "question_id": "2",
+    "attempt": 1,
+    "text": "Apply the three-schema architecture to design a database for a university library system, specifying how each schema (external, conceptual, internal) would be structured to support user queries, book management, and storage efficiency."
+   },
+   "ms": 1827.2123329807073
+  },
+  {
+   "at": "2026-10-26T09:46:19.131143Z",
+   "agent": "Lexis",
+   "action": "classified",
+   "detail": {
+    "n": 1,
+    "model": "embedlex"
+   },
+   "ms": 5.38029195740819
+  },
+  {
+   "at": "2026-10-26T09:46:19.147371Z",
+   "agent": "Archivist",
+   "action": "retrieved neighbours",
+   "detail": {
+    "k": 8
+   },
+   "ms": 16.191667062230408
+  },
+  {
+   "at": "2026-10-26T09:46:19.147506Z",
+   "agent": "Arbiter",
+   "action": "pooled votes",
+   "detail": {
+    "n": 1,
+    "sent_to_llm": 0,
+    "needs_review": 0
+   },
+   "ms": 0.09287497960031033
+  },
+  {
+   "at": "2026-10-26T09:46:19.147539Z",
+   "agent": "Verifier",
+   "action": "checked",
+   "detail": {
+    "question_id": "2",
+    "attempt": 1,
+    "passed": true,
+    "failed": [],
+    "predicted_level": "Apply",
+    "checks": [
+     {
+      "name": "level",
+      "passed": true,
+      "detail": "classified as Apply (P(Apply)=0.81)",
+      "score": 0.807
+     },
+     {
+      "name": "form",
+      "passed": true,
+      "detail": "32 words",
+      "score": null
+     },
+     {
+      "name": "topic",
+      "passed": true,
+      "detail": "content-word overlap 0.67, similarity 0.82",
+      "score": 0.667
+     },
+     {
+      "name": "not_duplicate",
+      "passed": true,
+      "detail": "similarity to original 0.82, to other questions 0.58",
+      "score": 0.823
+     }
+    ]
+   },
+   "ms": 51.593833952210844
+  },
+  {
+   "at": "2026-10-26T09:46:19.147570Z",
+   "agent": "Composer",
+   "action": "drafting",
+   "detail": {
+    "question_id": "3",
+    "attempt": 1,
+    "from_level": "Understand",
+    "to_level": "Apply",
+    "feedback": []
+   },
+   "ms": 0.0006249174475669861
+  },
+  {
+   "at": "2026-10-26T09:46:20.680287Z",
+   "agent": "Composer",
+   "action": "drafted",
+   "detail": {
+    "question_id": "3",
+    "attempt": 1,
+    "text": "Apply two-phase locking to a database transaction involving two concurrent updates to account balances, showing the lock acquisition and release sequence in a real-time scenario."
+   },
+   "ms": 1532.6907499693334
+  },
+  {
+   "at": "2026-10-26T09:46:20.732163Z",
+   "agent": "Lexis",
+   "action": "classified",
+   "detail": {
+    "n": 1,
+    "model": "embedlex"
+   },
+   "ms": 5.373083055019379
+  },
+  {
+   "at": "2026-10-26T09:46:20.746360Z",
+   "agent": "Archivist",
+   "action": "retrieved neighbours",
+   "detail": {
+    "k": 8
+   },
+   "ms": 14.149958034977317
+  },
+  {
+   "at": "2026-10-26T09:46:20.746508Z",
+   "agent": "Arbiter",
+   "action": "pooled votes",
+   "detail": {
+    "n": 1,
+    "sent_to_llm": 0,
+    "needs_review": 0
+   },
+   "ms": 0.10208401363343
+  },
+  {
+   "at": "2026-10-26T09:46:20.746548Z",
+   "agent": "Verifier",
+   "action": "checked",
+   "detail": {
+    "question_id": "3",
+    "attempt": 1,
+    "passed": true,
+    "failed": [],
+    "predicted_level": "Apply",
+    "checks": [
+     {
+      "name": "level",
+      "passed": true,
+      "detail": "classified as Apply (P(Apply)=0.98)",
+      "score": 0.976
+     },
+     {
+      "name": "form",
+      "passed": true,
+      "detail": "25 words",
+      "score": null
+     },
+     {
+      "name": "topic",
+      "passed": true,
+      "detail": "content-word overlap 1.00, similarity 0.77",
+      "score": 1.0
+     },
+     {
+      "name": "not_duplicate",
+      "passed": true,
+      "detail": "similarity to original 0.77, to other questions 0.62",
+      "score": 0.771
+     }
+    ]
+   },
+   "ms": 66.18983298540115
+  },
+  {
+   "at": "2026-10-26T09:46:20.746599Z",
+   "agent": "Composer",
+   "action": "drafting",
+   "detail": {
+    "question_id": "4",
+    "attempt": 1,
+    "from_level": "Remember",
+    "to_level": "Apply",
+    "feedback": []
+   },
+   "ms": 0.0007919734343886375
+  },
+  {
+   "at": "2026-10-26T09:46:22.771464Z",
+   "agent": "Composer",
+   "action": "drafted",
+   "detail": {
+    "question_id": "4",
+    "attempt": 1,
+    "text": "Apply B+ tree indexing to design a database query execution plan for retrieving all records from a large table of 1 million rows, given that the table is sorted by a key field and the query selects only a subset of rows based on that key."
+   },
+   "ms": 2024.8340839752927
+  },
+  {
+   "at": "2026-10-26T09:46:22.826483Z",
+   "agent": "Lexis",
+   "action": "classified",
+   "detail": {
+    "n": 1,
+    "model": "embedlex"
+   },
+   "ms": 5.848375032655895
+  },
+  {
+   "at": "2026-10-26T09:46:22.837202Z",
+   "agent": "Archivist",
+   "action": "retrieved neighbours",
+   "detail": {
+    "k": 8
+   },
+   "ms": 10.675583966076374
+  },
+  {
+   "at": "2026-10-26T09:46:22.837346Z",
+   "agent": "Arbiter",
+   "action": "pooled votes",
+   "detail": {
+    "n": 1,
+    "sent_to_llm": 0,
+    "needs_review": 0
+   },
+   "ms": 0.10466598905622959
+  },
+  {
+   "at": "2026-10-26T09:46:22.837377Z",
+   "agent": "Verifier",
+   "action": "checked",
+   "detail": {
+    "question_id": "4",
+    "attempt": 1,
+    "passed": true,
+    "failed": [],
+    "predicted_level": "Apply",
+    "checks": [
+     {
+      "name": "level",
+      "passed": true,
+      "detail": "classified as Apply (P(Apply)=0.96)",
+      "score": 0.958
+     },
+     {
+      "name": "form",
+      "passed": true,
+      "detail": "46 words",
+      "score": null
+     },
+     {
+      "name": "topic",
+      "passed": true,
+      "detail": "content-word overlap 1.00, similarity 0.73",
+      "score": 1.0
+     },
+     {
+      "name": "not_duplicate",
+      "passed": true,
+      "detail": "similarity to original 0.73, to other questions 0.68",
+      "score": 0.732
+     }
+    ]
+   },
+   "ms": 65.83970796782523
+  },
+  {
+   "at": "2026-10-26T09:46:22.837410Z",
+   "agent": "Composer",
+   "action": "drafting",
+   "detail": {
+    "question_id": "1c",
+    "attempt": 1,
+    "from_level": "Remember",
+    "to_level": "Evaluate",
+    "feedback": []
+   },
+   "ms": 0.0007910421118140221
+  },
+  {
+   "at": "2026-10-26T09:46:24.603985Z",
+   "agent": "Composer",
+   "action": "drafted",
+   "detail": {
+    "question_id": "1c",
+    "attempt": 1,
+    "text": "Critique the ACID properties in the context of database transaction management, assessing which property is most critical for ensuring data consistency in high-traffic systems and justify your evaluation with specific performance and reliability considerations."
+   },
+   "ms": 1766.550665954128
+  },
+  {
+   "at": "2026-10-26T09:46:24.638887Z",
+   "agent": "Lexis",
+   "action": "classified",
+   "detail": {
+    "n": 1,
+    "model": "embedlex"
+   },
+   "ms": 4.218791960738599
+  },
+  {
+   "at": "2026-10-26T09:46:24.649252Z",
+   "agent": "Archivist",
+   "action": "retrieved neighbours",
+   "detail": {
+    "k": 8
+   },
+   "ms": 10.319332941435277
+  },
+  {
+   "at": "2026-10-26T09:46:24.649474Z",
+   "agent": "Arbiter",
+   "action": "pooled votes",
+   "detail": {
+    "n": 1,
+    "sent_to_llm": 0,
+    "needs_review": 0
+   },
+   "ms": 0.17220794688910246
+  },
+  {
+   "at": "2026-10-26T09:46:27.948068Z",
+   "agent": "Verifier",
+   "action": "checked",
+   "detail": {
+    "question_id": "1c",
+    "attempt": 1,
+    "passed": false,
+    "failed": [
+     "student"
+    ],
+    "predicted_level": "Evaluate",
+    "checks": [
+     {
+      "name": "level",
+      "passed": true,
+      "detail": "classified as Evaluate (P(Evaluate)=0.99)",
+      "score": 0.993
+     },
+     {
+      "name": "form",
+      "passed": true,
+      "detail": "34 words",
+      "score": null
+     },
+     {
+      "name": "topic",
+      "passed": true,
+      "detail": "content-word overlap 1.00, similarity 0.66",
+      "score": 1.0
+     },
+     {
+      "name": "not_duplicate",
+      "passed": true,
+      "detail": "similarity to original 0.66, to other questions 0.69",
+      "score": 0.693
+     },
+     {
+      "name": "student",
+      "passed": false,
+      "detail": "The question asks for a critique of the ACID properties, an assessment of which is most critical for high-traffic systems, and a justification with performance and reliability considerations. This requires analysis, judgment, and synthesis of concepts—such as evaluating trade-offs between atomicity,",
+      "score": null
+     }
+    ]
+   },
+   "ms": 3343.9985000295565
+  },
+  {
+   "at": "2026-10-26T09:46:27.948171Z",
+   "agent": "Composer",
+   "action": "drafting",
+   "detail": {
+    "question_id": "1c",
+    "attempt": 2,
+    "from_level": "Remember",
+    "to_level": "Evaluate",
+    "feedback": [
+     "student: The question asks for a critique of the ACID properties, an assessment of which is most critical for high-traffic systems, and a justification with performance and reliability considerations. This requires analysis, judgment, and synthesis of concepts—such as evaluating trade-offs between atomicity,"
+    ]
+   },
+   "ms": 0.001500011421740055
+  },
+  {
+   "at": "2026-10-26T09:46:30.021555Z",
+   "agent": "Composer",
+   "action": "drafted",
+   "detail": {
+    "question_id": "1c",
+    "attempt": 2,
+    "text": "Evaluate which of the ACID properties is most critical for ensuring data reliability in a high-traffic online banking system, justifying your choice with considerations of transaction integrity and system recovery under failure."
+   },
+   "ms": 2073.352332925424
+  },
+  {
+   "at": "2026-10-26T09:46:30.187824Z",
+   "agent": "Lexis",
+   "action": "classified",
+   "detail": {
+    "n": 1,
+    "model": "embedlex"
+   },
+   "ms": 4.79212508071214
+  },
+  {
+   "at": "2026-10-26T09:46:30.198122Z",
+   "agent": "Archivist",
+   "action": "retrieved neighbours",
+   "detail": {
+    "k": 8
+   },
+   "ms": 10.250582941807806
+  },
+  {
+   "at": "2026-10-26T09:46:30.198300Z",
+   "agent": "Arbiter",
+   "action": "pooled votes",
+   "detail": {
+    "n": 1,
+    "sent_to_llm": 0,
+    "needs_review": 0
+   },
+   "ms": 0.1312500098720193
+  },
+  {
+   "at": "2026-10-26T09:46:33.249977Z",
+   "agent": "Verifier",
+   "action": "checked",
+   "detail": {
+    "question_id": "1c",
+    "attempt": 2,
+    "passed": true,
+    "failed": [],
+    "predicted_level": "Evaluate",
+    "checks": [
+     {
+      "name": "level",
+      "passed": true,
+      "detail": "classified as Evaluate (P(Evaluate)=0.99)",
+      "score": 0.994
+     },
+     {
+      "name": "form",
+      "passed": true,
+      "detail": "32 words",
+      "score": null
+     },
+     {
+      "name": "topic",
+      "passed": true,
+      "detail": "content-word overlap 1.00, similarity 0.62",
+      "score": 1.0
+     },
+     {
+      "name": "not_duplicate",
+      "passed": true,
+      "detail": "similarity to original 0.62, to other questions 0.61",
+      "score": 0.617
+     },
+     {
+      "name": "student",
+      "passed": true,
+      "detail": "",
+      "score": null
+     }
+    ]
+   },
+   "ms": 3228.330166079104
+  },
+  {
+   "at": "2026-10-26T09:46:33.250157Z",
+   "agent": "Composer",
+   "action": "drafting",
+   "detail": {
+    "question_id": "1b",
+    "attempt": 1,
+    "from_level": "Remember",
+    "to_level": "Evaluate",
+    "feedback": []
+   },
+   "ms": 0.0020420411601662636
+  },
+  {
+   "at": "2026-10-26T09:46:35.555546Z",
+   "agent": "Composer",
+   "action": "drafted",
+   "detail": {
+    "question_id": "1b",
+    "attempt": 1,
+    "text": "Evaluate whether the use of a foreign key in a database schema is more beneficial than problematic for ensuring data integrity in a multinational company's customer relationship management system, considering scalability, consistency, and potential performance issues."
+   },
+   "ms": 2305.36183307413
+  },
+  {
+   "at": "2026-10-26T09:46:35.585530Z",
+   "agent": "Lexis",
+   "action": "classified",
+   "detail": {
+    "n": 1,
+    "model": "embedlex"
+   },
+   "ms": 4.281124914996326
+  },
+  {
+   "at": "2026-10-26T09:46:35.588269Z",
+   "agent": "Archivist",
+   "action": "retrieved neighbours",
+   "detail": {
+    "k": 8
+   },
+   "ms": 2.7092499658465385
+  },
+  {
+   "at": "2026-10-26T09:46:35.588372Z",
+   "agent": "Arbiter",
+   "action": "pooled votes",
+   "detail": {
+    "n": 1,
+    "sent_to_llm": 0,
+    "needs_review": 0
+   },
+   "ms": 0.08716701995581388
+  },
+  {
+   "at": "2026-10-26T09:46:38.358392Z",
+   "agent": "Verifier",
+   "action": "checked",
+   "detail": {
+    "question_id": "1b",
+    "attempt": 1,
+    "passed": true,
+    "failed": [],
+    "predicted_level": "Evaluate",
+    "checks": [
+     {
+      "name": "level",
+      "passed": true,
+      "detail": "classified as Evaluate (P(Evaluate)=0.98)",
+      "score": 0.982
+     },
+     {
+      "name": "form",
+      "passed": true,
+      "detail": "36 words",
+      "score": null
+     },
+     {
+      "name": "topic",
+      "passed": true,
+      "detail": "content-word overlap 1.00, similarity 0.75",
+      "score": 1.0
+     },
+     {
+      "name": "not_duplicate",
+      "passed": true,
+      "detail": "similarity to original 0.75, to other questions 0.76",
+      "score": 0.764
+     },
+     {
+      "name": "student",
+      "passed": true,
+      "detail": "",
+      "score": null
+     }
+    ]
+   },
+   "ms": 2802.7716249926016
+  },
+  {
+   "at": "2026-10-26T09:46:38.364195Z",
+   "agent": "Lexis",
+   "action": "classified",
+   "detail": {
+    "n": 8,
+    "model": "embedlex"
+   },
+   "ms": 5.307332961820066
+  },
+  {
+   "at": "2026-10-26T09:46:38.384848Z",
+   "agent": "Archivist",
+   "action": "retrieved neighbours",
+   "detail": {
+    "k": 8
+   },
+   "ms": 20.58679109904915
+  },
+  {
+   "at": "2026-10-26T09:46:45.931870Z",
+   "agent": "Socrates",
+   "action": "answered",
+   "detail": {
+    "question": "Apply the three-schema architecture to design a database for a university library system, specifying how each schema (external, conceptual, internal) would be structured to support user queries, book management, and storage efficiency.",
+    "level": "Create",
+    "confidence": 1.0
+   },
+   "ms": 7546.892083948478
+  },
+  {
+   "at": "2026-10-26T09:46:51.484883Z",
+   "agent": "Socrates",
+   "action": "answered",
+   "detail": {
+    "question": "Evaluate whether the use of a foreign key in a database schema is more beneficial than problematic for ensuring data integrity in a multinational company's customer relationship management system, considering scalability, consistency, and potential performance issues.",
+    "level": "Evaluate",
+    "confidence": 1.0
+   },
+   "ms": 13099.875167012215
+  },
+  {
+   "at": "2026-10-26T09:46:57.537171Z",
+   "agent": "Socrates",
+   "action": "answered",
+   "detail": {
+    "question": "Apply two-phase locking to a database transaction involving two concurrent updates to account balances, showing the lock acquisition and release sequence in a real-time scenario.",
+    "level": "Apply",
+    "confidence": 0.9999
+   },
+   "ms": 19152.133792056702
+  },
+  {
+   "at": "2026-10-26T09:47:03.998854Z",
+   "agent": "Socrates",
+   "action": "answered",
+   "detail": {
+    "question": "Apply B+ tree indexing to design a database query execution plan for retrieving all records from a large table of 1 million rows, given that the table is sorted by a key field and the query selects only a subset of rows based on that key.",
+    "level": "Apply",
+    "confidence": 1.0
+   },
+   "ms": 25613.770209020004
+  },
+  {
+   "at": "2026-10-26T09:47:03.999604Z",
+   "agent": "Socrates",
+   "action": "reasoned votes",
+   "detail": {
+    "n": 4,
+    "model": "qwen3:4b-instruct-2507-q4_K_M"
+   },
+   "ms": 25614.543625037186
+  },
+  {
+   "at": "2026-10-26T09:47:04.001414Z",
+   "agent": "Arbiter",
+   "action": "pooled votes",
+   "detail": {
+    "n": 8,
+    "sent_to_llm": 4,
+    "needs_review": 1
+   },
+   "ms": 1.7667080974206328
+  },
+  {
+   "at": "2026-10-26T09:47:04.001647Z",
+   "agent": "Conductor",
+   "action": "assessed paper",
+   "detail": {
+    "questions": 8,
+    "compliant": true,
+    "needs_review": 1
+   },
+   "ms": 25642.636792035773
+  }
+ ]
+}

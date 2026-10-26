@@ -1,9 +1,9 @@
 {
- "id": "5597d8243594",
+ "id": "9428e5e369ca",
  "kind": "rebalance",
  "status": "done",
- "created_at": "2026-10-26T09:14:32.565194Z",
- "finished_at": "2026-10-26T09:14:44.224055Z",
+ "created_at": "2026-10-26T09:47:39.823907Z",
+ "finished_at": "2026-10-26T09:47:51.316608Z",
  "result": {
   "before": {
    "paper": {
@@ -3224,36 +3224,69 @@
  "error": null,
  "trace": [
   {
-   "at": "2026-10-26T09:14:32.567312Z",
+   "at": "2026-10-26T09:47:39.827348Z",
    "agent": "Lexis",
    "action": "classified",
    "detail": {
     "n": 11,
     "model": "embedlex"
    },
-   "ms": 2.0024169934913516
+   "ms": 3.2860409701243043
   },
   {
-   "at": "2026-10-26T09:14:32.590901Z",
+   "at": "2026-10-26T09:47:39.830336Z",
    "agent": "Archivist",
    "action": "retrieved neighbours",
    "detail": {
     "k": 8
    },
-   "ms": 23.57945905532688
+   "ms": 2.8834999538958073
   },
   {
-   "at": "2026-10-26T09:14:32.625973Z",
+   "at": "2026-10-26T09:47:39.832117Z",
+   "agent": "Socrates",
+   "action": "answered",
+   "detail": {
+    "question": "Describe the producer-consumer problem and its solution using semaphores.",
+    "level": "Understand",
+    "confidence": 1.0
+   },
+   "ms": 1.7139589181169868
+  },
+  {
+   "at": "2026-10-26T09:47:39.833140Z",
+   "agent": "Socrates",
+   "action": "answered",
+   "detail": {
+    "question": "Explain the difference between preemptive and non-preemptive scheduling with suitable examples.",
+    "level": "Analyze",
+    "confidence": 1.0
+   },
+   "ms": 2.73966696113348
+  },
+  {
+   "at": "2026-10-26T09:47:39.836878Z",
+   "agent": "Socrates",
+   "action": "answered",
+   "detail": {
+    "question": "What is a context switch?",
+    "level": "Remember",
+    "confidence": 1.0
+   },
+   "ms": 6.4752919133752584
+  },
+  {
+   "at": "2026-10-26T09:47:39.837072Z",
    "agent": "Socrates",
    "action": "reasoned votes",
    "detail": {
     "n": 3,
     "model": "qwen3:4b-instruct-2507-q4_K_M"
    },
-   "ms": 35.05008399952203
+   "ms": 6.672249990515411
   },
   {
-   "at": "2026-10-26T09:14:32.626407Z",
+   "at": "2026-10-26T09:47:39.838208Z",
    "agent": "Arbiter",
    "action": "pooled votes",
    "detail": {
@@ -3261,10 +3294,10 @@
     "sent_to_llm": 3,
     "needs_review": 1
    },
-   "ms": 0.4279169952496886
+   "ms": 1.1088750325143337
   },
   {
-   "at": "2026-10-26T09:14:32.626454Z",
+   "at": "2026-10-26T09:47:39.838343Z",
    "agent": "Conductor",
    "action": "assessed paper",
    "detail": {
@@ -3272,20 +3305,33 @@
     "compliant": false,
     "needs_review": 1
    },
-   "ms": 61.14733300637454
+   "ms": 14.297749963589013
   },
   {
-   "at": "2026-10-26T09:14:32.626973Z",
+   "at": "2026-10-26T09:47:39.839756Z",
    "agent": "Architect",
    "action": "planned rewrites",
    "detail": {
     "jobs": 4,
     "blueprint": "balanced-ug"
    },
-   "ms": 0.5154160317033529
+   "ms": 1.3877499150112271
   },
   {
-   "at": "2026-10-26T09:14:35.059362Z",
+   "at": "2026-10-26T09:47:39.854209Z",
+   "agent": "Composer",
+   "action": "drafting",
+   "detail": {
+    "question_id": "6",
+    "attempt": 1,
+    "from_level": "Remember",
+    "to_level": "Apply",
+    "feedback": []
+   },
+   "ms": 0.003249966539442539
+  },
+  {
+   "at": "2026-10-26T09:47:42.612199Z",
    "agent": "Composer",
    "action": "drafted",
    "detail": {
@@ -3293,29 +3339,29 @@
     "attempt": 1,
     "text": "Apply demand paging to a system with 512 MB physical memory and 2 GB virtual memory, where a process initially loads 128 MB of code and data. Show how the system handles the loading of additional 32 MB of code segments using demand paging, including the steps and memory management actions involved."
    },
-   "ms": 2432.3251669993624
+   "ms": 2757.9503749730065
   },
   {
-   "at": "2026-10-26T09:14:35.101965Z",
+   "at": "2026-10-26T09:47:42.667585Z",
    "agent": "Lexis",
    "action": "classified",
    "detail": {
     "n": 1,
     "model": "embedlex"
    },
-   "ms": 5.17204194329679
+   "ms": 5.977457971312106
   },
   {
-   "at": "2026-10-26T09:14:35.123698Z",
+   "at": "2026-10-26T09:47:42.683223Z",
    "agent": "Archivist",
    "action": "retrieved neighbours",
    "detail": {
     "k": 8
    },
-   "ms": 21.719458047300577
+   "ms": 15.578874968923628
   },
   {
-   "at": "2026-10-26T09:14:35.123854Z",
+   "at": "2026-10-26T09:47:42.683477Z",
    "agent": "Arbiter",
    "action": "pooled votes",
    "detail": {
@@ -3323,22 +3369,62 @@
     "sent_to_llm": 0,
     "needs_review": 0
    },
-   "ms": 0.14224997721612453
+   "ms": 0.17529202159494162
   },
   {
-   "at": "2026-10-26T09:14:35.123875Z",
+   "at": "2026-10-26T09:47:42.683513Z",
    "agent": "Verifier",
    "action": "checked",
    "detail": {
     "question_id": "6",
     "attempt": 1,
     "passed": true,
-    "failed": []
+    "failed": [],
+    "predicted_level": "Apply",
+    "checks": [
+     {
+      "name": "level",
+      "passed": true,
+      "detail": "classified as Apply (P(Apply)=0.97)",
+      "score": 0.966
+     },
+     {
+      "name": "form",
+      "passed": true,
+      "detail": "52 words",
+      "score": null
+     },
+     {
+      "name": "topic",
+      "passed": true,
+      "detail": "content-word overlap 1.00, similarity 0.78",
+      "score": 1.0
+     },
+     {
+      "name": "not_duplicate",
+      "passed": true,
+      "detail": "similarity to original 0.78, to other questions 0.67",
+      "score": 0.78
+     }
+    ]
    },
-   "ms": 64.48887498117983
+   "ms": 70.9581250557676
   },
   {
-   "at": "2026-10-26T09:14:37.179153Z",
+   "at": "2026-10-26T09:47:42.683566Z",
+   "agent": "Composer",
+   "action": "drafting",
+   "detail": {
+    "question_id": "5",
+    "attempt": 1,
+    "from_level": "Remember",
+    "to_level": "Apply",
+    "feedback": []
+   },
+   "ms": 0.0006669433787465096
+  },
+  {
+   "at": "2026-10-26T09:47:44.627123Z",
    "agent": "Composer",
    "action": "drafted",
    "detail": {
@@ -3346,29 +3432,29 @@
     "attempt": 1,
     "text": "Apply paging to a memory management scenario with 4 pages and 8 frame slots; show how processes are loaded and pages are mapped to frames, including page table entries and handling page faults."
    },
-   "ms": 2055.1642919890583
+   "ms": 1943.525957991369
   },
   {
-   "at": "2026-10-26T09:14:37.215963Z",
+   "at": "2026-10-26T09:47:44.661161Z",
    "agent": "Lexis",
    "action": "classified",
    "detail": {
     "n": 1,
     "model": "embedlex"
    },
-   "ms": 5.308000021614134
+   "ms": 4.2642500484362245
   },
   {
-   "at": "2026-10-26T09:14:37.228234Z",
+   "at": "2026-10-26T09:47:44.664441Z",
    "agent": "Archivist",
    "action": "retrieved neighbours",
    "detail": {
     "k": 8
    },
-   "ms": 12.252375017851591
+   "ms": 3.2363749342039227
   },
   {
-   "at": "2026-10-26T09:14:37.228406Z",
+   "at": "2026-10-26T09:47:44.664595Z",
    "agent": "Arbiter",
    "action": "pooled votes",
    "detail": {
@@ -3376,22 +3462,62 @@
     "sent_to_llm": 0,
     "needs_review": 0
    },
-   "ms": 0.15700003132224083
+   "ms": 0.11504197027534246
   },
   {
-   "at": "2026-10-26T09:14:37.228432Z",
+   "at": "2026-10-26T09:47:44.664626Z",
    "agent": "Verifier",
    "action": "checked",
    "detail": {
     "question_id": "5",
     "attempt": 1,
     "passed": true,
-    "failed": []
+    "failed": [],
+    "predicted_level": "Apply",
+    "checks": [
+     {
+      "name": "level",
+      "passed": true,
+      "detail": "classified as Apply (P(Apply)=0.98)",
+      "score": 0.981
+     },
+     {
+      "name": "form",
+      "passed": true,
+      "detail": "33 words",
+      "score": null
+     },
+     {
+      "name": "topic",
+      "passed": true,
+      "detail": "content-word overlap 0.00, similarity 0.69",
+      "score": 0.0
+     },
+     {
+      "name": "not_duplicate",
+      "passed": true,
+      "detail": "similarity to original 0.69, to other questions 0.75",
+      "score": 0.751
+     }
+    ]
    },
-   "ms": 49.235749989748
+   "ms": 37.43587504141033
   },
   {
-   "at": "2026-10-26T09:14:38.959063Z",
+   "at": "2026-10-26T09:47:44.664666Z",
+   "agent": "Composer",
+   "action": "drafting",
+   "detail": {
+    "question_id": "3",
+    "attempt": 1,
+    "from_level": "Understand",
+    "to_level": "Apply",
+    "feedback": []
+   },
+   "ms": 0.0006670597940683365
+  },
+  {
+   "at": "2026-10-26T09:47:46.409956Z",
    "agent": "Composer",
    "action": "drafted",
    "detail": {
@@ -3399,29 +3525,29 @@
     "attempt": 1,
     "text": "Implement a solution to the producer-consumer problem using semaphores in a shared memory environment where two threads produce and consume data from a buffer of size 5, ensuring no overflow or underflow occurs."
    },
-   "ms": 1730.5620829574764
+   "ms": 1745.265542063862
   },
   {
-   "at": "2026-10-26T09:14:38.996288Z",
+   "at": "2026-10-26T09:47:46.447187Z",
    "agent": "Lexis",
    "action": "classified",
    "detail": {
     "n": 1,
     "model": "embedlex"
    },
-   "ms": 6.88741693738848
+   "ms": 5.806667031720281
   },
   {
-   "at": "2026-10-26T09:14:39.008583Z",
+   "at": "2026-10-26T09:47:46.457640Z",
    "agent": "Archivist",
    "action": "retrieved neighbours",
    "detail": {
     "k": 8
    },
-   "ms": 12.268792022950947
+   "ms": 10.399874998256564
   },
   {
-   "at": "2026-10-26T09:14:39.008787Z",
+   "at": "2026-10-26T09:47:46.457817Z",
    "agent": "Arbiter",
    "action": "pooled votes",
    "detail": {
@@ -3429,22 +3555,62 @@
     "sent_to_llm": 0,
     "needs_review": 0
    },
-   "ms": 0.17933407798409462
+   "ms": 0.12350000906735659
   },
   {
-   "at": "2026-10-26T09:14:39.008813Z",
+   "at": "2026-10-26T09:47:46.457846Z",
    "agent": "Verifier",
    "action": "checked",
    "detail": {
     "question_id": "3",
     "attempt": 1,
     "passed": true,
-    "failed": []
+    "failed": [],
+    "predicted_level": "Apply",
+    "checks": [
+     {
+      "name": "level",
+      "passed": true,
+      "detail": "classified as Apply (P(Apply)=0.91)",
+      "score": 0.906
+     },
+     {
+      "name": "form",
+      "passed": true,
+      "detail": "33 words",
+      "score": null
+     },
+     {
+      "name": "topic",
+      "passed": true,
+      "detail": "content-word overlap 1.00, similarity 0.86",
+      "score": 1.0
+     },
+     {
+      "name": "not_duplicate",
+      "passed": true,
+      "detail": "similarity to original 0.86, to other questions 0.65",
+      "score": 0.864
+     }
+    ]
    },
-   "ms": 49.72895898390561
+   "ms": 47.842875006608665
   },
   {
-   "at": "2026-10-26T09:14:41.158390Z",
+   "at": "2026-10-26T09:47:46.457887Z",
+   "agent": "Composer",
+   "action": "drafting",
+   "detail": {
+    "question_id": "4b",
+    "attempt": 1,
+    "from_level": "Apply",
+    "to_level": "Evaluate",
+    "feedback": []
+   },
+   "ms": 0.000708969309926033
+  },
+  {
+   "at": "2026-10-26T09:47:48.448470Z",
    "agent": "Composer",
    "action": "drafted",
    "detail": {
@@ -3452,29 +3618,29 @@
     "attempt": 1,
     "text": "Critique the fairness of FCFS and SJF scheduling in the given scenario, assessing which algorithm better meets the criteria of minimizing average waiting time and justifying your judgment with specific process behavior analysis."
    },
-   "ms": 2149.504291010089
+   "ms": 1990.5632090521976
   },
   {
-   "at": "2026-10-26T09:14:41.197211Z",
+   "at": "2026-10-26T09:47:48.471280Z",
    "agent": "Lexis",
    "action": "classified",
    "detail": {
     "n": 1,
     "model": "embedlex"
    },
-   "ms": 5.3348749643191695
+   "ms": 3.2823749352246523
   },
   {
-   "at": "2026-10-26T09:14:41.207535Z",
+   "at": "2026-10-26T09:47:48.481529Z",
    "agent": "Archivist",
    "action": "retrieved neighbours",
    "detail": {
     "k": 8
    },
-   "ms": 10.296166990883648
+   "ms": 10.213749948889017
   },
   {
-   "at": "2026-10-26T09:14:41.207694Z",
+   "at": "2026-10-26T09:47:48.481645Z",
    "agent": "Arbiter",
    "action": "pooled votes",
    "detail": {
@@ -3482,51 +3648,150 @@
     "sent_to_llm": 0,
     "needs_review": 0
    },
-   "ms": 0.13658299576491117
+   "ms": 0.08633406832814217
   },
   {
-   "at": "2026-10-26T09:14:44.096326Z",
+   "at": "2026-10-26T09:47:51.275479Z",
    "agent": "Verifier",
    "action": "checked",
    "detail": {
     "question_id": "4b",
     "attempt": 1,
     "passed": true,
-    "failed": []
+    "failed": [],
+    "predicted_level": "Evaluate",
+    "checks": [
+     {
+      "name": "level",
+      "passed": true,
+      "detail": "classified as Evaluate (P(Evaluate)=0.99)",
+      "score": 0.994
+     },
+     {
+      "name": "form",
+      "passed": true,
+      "detail": "33 words",
+      "score": null
+     },
+     {
+      "name": "topic",
+      "passed": true,
+      "detail": "content-word overlap 1.00, similarity 0.75",
+      "score": 1.0
+     },
+     {
+      "name": "not_duplicate",
+      "passed": true,
+      "detail": "similarity to original 0.75, to other questions 0.68",
+      "score": 0.753
+     },
+     {
+      "name": "student",
+      "passed": true,
+      "detail": "",
+      "score": null
+     }
+    ]
    },
-   "ms": 2937.7671249676496
+   "ms": 2826.9561250926927
   },
   {
-   "at": "2026-10-26T09:14:44.106839Z",
+   "at": "2026-10-26T09:47:51.279525Z",
    "agent": "Lexis",
    "action": "classified",
    "detail": {
     "n": 11,
     "model": "embedlex"
    },
-   "ms": 9.654624969698489
+   "ms": 3.7812090013176203
   },
   {
-   "at": "2026-10-26T09:14:44.124005Z",
+   "at": "2026-10-26T09:47:51.286386Z",
    "agent": "Archivist",
    "action": "retrieved neighbours",
    "detail": {
     "k": 8
    },
-   "ms": 17.133916961029172
+   "ms": 6.820790935307741
   },
   {
-   "at": "2026-10-26T09:14:44.221901Z",
+   "at": "2026-10-26T09:47:51.312781Z",
+   "agent": "Socrates",
+   "action": "answered",
+   "detail": {
+    "question": "Implement a solution to the producer-consumer problem using semaphores in a shared memory environment where two threads produce and consume data from a buffer of size 5, ensuring no overflow or underflow occurs.",
+    "level": "Create",
+    "confidence": 1.0
+   },
+   "ms": 23.08779105078429
+  },
+  {
+   "at": "2026-10-26T09:47:51.312849Z",
+   "agent": "Socrates",
+   "action": "answered",
+   "detail": {
+    "question": "What is a context switch?",
+    "level": "Remember",
+    "confidence": 1.0
+   },
+   "ms": 23.169583058916032
+  },
+  {
+   "at": "2026-10-26T09:47:51.312873Z",
+   "agent": "Socrates",
+   "action": "answered",
+   "detail": {
+    "question": "Apply demand paging to a system with 512 MB physical memory and 2 GB virtual memory, where a process initially loads 128 MB of code and data. Show how the system handles the loading of additional 32 MB of code segments using demand paging, including the steps and memory management actions involved.",
+    "level": "Apply",
+    "confidence": 0.9999
+   },
+   "ms": 23.187166079878807
+  },
+  {
+   "at": "2026-10-26T09:47:51.312887Z",
+   "agent": "Socrates",
+   "action": "answered",
+   "detail": {
+    "question": "Apply paging to a memory management scenario with 4 pages and 8 frame slots; show how processes are loaded and pages are mapped to frames, including page table entries and handling page faults.",
+    "level": "Apply",
+    "confidence": 1.0
+   },
+   "ms": 23.20875006262213
+  },
+  {
+   "at": "2026-10-26T09:47:51.312906Z",
+   "agent": "Socrates",
+   "action": "answered",
+   "detail": {
+    "question": "Critique the fairness of FCFS and SJF scheduling in the given scenario, assessing which algorithm better meets the criteria of minimizing average waiting time and justifying your judgment with specific process behavior analysis.",
+    "level": "Evaluate",
+    "confidence": 1.0
+   },
+   "ms": 23.221125011332333
+  },
+  {
+   "at": "2026-10-26T09:47:51.312919Z",
+   "agent": "Socrates",
+   "action": "answered",
+   "detail": {
+    "question": "Explain the difference between preemptive and non-preemptive scheduling with suitable examples.",
+    "level": "Analyze",
+    "confidence": 1.0
+   },
+   "ms": 23.240833077579737
+  },
+  {
+   "at": "2026-10-26T09:47:51.315860Z",
    "agent": "Socrates",
    "action": "reasoned votes",
    "detail": {
     "n": 6,
     "model": "qwen3:4b-instruct-2507-q4_K_M"
    },
-   "ms": 97.83308301120996
+   "ms": 26.166833005845547
   },
   {
-   "at": "2026-10-26T09:14:44.223380Z",
+   "at": "2026-10-26T09:47:51.316454Z",
    "agent": "Arbiter",
    "action": "pooled votes",
    "detail": {
@@ -3534,10 +3799,10 @@
     "sent_to_llm": 6,
     "needs_review": 2
    },
-   "ms": 1.452250056900084
+   "ms": 0.5546659231185913
   },
   {
-   "at": "2026-10-26T09:14:44.223646Z",
+   "at": "2026-10-26T09:47:51.316547Z",
    "agent": "Conductor",
    "action": "assessed paper",
    "detail": {
@@ -3545,7 +3810,7 @@
     "compliant": true,
     "needs_review": 2
    },
-   "ms": 126.47283298429102
+   "ms": 40.8104999223724
   }
  ]
 }
