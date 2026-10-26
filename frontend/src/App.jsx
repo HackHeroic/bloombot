@@ -564,7 +564,7 @@ export default class App extends React.Component {
         : 'After rewriting, no question is flagged for review.',
       stages, traceRows, totalMs: (cum / 1000).toFixed(1) + ' s', progressW: live ? Math.round(s.progress * 100) + '%' : Math.round(n / TR.length * 100) + '%',
       showPlan, planRows, ...this.planText(planSrc, reasons, s),
-      rwCards, hasCards: rwCards.length > 0, showHandBack: !live || !!B.HANDBACK, handBack: { ...hand },  // live: only a real hand-back handStatus: s.rwStatus[hand.id] || 'pending',
+      rwCards, hasCards: rwCards.length > 0, showHandBack: !live || !!B.HANDBACK, handBack: { ...hand }, handStatus: s.rwStatus[hand.id] || 'pending',  // live: only a real hand-back
       onHand: st => this.setState(x => ({ rwStatus: { ...x.rwStatus, [hand.id]: st } })),
       acceptAll: () => this.setState(x => { const r = { ...x.rwStatus }; B.RW.forEach(w => { if (!(qById(w.id) || {}).locked && (r[w.id] || 'pending') === 'pending' && rwVisibleAt(w)) r[w.id] = 'accepted'; }); return { rwStatus: r }; }),
       pendingCount: pending, hasPending: pending > 0, pendingText: pending ? `${pending} rewrite${pending > 1 ? 's' : ''} waiting for your decision` : 'All rewrites decided',
