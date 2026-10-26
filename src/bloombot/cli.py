@@ -136,6 +136,16 @@ def serve(host: str = "127.0.0.1", port: int = 8000, reload: bool = False) -> No
 
     import uvicorn
 
+    from bloombot.config import get_settings
+    from bloombot.models.llm import OllamaClient
+
+    s = get_settings()
+    if s.llm and s.llm_policy != "never":
+        if OllamaClient(s.llm, s.ollama_host).available():
+            typer.echo(f"LLM: {s.llm} at {s.ollama_host}")
+        else:
+            typer.echo(f"Ollama not running (or {s.llm} not pulled) at {s.ollama_host}: start the Ollama app or run "
+                       f"`ollama serve`; continuing without the LLM. The page's LLM chip shows when it is back.")
     os.environ.setdefault("BLOOMBOT_WARMUP", "1")
     uvicorn.run("bloombot.api.app:app", host=host, port=port, reload=reload)
 

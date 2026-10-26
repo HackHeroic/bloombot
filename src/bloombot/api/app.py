@@ -118,7 +118,10 @@ def create_app() -> FastAPI:
     app = FastAPI(title="BloomBot API", version=__version__, lifespan=lifespan,
                   description="Classify exam questions by revised Bloom level, check papers against a "
                               "blueprint, and rewrite questions to a target level with automatic checks.")
-    app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"])
+    # allow_private_network: Chrome's private-network preflight, so a public page (the hosted demo)
+    # may call the API on the teacher's own computer once they connect it
+    app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"],
+                       allow_private_network=True)
 
     @app.get("/health")
     def health(s: Services = Depends(services)) -> dict[str, Any]:

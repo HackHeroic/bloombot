@@ -124,3 +124,9 @@ def test_assess_reports_time_and_marks(client):
     assert {c["name"] for c in rep["marking"]} >= {"Marks printed", "Total marks", "Marks match the work"}
     assert rep["ready"] is (rep["compliant"] and rep["timing"]["verdict"] != "too_long"
                             and all(c["ok"] is not False for c in rep["marking"]))
+
+
+def test_cors_allows_private_network_preflight(client):
+    r = client.options("/v1/meta", headers={"Origin": "https://bloombot.muralimadhav.com", "Access-Control-Request-Method": "GET",
+                                            "Access-Control-Request-Private-Network": "true"})
+    assert r.status_code == 200 and r.headers.get("access-control-allow-private-network") == "true"
