@@ -1,0 +1,13 @@
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/
+.ruff_cache/
+data/external/
+data/processed/
+artifacts/
+results/runs/
+*.egg-info/
+.DS_Store
+.env
+results/predictions/
