@@ -1,0 +1,59 @@
+id,category,pair,level,question
+t01,verb_trap,,Remember,List the steps a team follows to design a relational database.
+t02,verb_trap,,Understand,Explain how engineers evaluate the safety of an old bridge.
+t03,verb_trap,,Remember,State the formula used to calculate compound interest.
+t04,verb_trap,,Remember,Name two tools that are used to analyze network traffic.
+t05,verb_trap,,Understand,Describe how a compiler creates its symbol table.
+t06,verb_trap,,Remember,Define what it means to evaluate an expression in a programming language.
+t07,verb_trap,,Remember,Recall the procedure for designing a controlled experiment.
+t08,verb_trap,,Understand,Summarize how historians judge the reliability of a primary source.
+t09,verb_trap,,Understand,Explain why critics argue that GDP is a poor measure of welfare.
+t10,verb_trap,,Remember,What are the four stages that a designer goes through when creating a prototype?
+n01,negation,,Evaluate,Do not just define recursion; evaluate when it should be preferred over iteration.
+n02,negation,,Analyze,"Without listing the features, compare Python and Java as first programming languages."
+n03,negation,,Create,Do not describe existing schemes; propose a new scheme for allocating hostel rooms fairly.
+n04,negation,,Understand,"Rather than merely stating Newton's third law, explain it in your own words with an everyday example."
+v01,no_verb,,Remember,Who proposed the theory of natural selection?
+v02,no_verb,,Remember,When did the French Revolution begin?
+v03,no_verb,,Understand,Why does ice float on water?
+v04,no_verb,,Evaluate,"In your opinion, is nuclear power a good choice for India's energy future? Give reasons."
+v05,no_verb,,Evaluate,Which of the two given sorting algorithms is more suitable for a device with very little memory?
+v06,no_verb,,Apply,How would you use Ohm's law to find the current through a 10 ohm resistor connected to a 5 V supply?
+v07,no_verb,,Remember,What is the capital of Australia?
+v08,no_verb,,Understand,How does a refrigerator keep food cold?
+m01,math_sense,,Apply,Evaluate the integral of 2x from 0 to 3.
+m02,math_sense,,Apply,Evaluate the limit of sin(x)/x as x approaches 0.
+m03,math_sense,,Apply,Find the determinant of the given 3 x 3 matrix.
+k01,multi_task,,Create,Define a stack and design a stack-based algorithm to check whether brackets in an expression are balanced.
+k02,multi_task,,Understand,List the layers of the OSI model and explain the function of each.
+k03,multi_task,,Evaluate,"Describe two methods of waste disposal, then judge which is better for a small town and justify your choice."
+p01,ladder,deadlock,Remember,Define deadlock.
+p02,ladder,deadlock,Understand,Explain in your own words why a deadlock can occur when processes share resources.
+p03,ladder,deadlock,Apply,Use the banker's algorithm to decide whether the given system state is safe.
+p04,ladder,deadlock,Analyze,Compare deadlock prevention and deadlock avoidance in terms of resource utilisation.
+p05,ladder,deadlock,Evaluate,Justify whether deadlock avoidance is worth its overhead in a hard real-time system.
+p06,ladder,deadlock,Create,Design a deadlock-free protocol for two processes that share three printers.
+p07,ladder,photosynthesis,Remember,State the word equation for photosynthesis.
+p08,ladder,photosynthesis,Understand,Explain why plants kept in the dark stop producing starch.
+p09,ladder,photosynthesis,Apply,Calculate the rate of photosynthesis from the given oxygen-bubble counts.
+p10,ladder,photosynthesis,Analyze,Analyze the given graph to identify the factor limiting photosynthesis at each light intensity.
+p11,ladder,photosynthesis,Evaluate,Evaluate whether the given experiment is a fair test of the effect of light on photosynthesis.
+p12,ladder,photosynthesis,Create,Design an experiment to test how temperature affects the rate of photosynthesis.
+p13,ladder,demand,Remember,What is the law of demand?
+p14,ladder,demand,Understand,Explain why the demand curve usually slopes downward.
+p15,ladder,demand,Apply,Use the given demand schedule to calculate the price elasticity of demand between Rs 10 and Rs 12.
+p16,ladder,demand,Analyze,Differentiate between a movement along the demand curve and a shift of the demand curve.
+p17,ladder,demand,Evaluate,Assess whether a sugar tax would reduce consumption of soft drinks in India.
+p18,ladder,demand,Create,Propose a pricing strategy for a new metro line that maximises ridership without making a loss.
+p19,ladder,search,Remember,List the conditions under which binary search can be used.
+p20,ladder,search,Understand,Explain how binary search halves the search space at every step.
+p21,ladder,search,Apply,Trace binary search for the key 42 on the given sorted array.
+p22,ladder,search,Analyze,Examine why binary search is slower than hashing for repeated look-ups.
+p23,ladder,search,Evaluate,Critique the claim that binary search is always better than linear search.
+p24,ladder,search,Create,Develop a search algorithm for a sorted array whose elements have been rotated by an unknown amount.
+p25,ladder,judiciary,Remember,Name the article of the Indian Constitution that deals with the Supreme Court's original jurisdiction.
+p26,ladder,judiciary,Understand,Summarize the role of judicial review in the Indian Constitution.
+p27,ladder,judiciary,Apply,Apply the basic structure doctrine to decide whether the given amendment is valid.
+p28,ladder,judiciary,Analyze,Distinguish between public interest litigation and ordinary writ petitions.
+p29,ladder,judiciary,Evaluate,Assess the argument that judicial activism weakens parliamentary democracy.
+p30,ladder,judiciary,Create,Formulate a proposal to reduce the backlog of cases in Indian district courts.
