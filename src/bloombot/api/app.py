@@ -13,7 +13,7 @@ from typing import Any
 from fastapi import Depends, FastAPI, File, Form, HTTPException, Query, Request, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, field_validator
 
 from bloombot import __version__
 from bloombot.api.services import JobState, LabelledExample, LiveTrace, Profile, Services
@@ -50,14 +50,25 @@ class AnalyzeRequest(BaseModel):
     question: str
 
 
+MAX_QUESTIONS = 300  # per paper: a public server should not take arbitrarily large jobs
+
+
 class ParseTextRequest(BaseModel):
-    text: str
+    text: str = Field(max_length=200_000)
     title: str = ""
     bt_scheme: str | None = Field(default="revised", description="how printed BT1-BT6 codes are numbered")
 
 
 class AssessRequest(BaseModel):
     paper: Paper
+
+    @field_validator("paper")
+    @classmethod
+    def _size(cls, p: Paper) -> Paper:
+        if len(p.questions) > MAX_QUESTIONS:
+            raise ValueError(f"at most {MAX_QUESTIONS} questions per paper")
+        return p
+
     blueprint_id: str | None = None
     blueprint: Blueprint | None = None
     use_llm: bool | None = None

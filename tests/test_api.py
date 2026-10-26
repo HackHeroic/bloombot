@@ -181,3 +181,9 @@ def test_public_server_keeps_jobs_and_profiles_in_memory(assessor, settings, tmp
         assert c.post("/v1/classify", json={"questions": ["Define a queue."], "profile_id": prof["id"]}).status_code == 200
         assert c.get("/v1/profiles").json() == []  # never listed to other visitors
     assert not any(tmp_path.rglob("*.json")) and not any(tmp_path.rglob("*.joblib"))  # nothing on disk
+
+
+def test_paper_size_limits(client):
+    big = {"questions": [{"id": str(i), "text": "Define a stack."} for i in range(301)]}
+    assert client.post("/v1/papers/assess", json={"paper": big}).status_code == 422
+    assert client.post("/v1/papers/parse-text", json={"text": "x" * 200_001}).status_code == 422

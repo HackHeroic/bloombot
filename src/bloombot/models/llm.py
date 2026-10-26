@@ -225,6 +225,10 @@ def _cache_put(key: str, value: dict) -> None:
     with _CACHE_LOCK:
         if _CACHE is not None:
             _CACHE[key] = value
+        from bloombot.config import get_settings
+
+        if not get_settings().store:  # a public server keeps visitors' questions in memory only
+            return
         path = _cache_path()
         path.parent.mkdir(parents=True, exist_ok=True)
         with path.open("a") as fh:
