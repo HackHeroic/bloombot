@@ -11,3 +11,6 @@ results/runs/
 .DS_Store
 .env
 results/predictions/
+frontend/node_modules/
+frontend/.next/
+frontend/out/
