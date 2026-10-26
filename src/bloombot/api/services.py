@@ -69,7 +69,9 @@ class Services:
         self._load_lock = threading.Lock()
         self._profiles: dict[str, Assessor] = {}
         self.jobs: dict[str, JobState] = {}
-        self._pool = ThreadPoolExecutor(max_workers=2)
+        # Ollama already serialises LLM calls; the pool only needs to be wide enough that a long LLM
+        # job (or a cancelled one finishing its last calls) never blocks a fast one behind it.
+        self._pool = ThreadPoolExecutor(max_workers=8)
         self.cancels: dict[str, threading.Event] = {}
 
     # -- models ---------------------------------------------------------------------------------------------
