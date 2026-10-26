@@ -169,3 +169,14 @@ def test_pool_rules():
     geo = pool([lex, llm], [1, 0.5], "geometric")
     assert geo.argmax() == 2  # log-linear pooling settles on a level neither voter chose
     assert np.allclose(pool([lex, llm], [1, 0], "linear"), lex)  # weight 0 = evidence only
+
+
+def test_explicit_q_headings_ignore_bare_numbers_and_guessed_marks():
+    # A LaTeX worksheet: matrix rows ("1.0", "0") start lines, subscripts trail sentences, no marks.
+    text = ("Q1: Sample Problem 1\nA decoder has query s = [\n1.0\n0.5\n] and states h.\n"
+            "(a) Compute the alignment scores.\n(b) Compute precision, recall and F for each class.\n1\n"
+            "Q2: Sample Problem 2\n0 A second setting.\n(a) Prove that the softmax is invariant to shifts.\n")
+    p = parse_text(text)
+    assert [q.id for q in p.questions] == ["1a", "1b", "2a"]
+    assert all(q.marks is None for q in p.questions)
+

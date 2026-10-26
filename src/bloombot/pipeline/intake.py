@@ -11,6 +11,8 @@ outcomes and Bloom tags in brackets or table columns. The parser is a line-based
   sub-parts becomes their stem and is not assessed itself
 * any other line continues the current item
 * marks, CO and BT/L/K tags are read from the item and removed from its text
+* a paper that numbers its questions "Q1", "Q2" ... is trusted: a bare number at the start of a
+  line (a matrix row, a wrapped formula) is then a continuation, not a new question
 
 Scanned PDFs (no text layer) are reported, not guessed; OCR is out of scope.
 """
@@ -36,6 +38,7 @@ _OR = re.compile(r"^\s*[\(\[]?\s*or\s*[\)\]]?\s*$", re.I)
 _MAIN = re.compile(r"^\s*(?:q(?:uestion)?\s*\.?\s*(?:no\.?)?\s*)?(\d{1,2})(?:\s*[.):\]]\s*|\s{2,}|\t)(?:\(?([a-h])\s*[.)\]])?\s*(.*)$", re.I)
 _MAIN_Q = re.compile(r"^\s*q(?:uestion)?\s*\.?\s*(?:no\.?)?\s*(\d{1,2})\s*[.):\]-]?\s*(.*)$", re.I)
 _SUB = re.compile(r"^\s*(?:\(?\s*([a-h]|i{1,3}|iv|vi{0,3}|ix|x)\s*[.)\]]\s+|([a-h])(?:\s{2,}|\t))(.*)$", re.I)
+_Q_HEAD = re.compile(r"^\s*q(?:uestion)?\s*\.?\s*(?:no\.?)?\s*\d{1,2}\b", re.I)
 _INLINE_SUB = re.compile(r"^\s*(\d{1,2})\s*\(\s*([a-h]|i{1,3}|iv|vi{0,3}|ix|x)\s*\)\s*(.*)$", re.I)
 
 _MARKS = [
@@ -71,8 +74,9 @@ class _Item:
         return " ".join(s.strip() for s in self.lines if s.strip())
 
 
-def _extract_meta(raw: str, scheme: str | None) -> tuple[str, float | None, str | None, str | None]:
-    """Pull CO, Bloom tag and marks out of an item; return (clean text, marks, co, tagged level)."""
+def _extract_meta(raw: str, scheme: str | None) -> tuple[str, float | None, str | None, str | None, bool]:
+    """Pull CO, Bloom tag and marks out of an item; return (clean text, marks, co, tagged level,
+    whether the marks were only guessed from a bare trailing number)."""
     text = raw
     co = tagged = None
     m = _CO.search(text)
@@ -84,7 +88,7 @@ def _extract_meta(raw: str, scheme: str | None) -> tuple[str, float | None, str 
         tagged = level_name(lv) if lv else None
     # Tags go first so that marks printed before them ("[2] CO1 BT1") end up at the end.
     stripped = _BT.sub(" ", _CO.sub(" ", text)).rstrip(" ,;|/")
-    marks = None
+    marks, guessed = None, False
     for rx in _MARKS:
         m = rx.search(stripped)
         if m:
@@ -95,10 +99,10 @@ def _extract_meta(raw: str, scheme: str | None) -> tuple[str, float | None, str 
         # a bare trailing number after the sentence is the marks column of a table row
         m = re.search(r"(?<=[.?!)])\s*(\d{1,3})\s*$", stripped)
         if m:
-            marks = float(m.group(1))
+            marks, guessed = float(m.group(1)), True
             stripped = stripped[: m.start()]
     # The printed tag is the label itself: it must not reach the classifier.
-    return clean_question(stripped), marks, co, tagged
+    return clean_question(stripped), marks, co, tagged, guessed
 
 
 def parse_text(text: str, title: str = "", bt_scheme: str | None = "revised") -> Paper:
@@ -110,6 +114,7 @@ def parse_text(text: str, title: str = "", bt_scheme: str | None = "revised") ->
     current: _Item | None = None
     pending_or = False
     warnings: list[str] = []
+    explicit_q = sum(bool(_Q_HEAD.match(ln)) for ln in lines) >= 2
 
     for ln in lines:
         if not ln.strip() or _NOISE.match(ln):
@@ -122,7 +127,7 @@ def parse_text(text: str, title: str = "", bt_scheme: str | None = "revised") ->
             section = f"{sec.group(1).upper()}"
             continue
         inline = _INLINE_SUB.match(ln)
-        mq = _MAIN_Q.match(ln) or (None if inline else _MAIN.match(ln))
+        mq = _MAIN_Q.match(ln) or (None if inline or explicit_q else _MAIN.match(ln))
         sub = _SUB.match(ln)
         if inline:  # "11(a) ..." numbering
             num, part, rest = inline.groups()
@@ -199,11 +204,12 @@ def parse_text(text: str, title: str = "", bt_scheme: str | None = "revised") ->
         current.lines.append(ln)
 
     questions: list[Question] = []
+    guessed: list[Question] = []
     for main in mains:
-        stem, stem_marks, stem_co, stem_tag = _extract_meta(main.raw, bt_scheme)
+        stem, stem_marks, stem_co, stem_tag, stem_guess = _extract_meta(main.raw, bt_scheme)
         if main.children:
             for c in main.children:
-                t, marks, co, tag = _extract_meta(c.raw, bt_scheme)
+                t, marks, co, tag, guess = _extract_meta(c.raw, bt_scheme)
                 if not t:
                     continue
                 context = stem if stem and not _INSTRUCTION_STEM.match(stem) and len(stem.split()) > 3 else None
@@ -212,12 +218,21 @@ def parse_text(text: str, title: str = "", bt_scheme: str | None = "revised") ->
                 questions.append(Question(id=c.qid, number=c.number, text=t, context=context, marks=marks,
                                           section=c.section, group=c.group, option=option,
                                           course_outcome=co or stem_co, tagged_level=tag or stem_tag))
+                if guess:
+                    guessed.append(questions[-1])
         elif stem:
             questions.append(Question(id=main.qid, number=main.number, text=stem, marks=stem_marks, section=main.section,
                                       group=main.group, option=main.qid if main.group else None,
                                       course_outcome=stem_co, tagged_level=stem_tag))
+            if stem_guess:
+                guessed.append(questions[-1])
     if not questions:
         warnings.append("no questions found; is the file a scanned image or an unusual layout?")
+    # A marks column is printed for most questions; a few bare trailing numbers are subscripts or
+    # numbers from the question itself ("... F1", a matrix entry), not marks.
+    if guessed and sum(q.marks is not None for q in questions) < len(questions) / 2:
+        for q in guessed:
+            q.marks = None
     seen: dict[str, int] = {}
     for q in questions:  # keep ids unique
         if q.id in seen:
@@ -249,7 +264,8 @@ def _pdf_text(data: bytes) -> str:
     import pdfplumber
 
     with pdfplumber.open(io.BytesIO(data)) as pdf:
-        return "\n".join((page.extract_text() or "") for page in pdf.pages)
+        # x_tolerance below the default 3 keeps words apart in tightly set (e.g. LaTeX) PDFs
+        return "\n".join((page.extract_text(x_tolerance=1.5) or "") for page in pdf.pages)
 
 
 def _docx_text(data: bytes) -> str:
