@@ -25,7 +25,7 @@ import math
 import os
 import re
 import threading
-from concurrent.futures import ThreadPoolExecutor
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Sequence
@@ -287,10 +287,19 @@ class LLMClassifier(BloomClassifier):
             _cache_put(key, out)
         return out
 
-    def classify_many(self, texts) -> list[dict]:
-        """Thread-safe: returns the outputs instead of storing them on the instance."""
+    def classify_many(self, texts, on_result=None) -> list[dict]:
+        """Thread-safe: returns the outputs instead of storing them on the instance.
+        ``on_result(i, out)`` is called as each answer arrives (for live progress)."""
+        texts = list(texts)
+        outs: list[dict] = [{} for _ in texts]
         with ThreadPoolExecutor(max_workers=self.workers) as pool:
-            return list(pool.map(self.classify_one, list(texts)))
+            futures = {pool.submit(self.classify_one, t): i for i, t in enumerate(texts)}
+            for f in as_completed(futures):
+                i = futures[f]
+                outs[i] = f.result()
+                if on_result is not None:
+                    on_result(i, outs[i])
+        return outs
 
     def predict_proba(self, texts):
         outs = self.classify_many(texts)

@@ -166,6 +166,8 @@ class Rewriter:
         max_attempts = self.settings.max_attempts if self.client is not None else 1
         for n in range(1, max_attempts + 1):
             t0 = time.perf_counter()
+            self._log("Composer", "drafting", t0, question_id=job.question_id, attempt=n, from_level=job.from_level,
+                      to_level=job.to_level, feedback=feedback)
             text, composer, rationale = self.compose(job, feedback, context)
             self._log("Composer", "drafted", t0, question_id=job.question_id, attempt=n, text=text)
             if not text:
@@ -182,7 +184,8 @@ class Rewriter:
                     checks.append(st)
             passed = all(c.passed for c in checks)
             self._log("Verifier", "checked", t0, question_id=job.question_id, attempt=n, passed=passed,
-                      failed=[c.name for c in checks if not c.passed])
+                      failed=[c.name for c in checks if not c.passed], predicted_level=pred.level,
+                      checks=[c.model_dump() for c in checks])
             attempts.append(Attempt(number=n, question=text, composer=composer, rationale=rationale, checks=checks,
                                     passed=passed, predicted_level=pred.level))
             if passed:

@@ -21,7 +21,7 @@ Level names are always one of `Remember, Understand, Apply, Analyze, Evaluate, C
 | POST | `/v1/papers/plan` | `PaperReport` + blueprint → list of `RewriteJob` |
 | POST | `/v1/rewrite` | rewrite one question to a target level, with checks (synchronous) |
 | POST | `/v1/papers/rebalance` | full pipeline as a background job → `202 JobState` |
-| GET | `/v1/jobs/{id}` | job status; `result` is a `RebalanceResult` when `status == "done"` |
+| GET | `/v1/jobs/{id}` | job status; `trace` grows live while it runs; `result` is a `RebalanceResult` when `status == "done"` |
 | GET/POST | `/v1/profiles` | list / create an institution profile (k-shot adaptation) |
 | DELETE | `/v1/profiles/{id}` | delete a profile |
 | GET | `/v1/experiments` | `results/summary.json` (for a results dashboard) |
@@ -74,6 +74,28 @@ curl -s -F file=@data/papers/sample_os_paper.txt localhost:8000/v1/papers/parse
 curl -s localhost:8000/v1/profiles -H 'content-type: application/json' -d '{"name": "XYZ CSE", "examples": [
   {"question": "Explain paging.", "level": "Remember"}, ...]}'
 ```
+
+## Following a job live
+
+While a rebalance job runs, `GET /v1/jobs/{id}` returns the events so far in `trace`; poll
+about once a second and render only the new ones. Each event is
+`{at, agent, action, detail, ms}`:
+
+| agent | action | detail |
+|---|---|---|
+| Lexis | classified | `n`, `model` |
+| Archivist | retrieved neighbours | `k` |
+| Socrates | answered | `question`, `level`, `confidence` (one per question it was asked) |
+| Socrates | reasoned votes | `n`, `model` |
+| Arbiter | pooled votes | `n`, `sent_to_llm`, `needs_review` |
+| Conductor | assessed paper | `questions`, `compliant`, `needs_review` (before, then again after) |
+| Architect | planned rewrites | `jobs`, `blueprint` |
+| Composer | drafting | `question_id`, `attempt`, `from_level`, `to_level`, `feedback` (reasons the last attempt failed) |
+| Composer | drafted | `question_id`, `attempt`, `text` |
+| Verifier | checked | `question_id`, `attempt`, `passed`, `failed`, `predicted_level`, `checks` (level, form, topic, not_duplicate, student) |
+
+`frontend/fixtures/rebalance_live_dbms.json` is a real uncached run (about 60 s, with one
+Student-check failure and retry) whose `at` timestamps can be replayed at real speed.
 
 ## Notes for the UI
 

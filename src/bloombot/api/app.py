@@ -15,7 +15,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
 from bloombot import __version__
-from bloombot.api.services import JobState, LabelledExample, Profile, Services
+from bloombot.api.services import JobState, LabelledExample, LiveTrace, Profile, Services
 from bloombot.pipeline import blueprint as bp_mod
 from bloombot.pipeline.conductor import Conductor
 from bloombot.pipeline.intake import parse_file, parse_text
@@ -197,10 +197,8 @@ def create_app() -> FastAPI:
         a = _assessor(s, req.profile_id)
 
         def work(job: JobState) -> RebalanceResult:
-            c = Conductor(a, s.settings)
-            result = c.rebalance(req.paper, bp, req.use_llm)
-            job.trace = [t.model_dump(mode="json") for t in c.trace]
-            return result
+            c = Conductor(a, s.settings, trace=LiveTrace(job.trace))
+            return c.rebalance(req.paper, bp, req.use_llm)
 
         return s.submit("rebalance", work)
 

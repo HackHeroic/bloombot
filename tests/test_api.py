@@ -72,3 +72,22 @@ def test_experiment_tables(client):
     rows = client.get("/v1/experiments/tables/loso").json()
     assert rows and {"model", "test", "weighted_f1"} <= set(rows[0])
     assert client.get("/v1/experiments/tables/../summary").status_code == 404
+
+
+def test_rebalance_job_streams_trace(client):
+    import time
+
+    text = (ROOT / "data" / "papers" / "sample_os_paper.txt").read_text()
+    paper = client.post("/v1/papers/parse-text", json={"text": text}).json()
+    job = client.post("/v1/papers/rebalance", json={"paper": paper, "blueprint_id": "balanced-ug"}).json()
+    for _ in range(100):
+        state = client.get(f"/v1/jobs/{job['id']}").json()
+        if state["status"] in ("done", "failed"):
+            break
+        time.sleep(0.1)
+    assert state["status"] == "done", state["error"]
+    agents = [e["agent"] for e in state["trace"]]
+    assert agents[0] == "Lexis" and "Architect" in agents
+    checked = [e for e in state["trace"] if e["agent"] == "Verifier"]
+    assert checked and checked[0]["detail"]["checks"][0]["name"] == "level"
+    assert any(e["action"] == "drafting" for e in state["trace"])

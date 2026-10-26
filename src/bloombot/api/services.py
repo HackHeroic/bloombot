@@ -38,6 +38,19 @@ class Profile(BaseModel):
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
 
 
+class LiveTrace(list):
+    """A pipeline trace that also copies each event into a job as it happens, so clients polling
+    GET /v1/jobs/{id} can follow the agents live instead of waiting for the result."""
+
+    def __init__(self, sink: list[dict]):
+        super().__init__()
+        self.sink = sink
+
+    def append(self, event) -> None:
+        super().append(event)
+        self.sink.append(event.model_dump(mode="json"))
+
+
 class JobState(BaseModel):
     id: str
     kind: str

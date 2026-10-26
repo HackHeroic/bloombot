@@ -195,7 +195,13 @@ class Assessor:
         if ask.any():
             t0 = time.perf_counter()
             idx = np.flatnonzero(ask)
-            outs = self.llm.classify_many([clean[i] for i in idx])
+            def answered(j, out):
+                ok = out.get("level") is not None
+                self._log(trace, "Socrates", "answered", t0, question=clean[idx[j]],
+                          level=level_name(out["level"]) if ok else None,
+                          confidence=round(float(max(out["proba"])), 4) if ok else None)
+
+            outs = self.llm.classify_many([clean[i] for i in idx], on_result=answered)
             for i, out in zip(idx, outs, strict=True):
                 if out.get("level") is not None:  # no usable answer: Socrates abstains
                     llm_out[int(i)] = out
