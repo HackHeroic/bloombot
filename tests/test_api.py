@@ -112,3 +112,15 @@ def test_assess_job_reports_progress(client):
 
 def test_cancel_unknown_job_404(client):
     assert client.delete("/v1/jobs/nope").status_code == 404
+
+
+def test_assess_reports_time_and_marks(client):
+    text = (ROOT / "data" / "papers" / "sample_os_paper.txt").read_text()
+    paper = client.post("/v1/papers/parse-text", json={"text": text}).json()
+    assert paper["duration_minutes"] == 180 and paper["max_marks"] == 50
+    rep = client.post("/v1/papers/assess", json={"paper": paper, "blueprint_id": "balanced-ug", "pace": "slower"}).json()
+    assert rep["timing"]["pace"] == "slower" and rep["timing"]["verdict"] in ("fits", "tight", "too_long")
+    assert len(rep["timing"]["questions"]) == len(paper["questions"])
+    assert {c["name"] for c in rep["marking"]} >= {"Marks printed", "Total marks", "Marks match the work"}
+    assert rep["ready"] is (rep["compliant"] and rep["timing"]["verdict"] != "too_long"
+                            and all(c["ok"] is not False for c in rep["marking"]))

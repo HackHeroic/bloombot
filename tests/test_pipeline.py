@@ -214,3 +214,65 @@ def test_cancelled_assessment_stops_llm_calls(assessor, settings, monkeypatch):
         a.assess(["Explain paging.", "Define a stack."], use_llm=True, cancel=stop)
     assert calls == []
     assert len(a.assess(["Explain paging."], use_llm=True)[0].votes) == 3  # not cancelled: Socrates votes
+
+
+@pytest.mark.parametrize("header,minutes,marks", [
+    ("Time: 3 Hrs                 Max. Marks: 100", 180, 100),
+    ("Duration: 90 minutes   Maximum Marks : 50", 90, 50),
+    ("Time Allowed: 1½ hours  Total marks: 60", 90, 60),
+    ("(Time: 1 hour 30 minutes)", 90, None),
+    ("Course: Operating Systems", None, None),
+])
+def test_header_duration_and_max_marks(header, minutes, marks):
+    p = parse_text(header + "\nQ1. Define a stack. [2]\nQ2. Explain paging. [5]\n")
+    assert p.duration_minutes == minutes and p.max_marks == marks
+    assert len(p.questions) == 2
+
+
+def _report(assessor, settings, paper, pace="typical"):
+    from bloombot.pipeline.blueprint import load_blueprints
+    from bloombot.pipeline.conductor import Conductor
+
+    return Conductor(assessor, settings).assess_paper(paper, load_blueprints()["balanced-ug"], use_llm=False, pace=pace)
+
+
+def test_time_estimate_actions_and_or_groups(assessor, settings):
+    from bloombot.pipeline.feasibility import actions
+    from bloombot.pipeline.schemas import Paper, Question
+
+    assert [a.split(":")[1] for a in actions("Prove that x > 0, and verify it numerically.", "Analyze")] == ["prove", "compute"]
+    assert actions("Construct the DFA for (a|b)*abb.", "Apply") == ["construct:compute"]
+    qs = [Question(id="1", text="Define a stack.", marks=2),
+          Question(id="2", text="Explain paging with a diagram.", marks=10, group="g", option="2"),
+          Question(id="3", text="Define a page.", marks=10, group="g", option="3")]
+    rep = _report(assessor, settings, Paper(questions=qs, duration_minutes=60))
+    t = {x.id: x for x in rep.timing.questions}
+    assert t["2"].high > 15  # a 10-mark written answer: planning and ~250 words
+    # only the longer OR-alternative counts
+    assert rep.timing.total_high == pytest.approx(t["1"].high + t["2"].high, abs=0.2)
+    slow = _report(assessor, settings, Paper(questions=qs, duration_minutes=60), pace="slower")
+    assert slow.timing.total_high > rep.timing.total_high
+
+
+def test_too_long_paper_and_bad_marking_are_not_ready(assessor, settings):
+    from bloombot.pipeline.schemas import Paper, Question
+
+    qs = [Question(id="1", text="Define a stack.", marks=10),
+          Question(id="2", text="Prove that the problem is undecidable and derive the bound.", marks=1),
+          Question(id="3", text="Explain paging.", marks=5), Question(id="4", text="Explain segmentation.", marks=5),
+          Question(id="5", text="Compute the average waiting time.", marks=5)]
+    rep = _report(assessor, settings, Paper(questions=qs, duration_minutes=10, max_marks=30))
+    assert rep.timing.verdict == "too_long" and rep.ready is False
+    checks = {c.name: c for c in rep.marking}
+    assert checks["Total marks"].ok is False and "26" in checks["Total marks"].detail
+    assert checks["Marks match the work"].ok is False
+    assert set(checks["Marks match the work"].questions) == {"1", "2"}
+    assert "OR alternatives are equivalent" not in checks  # no OR-groups in this paper
+
+
+def test_paper_without_marks_or_duration(assessor, settings):
+    from bloombot.pipeline.schemas import Paper, Question
+
+    rep = _report(assessor, settings, Paper(questions=[Question(id="1", text="Explain paging.")]))
+    assert rep.timing.verdict == "unknown"
+    assert rep.marking[0].ok is None and len(rep.marking) == 1

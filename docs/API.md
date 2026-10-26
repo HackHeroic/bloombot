@@ -34,6 +34,25 @@ Level names are always one of `Remember, Understand, Apply, Analyze, Evaluate, C
 `false` = never, `true` = when unsure. `profile_id` makes any assessment use an institution's
 adapted model.
 
+### Time and marks
+
+A parsed `Paper` carries `duration_minutes` and `max_marks` when the header prints them ("Time: 3
+Hrs   Max. Marks: 100"); the client may set or change both before assessing. Assess and rebalance
+requests take `pace`: `"faster"`, `"typical"` (default) or `"slower"`. Every `PaperReport` then has:
+
+* `timing`: per question `{id, low, high, reading, actions, basis}` in minutes (`actions` explain
+  the estimate, e.g. `"prove (prove) 6-15 min"`), the paper total `total_low`/`total_high` (one
+  option per OR-group), and `verdict`: `fits`, `tight` (only slower students run out of time),
+  `too_long` (even the low estimate exceeds the duration) or `unknown` (no duration), with `detail`
+* `marking`: checks `{name, ok, detail, questions}`: marks printed, total against the printed
+  maximum, marks against the work (under-marked questions; over-marked pure recall), OR
+  alternatives equivalent. `ok` is null when a check cannot be made (no marks printed)
+* `ready`: the Bloom bounds, the time (not `too_long`) and every marking check pass
+
+The time model is a rule of thumb, documented in `src/bloombot/pipeline/feasibility.py`: reading at
+150 words a minute, a range per action verb, and for written answers ~25 words per mark written at
+12-20 words a minute plus planning time.
+
 ## Typical frontend flow
 
 ```

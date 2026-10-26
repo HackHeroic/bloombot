@@ -38,6 +38,8 @@ class Paper(BaseModel):
     title: str = ""
     questions: list[Question]
     total_marks: float | None = None
+    max_marks: float | None = Field(default=None, description="maximum marks printed on the paper")
+    duration_minutes: float | None = Field(default=None, description="exam duration, printed or entered by the teacher")
     warnings: list[str] = Field(default_factory=list)
 
 
@@ -119,6 +121,35 @@ class QuestionAssessment(BaseModel):
     prediction: Prediction
 
 
+Pace = Literal["faster", "typical", "slower"]
+
+
+class QuestionTime(BaseModel):
+    id: str
+    low: float = Field(description="minutes, at the chosen pace")
+    high: float
+    reading: float = Field(description="minutes spent reading the question and its share of the stem")
+    actions: list[str] = Field(default_factory=list, description="what the student must do, e.g. 'prove 6-15 min'")
+    basis: Literal["verbs", "level"] = Field(description="action verbs found, or the predicted level as fallback")
+
+
+class TimeEstimate(BaseModel):
+    questions: list[QuestionTime]
+    total_low: float = Field(description="minutes for the questions a student answers (one option per OR-group)")
+    total_high: float
+    duration_minutes: float | None = None
+    pace: Pace = "typical"
+    verdict: Literal["fits", "tight", "too_long", "unknown"]
+    detail: str
+
+
+class MarkingCheck(BaseModel):
+    name: str
+    ok: bool | None = Field(description="None when it cannot be checked (e.g. no marks printed)")
+    detail: str
+    questions: list[str] = Field(default_factory=list)
+
+
 class PaperReport(BaseModel):
     paper: Paper
     items: list[QuestionAssessment]
@@ -127,6 +158,9 @@ class PaperReport(BaseModel):
     checks: list[BoundCheck] = Field(default_factory=list)
     compliant: bool | None = None
     needs_review: list[str] = Field(default_factory=list)
+    timing: TimeEstimate | None = None
+    marking: list[MarkingCheck] = Field(default_factory=list)
+    ready: bool | None = Field(default=None, description="Bloom mix, time and marking all pass (None: nothing to check)")
 
 
 # --- rewriting -----------------------------------------------------------------------------------------

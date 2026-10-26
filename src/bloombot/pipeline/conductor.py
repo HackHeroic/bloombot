@@ -16,9 +16,10 @@ from dataclasses import dataclass, field
 
 from bloombot.config import Settings, get_settings
 from bloombot.pipeline import blueprint as bp_mod
+from bloombot.pipeline import feasibility
 from bloombot.pipeline.assess import Assessor
 from bloombot.pipeline.rewrite import Rewriter
-from bloombot.pipeline.schemas import Blueprint, Paper, PaperReport, RebalanceResult, TraceEvent
+from bloombot.pipeline.schemas import Blueprint, Pace, Paper, PaperReport, RebalanceResult, TraceEvent
 
 
 @dataclass
@@ -36,18 +37,27 @@ class Conductor:
     def _client(self):
         return self.assessor.llm.client if self.assessor.llm is not None else None
 
-    def assess_paper(self, paper: Paper, blueprint: Blueprint | None = None, use_llm: bool | None = None) -> PaperReport:
+    def assess_paper(self, paper: Paper, blueprint: Blueprint | None = None, use_llm: bool | None = None,
+                     pace: Pace = "typical") -> PaperReport:
         t0 = time.perf_counter()
         preds = self.assessor.assess([q.text for q in paper.questions], use_llm=use_llm, trace=self.trace,
                                      cancel=self.cancel)
         rep = bp_mod.report(paper, preds, blueprint)
+        rep.timing = feasibility.estimate(paper, preds, pace)
+        rep.marking = feasibility.marking(paper, preds, rep.timing)
+        verdicts = ([rep.compliant] if rep.compliant is not None else []) + [c.ok for c in rep.marking if c.ok is not None]
+        if rep.timing.verdict != "unknown":
+            verdicts.append(rep.timing.verdict != "too_long")
+        rep.ready = all(verdicts) if verdicts else None
         self.trace.append(TraceEvent(agent="Conductor", action="assessed paper", ms=(time.perf_counter() - t0) * 1000,
                                      detail={"questions": len(paper.questions), "compliant": rep.compliant,
-                                             "needs_review": len(rep.needs_review)}))
+                                             "needs_review": len(rep.needs_review), "time": rep.timing.verdict,
+                                             "minutes": [rep.timing.total_low, rep.timing.total_high]}))
         return rep
 
-    def rebalance(self, paper: Paper, blueprint: Blueprint, use_llm: bool | None = None) -> RebalanceResult:
-        before = self.assess_paper(paper, blueprint, use_llm)
+    def rebalance(self, paper: Paper, blueprint: Blueprint, use_llm: bool | None = None,
+                  pace: Pace = "typical") -> RebalanceResult:
+        before = self.assess_paper(paper, blueprint, use_llm, pace)
         t0 = time.perf_counter()
         jobs = bp_mod.plan(before, blueprint)
         self.trace.append(TraceEvent(agent="Architect", action="planned rewrites", ms=(time.perf_counter() - t0) * 1000,
@@ -64,5 +74,5 @@ class Conductor:
         for q in final.questions:
             if q.id in accepted:
                 q.text = accepted[q.id]
-        after = self.assess_paper(final, blueprint, use_llm)
+        after = self.assess_paper(final, blueprint, use_llm, pace)
         return RebalanceResult(before=before, plan=jobs, rewrites=results, after=after, final_paper=final)

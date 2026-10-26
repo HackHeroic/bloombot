@@ -70,7 +70,9 @@ def classify(questions: list[str], llm: bool = typer.Option(False, help="ask the
 
 @app.command()
 def paper(path: Path, blueprint: str = typer.Option("aicte-2018-example"), rebalance: bool = False,
-          llm: bool = typer.Option(False), out: Optional[Path] = None) -> None:
+          llm: bool = typer.Option(False), out: Optional[Path] = None,
+          duration: Optional[float] = typer.Option(None, help="exam duration in minutes (if not printed)"),
+          pace: str = typer.Option("typical", help="students' pace: faster, typical or slower")) -> None:
     """Assess a question paper (PDF/DOCX/TXT/CSV) against a blueprint; optionally rebalance it."""
     _setup()
     from bloombot.pipeline.blueprint import load_blueprints
@@ -80,13 +82,15 @@ def paper(path: Path, blueprint: str = typer.Option("aicte-2018-example"), rebal
 
     bp = load_blueprints()[blueprint]
     p = parse_file(path.read_bytes(), path.name)
+    if duration:
+        p.duration_minutes = duration
     c = Conductor.load(use_llm=llm)
     if rebalance:
-        res = c.rebalance(p, bp, use_llm=llm)
+        res = c.rebalance(p, bp, use_llm=llm, pace=pace)
         md = render_markdown(res.before, bp, res)
         payload = res.model_dump(mode="json")
     else:
-        rep = c.assess_paper(p, bp, use_llm=llm)
+        rep = c.assess_paper(p, bp, use_llm=llm, pace=pace)
         md = render_markdown(rep, bp)
         payload = rep.model_dump(mode="json")
     typer.echo(md)

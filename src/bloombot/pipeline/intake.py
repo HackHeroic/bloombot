@@ -11,6 +11,7 @@ outcomes and Bloom tags in brackets or table columns. The parser is a line-based
   sub-parts becomes their stem and is not assessed itself
 * any other line continues the current item
 * marks, CO and BT/L/K tags are read from the item and removed from its text
+* the header's duration ("Time: 3 Hrs", "Duration: 90 minutes") and maximum marks are kept
 * a paper that numbers its questions "Q1", "Q2" ... is trusted: a bare number at the start of a
   line (a matrix row, a wrapped formula) is then a continuation, not a new question
 
@@ -52,6 +53,11 @@ _NOISE = re.compile(
     r"answer\s+(?:all|any)|attempt\s+(?:all|any)|all\s+questions\s+carry|page\s+\d+|\*+$|-+$|_+$|figures?\s+to\s+the\s+right)",
     re.I,
 )
+# "1½ hours" reaches us as "11⁄2 hours" after Unicode normalisation
+_DURATION = re.compile(
+    r"\b(?:time|duration)(?:\s+(?:allowed|allotted))?\s*[:\-–]?\s*(\d+?(?:\.\d+)?)(½|1\s*[⁄/]\s*2)?\s*"
+    r"(hours?|hrs?|h|minutes?|mins?)\b\.?(?:\s*(?:and\s*)?(\d+)\s*(?:minutes?|mins?)\b)?", re.I)
+_MAX_MARKS = re.compile(r"\b(?:max(?:imum)?\.?\s*marks?|total\s+marks|full\s+marks)\s*[:\-–]?\s*(\d{1,3})\b", re.I)
 _INSTRUCTION_STEM = re.compile(r"^\s*(?:answer|attempt|solve|write)\s+(?:any|all|the following)\b|^\s*(?:any\s+\w+\s+of\s+the\s+following)", re.I)
 
 
@@ -115,8 +121,16 @@ def parse_text(text: str, title: str = "", bt_scheme: str | None = "revised") ->
     pending_or = False
     warnings: list[str] = []
     explicit_q = sum(bool(_Q_HEAD.match(ln)) for ln in lines) >= 2
+    duration = max_marks = None
 
     for ln in lines:
+        if current is None:  # header: "Time: 3 Hrs    Max. Marks: 100"
+            if duration is None and (m := _DURATION.search(ln)):
+                value, half, unit, extra = m.groups()
+                duration = (float(value) + (0.5 if half else 0)) * (1 if unit.lower().startswith("m") else 60)
+                duration += float(extra or 0)
+            if max_marks is None and (m := _MAX_MARKS.search(ln)):
+                max_marks = float(m.group(1))
         if not ln.strip() or _NOISE.match(ln):
             continue
         if _OR.match(ln):
@@ -244,7 +258,8 @@ def parse_text(text: str, title: str = "", bt_scheme: str | None = "revised") ->
     if questions and 0 < missing < len(questions):
         warnings.append(f"{missing} of {len(questions)} questions have no marks; the report will weight by count")
     total = effective_total(questions) if missing == 0 and questions else None
-    return Paper(title=title, questions=questions, total_marks=total, warnings=warnings)
+    return Paper(title=title, questions=questions, total_marks=total, max_marks=max_marks, duration_minutes=duration,
+                 warnings=warnings)
 
 
 def effective_total(questions: list[Question]) -> float:

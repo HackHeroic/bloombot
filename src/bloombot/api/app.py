@@ -23,7 +23,7 @@ from bloombot.pipeline.conductor import Conductor
 from bloombot.pipeline.intake import parse_file, parse_text
 from bloombot.pipeline.rewrite import Rewriter
 from bloombot.pipeline.schemas import (
-    Blueprint, LevelName, Paper, PaperReport, Prediction, RebalanceResult, RewriteJob, RewriteResult,
+    Blueprint, LevelName, Pace, Paper, PaperReport, Prediction, RebalanceResult, RewriteJob, RewriteResult,
 )
 from bloombot.taxonomy import DESCRIPTIONS, LEVELS, Level
 from bloombot.text.linguistics import default_analyzer
@@ -59,6 +59,7 @@ class AssessRequest(BaseModel):
     blueprint: Blueprint | None = None
     use_llm: bool | None = None
     profile_id: str | None = None
+    pace: Pace = Field(default="typical", description="students' pace for the time estimate")
 
 
 class PlanRequest(BaseModel):
@@ -175,7 +176,7 @@ def create_app() -> FastAPI:
         if not req.paper.questions:
             raise HTTPException(422, "the paper has no questions")
         c = Conductor(_assessor(s, req.profile_id), s.settings)
-        return c.assess_paper(req.paper, _blueprint(s, req.blueprint_id, req.blueprint), req.use_llm)
+        return c.assess_paper(req.paper, _blueprint(s, req.blueprint_id, req.blueprint), req.use_llm, req.pace)
 
     @app.post("/v1/papers/assess-job", status_code=202)
     def assess_job(req: AssessRequest, s: Services = Depends(services)) -> JobState:
@@ -187,7 +188,7 @@ def create_app() -> FastAPI:
 
         def work(job: JobState) -> PaperReport:
             c = Conductor(a, s.settings, trace=LiveTrace(job.trace), cancel=s.cancels.get(job.id))
-            return c.assess_paper(req.paper, bp, req.use_llm)
+            return c.assess_paper(req.paper, bp, req.use_llm, req.pace)
 
         return s.submit("assess", work)
 
@@ -216,7 +217,7 @@ def create_app() -> FastAPI:
 
         def work(job: JobState) -> RebalanceResult:
             c = Conductor(a, s.settings, trace=LiveTrace(job.trace), cancel=s.cancels.get(job.id))
-            return c.rebalance(req.paper, bp, req.use_llm)
+            return c.rebalance(req.paper, bp, req.use_llm, req.pace)
 
         return s.submit("rebalance", work)
 

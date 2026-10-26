@@ -730,6 +730,17 @@
               }
             ],
             "title": "Profile Id"
+          },
+          "pace": {
+            "type": "string",
+            "enum": [
+              "faster",
+              "typical",
+              "slower"
+            ],
+            "title": "Pace",
+            "description": "students' pace for the time estimate",
+            "default": "typical"
           }
         },
         "type": "object",
@@ -1197,6 +1208,44 @@
         ],
         "title": "LevelBound"
       },
+      "MarkingCheck": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "ok": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ok",
+            "description": "None when it cannot be checked (e.g. no marks printed)"
+          },
+          "detail": {
+            "type": "string",
+            "title": "Detail"
+          },
+          "questions": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Questions"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "ok",
+          "detail"
+        ],
+        "title": "MarkingCheck"
+      },
       "Neighbour": {
         "properties": {
           "question": {
@@ -1264,6 +1313,30 @@
             ],
             "title": "Total Marks"
           },
+          "max_marks": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Marks",
+            "description": "maximum marks printed on the paper"
+          },
+          "duration_minutes": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Duration Minutes",
+            "description": "exam duration, printed or entered by the teacher"
+          },
           "warnings": {
             "items": {
               "type": "string"
@@ -1326,6 +1399,35 @@
             },
             "type": "array",
             "title": "Needs Review"
+          },
+          "timing": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/TimeEstimate"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "marking": {
+            "items": {
+              "$ref": "#/components/schemas/MarkingCheck"
+            },
+            "type": "array",
+            "title": "Marking"
+          },
+          "ready": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ready",
+            "description": "Bloom mix, time and marking all pass (None: nothing to check)"
           }
         },
         "type": "object",
@@ -1385,6 +1487,35 @@
             },
             "type": "array",
             "title": "Needs Review"
+          },
+          "timing": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/TimeEstimate"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "marking": {
+            "items": {
+              "$ref": "#/components/schemas/MarkingCheck"
+            },
+            "type": "array",
+            "title": "Marking"
+          },
+          "ready": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ready",
+            "description": "Bloom mix, time and marking all pass (None: nothing to check)"
           }
         },
         "type": "object",
@@ -1773,6 +1904,54 @@
         ],
         "title": "QuestionAssessment"
       },
+      "QuestionTime": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "low": {
+            "type": "number",
+            "title": "Low",
+            "description": "minutes, at the chosen pace"
+          },
+          "high": {
+            "type": "number",
+            "title": "High"
+          },
+          "reading": {
+            "type": "number",
+            "title": "Reading",
+            "description": "minutes spent reading the question and its share of the stem"
+          },
+          "actions": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Actions",
+            "description": "what the student must do, e.g. 'prove 6-15 min'"
+          },
+          "basis": {
+            "type": "string",
+            "enum": [
+              "verbs",
+              "level"
+            ],
+            "title": "Basis",
+            "description": "action verbs found, or the predicted level as fallback"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "low",
+          "high",
+          "reading",
+          "basis"
+        ],
+        "title": "QuestionTime"
+      },
       "RewriteJob": {
         "properties": {
           "question_id": {
@@ -1959,6 +2138,70 @@
           "needs_teacher"
         ],
         "title": "RewriteResult"
+      },
+      "TimeEstimate": {
+        "properties": {
+          "questions": {
+            "items": {
+              "$ref": "#/components/schemas/QuestionTime"
+            },
+            "type": "array",
+            "title": "Questions"
+          },
+          "total_low": {
+            "type": "number",
+            "title": "Total Low",
+            "description": "minutes for the questions a student answers (one option per OR-group)"
+          },
+          "total_high": {
+            "type": "number",
+            "title": "Total High"
+          },
+          "duration_minutes": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Duration Minutes"
+          },
+          "pace": {
+            "type": "string",
+            "enum": [
+              "faster",
+              "typical",
+              "slower"
+            ],
+            "title": "Pace",
+            "default": "typical"
+          },
+          "verdict": {
+            "type": "string",
+            "enum": [
+              "fits",
+              "tight",
+              "too_long",
+              "unknown"
+            ],
+            "title": "Verdict"
+          },
+          "detail": {
+            "type": "string",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "required": [
+          "questions",
+          "total_low",
+          "total_high",
+          "verdict",
+          "detail"
+        ],
+        "title": "TimeEstimate"
       },
       "ValidationError": {
         "properties": {
