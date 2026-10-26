@@ -1,0 +1,27 @@
+XYZ Institute of Technology
+B.Tech Semester V End-Semester Examination, November 2026
+Course: Operating Systems (CS301)
+Time: 3 Hours                                        Max. Marks: 50
+Instructions: Answer all questions. Figures to the right indicate full marks.
+
+PART - A
+Q.1 a) Define a process. [2] CO1 BT1
+    b) List the states of a process. [2] CO1 BT1
+    c) What is a context switch? [2] CO1 BT1
+    d) State the necessary conditions for deadlock. [2] CO2 BT1
+    e) What is thrashing? [2] CO3 BT1
+
+PART - B
+Q2. Explain the difference between preemptive and non-preemptive
+    scheduling with suitable examples. (10 Marks) CO2 BT2
+OR
+Q3. Describe the producer-consumer problem and its solution using
+    semaphores. (10 Marks) CO2 BT2
+
+Q4. Consider the following processes with burst times P1=24, P2=3, P3=3 ms.
+    (a) Draw the Gantt chart for FCFS scheduling. [5]
+    (b) Calculate the average waiting time for FCFS and SJF. [5]
+
+Q5. Explain paging with a neat diagram. (10 Marks) CO3 BT2
+
+Q6. Write short notes on virtual memory and demand paging. (10 Marks) CO3 BT1

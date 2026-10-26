@@ -1,0 +1,15 @@
+ABC College of Engineering (Autonomous)
+Department of Computer Science and Engineering
+Course: Compiler Design (21CS62)                                Max Marks: 100
+Q.No   Questions                                                        Marks   CO    BL
+1   a  Define a compiler. List the phases of a compiler.                  6     CO1   L1
+    b  Explain the role of the lexical analyzer with a neat diagram.      8     CO1   L2
+    c  Construct the DFA for the regular expression (a|b)*abb.            6     CO1   L3
+OR
+2   a  What is a token? Differentiate between token, lexeme and pattern.  6     CO1   L4
+    b  Write a LEX program to count vowels and consonants in a string.   14     CO1   L3
+3   a  Eliminate left recursion from the given grammar and left factor it. 10   CO2   L3
+    b  Compare top-down and bottom-up parsing techniques.                 10    CO2   L4
+OR
+4   a  Construct the LL(1) parsing table for the given grammar.           12    CO2   L3
+    b  Justify why an ambiguous grammar cannot be LL(1).                    8    CO2   L5

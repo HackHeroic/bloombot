@@ -1,0 +1,171 @@
+from pathlib import Path
+
+import numpy as np
+import pytest
+
+from bloombot.eval.metrics import scores
+from bloombot.models.linear import BloomLex, LexiconRule
+from bloombot.models.llm import distribution_from_logprobs
+from bloombot.pipeline import blueprint as bp
+from bloombot.pipeline.intake import parse_text
+from bloombot.pipeline.rewrite import Rewriter
+from bloombot.pipeline.schemas import Blueprint, LevelBound, Paper, Question, RewriteJob
+
+ROOT = Path(__file__).resolve().parents[1]
+
+
+def test_paper_parse():
+    p = parse_text((ROOT / "data" / "papers" / "sample_os_paper.txt").read_text())
+    ids = [q.id for q in p.questions]
+    assert ids == ["1a", "1b", "1c", "1d", "1e", "2", "3", "4a", "4b", "5", "6"]
+    q = {q.id: q for q in p.questions}
+    assert q["1a"].marks == 2 and q["1a"].course_outcome == "CO1" and q["1a"].tagged_level == "Remember"
+    assert q["1a"].text == "Define a process."
+    assert q["2"].group == q["3"].group is not None          # OR alternatives
+    assert q["4a"].context and q["4a"].context.startswith("Consider")
+    assert p.total_marks == 50                                 # OR pair counted once
+
+
+@pytest.mark.parametrize("model", [LexiconRule(), BloomLex(), BloomLex(ordinal=True)])
+def test_models_return_distributions(model, toy):
+    q, y = toy
+    model.fit(q, y)
+    p = model.predict_proba(["Define recursion.", "Design a new compiler."])
+    assert p.shape == (2, 6)
+    np.testing.assert_allclose(p.sum(1), 1, atol=1e-6)
+    assert list(model.predict(["Define recursion.", "Design a new compiler."])) == [1, 6]
+
+
+def test_metrics():
+    s = scores([1, 2, 3, 4], [1, 2, 3, 4])
+    assert s["accuracy"] == 1 and s["qwk"] == pytest.approx(1)
+    s = scores([1, 2, 3, 4], [2, 3, 4, 5])
+    assert s["accuracy"] == 0 and s["within_one"] == 1 and s["mae"] == 1
+
+
+def test_logprob_distribution():
+    lp = [{"token": '{"', "logprob": 0}, {"token": "level", "logprob": 0}, {"token": '":', "logprob": 0},
+          {"token": "4", "logprob": -0.2, "top_logprobs": [{"token": "4", "logprob": -0.2}, {"token": "2", "logprob": -1.8}]}]
+    p = distribution_from_logprobs(lp, 4)
+    assert p.argmax() == 3 and 0.7 < p[3] < 0.9 and p[1] > 0
+    assert distribution_from_logprobs(None, 2).argmax() == 1
+    # non-ASCII digits among the alternatives must be ignored, not crash
+    lp[-1]["top_logprobs"] += [{"token": "\u2082", "logprob": -3.0}, {"token": "\uff12", "logprob": -3.0}]
+    assert distribution_from_logprobs(lp, 4).argmax() == 3
+
+
+def _paper():
+    return Paper(questions=[
+        Question(id="1", text="Define a stack.", marks=10), Question(id="2", text="List the types of memory.", marks=10),
+        Question(id="3", text="State Ohm's law.", marks=10), Question(id="4", text="Explain paging.", marks=10, group="g"),
+        Question(id="5", text="Describe the water cycle.", marks=10, group="g"),
+    ])
+
+
+def test_report_and_plan(assessor):
+    paper = _paper()
+    preds = assessor.assess([q.text for q in paper.questions])
+    blue = Blueprint(id="t", name="t", bounds=[LevelBound(levels=["Remember"], max_share=0.40)])
+    rep = bp.report(paper, preds, blue)
+    # 30 Remember marks out of 40 effective (the OR pair shares one 10-mark slot)
+    assert rep.distribution["Remember"] == pytest.approx(0.75)
+    assert rep.compliant is False
+    jobs = bp.plan(rep, blue)
+    assert len(jobs) == 2 and all(j.from_level == "Remember" for j in jobs)
+
+
+def test_rewrite_template_offline(assessor, settings):
+    rw = Rewriter(assessor, None, settings)
+    res = rw.run(RewriteJob(question_id="1", original="Define a binary search tree.", from_level="Remember",
+                            to_level="Create"))
+    assert res.attempts and res.attempts[0].composer == "template"
+    assert "binary search tree" in res.attempts[0].question
+    assert {c.name for c in res.attempts[0].checks} >= {"level", "form", "topic", "not_duplicate"}
+
+
+def test_table_layout_paper_with_whole_question_or():
+    p = parse_text((ROOT / "data" / "papers" / "sample_table_paper.txt").read_text())
+    assert [q.id for q in p.questions] == ["1a", "1b", "1c", "2a", "2b", "3a", "3b", "4a", "4b"]
+    q = {q.id: q for q in p.questions}
+    assert q["1a"].text == "Define a compiler. List the phases of a compiler."
+    assert (q["2b"].marks, q["2b"].tagged_level, q["4b"].tagged_level) == (14, "Apply", "Evaluate")
+    assert q["1a"].group == q["2b"].group and q["1a"].option != q["2b"].option
+    assert p.total_marks == 40
+    assert sum(bp.question_weights(p)) == pytest.approx(40)
+
+
+# --- regressions from the independent review -------------------------------------------------------
+@pytest.mark.parametrize("text,total,groups", [
+    ("11(a) Explain paging. [16]\nOR\n11(b) Explain segmentation. [16]\n12(a) Define a process. [16]\n", 32, 1),
+    ("11(a) Define X. [6]\n11(b) Explain Y. [10]\nOR\n12(a) Define Z. [6]\n12(b) Explain W. [10]\n13. Compare A and B. [4]\n", 20, 1),
+])
+def test_inline_numbering_or_groups(text, total, groups):
+    p = parse_text(text)
+    assert p.total_marks == total
+    assert len({q.group for q in p.questions if q.group}) == groups
+    assert sum(bp.question_weights(p)) == pytest.approx(total)
+    assert p.questions[-1].group is None or "13" not in p.questions[-1].id  # compulsory question stays outside
+
+
+def test_printed_tags_do_not_leak_into_text():
+    q = parse_text("1. Explain TCP congestion control in detail. CO2 L2 [10]\n").questions[0]
+    assert q.text == "Explain TCP congestion control in detail."
+    assert (q.marks, q.tagged_level, q.course_outcome) == (10, "Understand", "CO2")
+
+
+def test_wrapped_line_starting_with_number_is_continuation():
+    p = parse_text("1. A vessel contains\n2 moles of an ideal gas at 300 K. Find the pressure. [5]\n2. Define entropy. [5]\n")
+    assert [q.id for q in p.questions] == ["1", "2"] and "2 moles" in p.questions[0].text
+
+
+def test_logprobs_ignore_digits_inside_reasoning():
+    toks = ['{"', "reasoning", '":', ' "', "a", " level", " ", "4", " task", '",', ' "', "level", '":', " ", "2", "}"]
+    lp = [{"token": t, "logprob": 0.0} for t in toks]
+    lp[7]["top_logprobs"] = [{"token": "4", "logprob": -0.01}]
+    lp[14]["top_logprobs"] = [{"token": "2", "logprob": -0.1}, {"token": "3", "logprob": -2.5}]
+    p = distribution_from_logprobs(lp, 2)
+    assert p.argmax() == 1 and p[2] > 0
+
+
+def test_stratified_sample_keeps_level_shares():
+    import pandas as pd
+    from bloombot.eval.runner import _stratified
+
+    df = pd.DataFrame({"source": ["s"] * 1000, "level": [2] * 600 + [1] * 300 + [6] * 100, "uid": range(1000)})
+    s = _stratified(df, 100)
+    assert len(s) == 100 and s.level.value_counts().to_dict() == {2: 60, 1: 30, 6: 10}
+
+
+def test_profiles_do_not_share_llm_retriever(assessor, settings, toy):
+    from bloombot.models.llm import LLMClassifier
+    from bloombot.pipeline.assess import Assessor
+
+    q, y = toy
+    base = Assessor(assessor.lexis, assessor.bank, settings.model_copy(update={"encoder": "hashing"}),
+                    llm=LLMClassifier("none", shots=2))
+    before = base.llm.retriever
+    prof = base.with_examples(["Explain paging."] * 5, [1] * 5, "inst")
+    assert base.llm is not prof.llm and base.llm.retriever is before
+    assert len(prof.llm.retriever.questions) == len(q) + 5 and len(before.questions) == len(q)
+
+
+def test_svm_calibration_with_rare_class(toy):
+    from bloombot.models.linear import TfidfSVM
+
+    q, y = toy
+    q2, y2 = list(q) + ["Invent a new game."], np.append(y, 6)
+    keep = [i for i, v in enumerate(y2) if v != 6][:24] + [len(y2) - 1, len(y2) - 2]  # 2 Create examples
+    m = TfidfSVM().fit([q2[i] for i in keep], y2[keep])
+    assert m.fallback_ is False
+
+
+def test_pool_rules():
+    from bloombot.pipeline.assess import pool
+
+    lex = np.array([0.05, 0.6, 0.3, 0.03, 0.01, 0.01])  # Lexis: Understand, Apply second
+    llm = np.array([0.0, 0.0, 0.02, 0.0, 0.98, 0.0])   # an overconfident LLM: Evaluate
+    lin = pool([lex, llm], [1, 0.5], "linear")
+    assert np.isclose(lin.sum(), 1) and lin.argmax() == 1  # the mixture keeps Lexis' answer
+    geo = pool([lex, llm], [1, 0.5], "geometric")
+    assert geo.argmax() == 2  # log-linear pooling settles on a level neither voter chose
+    assert np.allclose(pool([lex, llm], [1, 0], "linear"), lex)  # weight 0 = evidence only

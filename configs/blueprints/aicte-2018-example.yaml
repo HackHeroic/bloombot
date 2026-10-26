@@ -1,0 +1,13 @@
+id: aicte-2018-example
+name: AICTE 2018 example cap on knowledge questions
+description: >
+  At most 40% of marks on knowledge-oriented (Remember) questions. AICTE's Examination Reform
+  Policy (2018, pp. 22-23) gives this as an example: "upper limit need to be arrived for lower
+  order skills (for example, no more than 40% weightage for knowledge-oriented questions)" and
+  notes that the weightage "can also vary from course to course". It is not a fixed rule.
+source: https://aicte.gov.in/sites/default/files/ExaminationReforms.pdf
+weight_by: marks
+bounds:
+  - label: Knowledge-oriented (Remember)
+    levels: [Remember]
+    max_share: 0.40

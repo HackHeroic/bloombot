@@ -1,0 +1,18 @@
+id: balanced-ug
+name: Balanced undergraduate paper (illustrative)
+description: >
+  An editable template, not an official rule: lower-order (Remember + Understand) at most 40%,
+  application and analysis at least 40%, and evaluation and creation at least 10% of marks.
+  Similar splits appear in several university OBE guidelines; set your own institution's numbers.
+source: illustrative
+weight_by: marks
+bounds:
+  - label: Lower order (Remember + Understand)
+    levels: [Remember, Understand]
+    max_share: 0.40
+  - label: Apply + Analyze
+    levels: [Apply, Analyze]
+    min_share: 0.40
+  - label: Higher order (Evaluate + Create)
+    levels: [Evaluate, Create]
+    min_share: 0.10
