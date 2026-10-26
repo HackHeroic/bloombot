@@ -1,0 +1,1976 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "BloomBot API",
+    "description": "Classify exam questions by revised Bloom level, check papers against a blueprint, and rewrite questions to a target level with automatic checks.",
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/health": {
+      "get": {
+        "summary": "Health",
+        "operationId": "health_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "type": "object",
+                  "title": "Response Health Health Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/meta": {
+      "get": {
+        "summary": "Meta",
+        "operationId": "meta_v1_meta_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "type": "object",
+                  "title": "Response Meta V1 Meta Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/blueprints": {
+      "get": {
+        "summary": "Blueprints",
+        "operationId": "blueprints_v1_blueprints_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/Blueprint"
+                  },
+                  "type": "array",
+                  "title": "Response Blueprints V1 Blueprints Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/analyze": {
+      "post": {
+        "summary": "Analyze",
+        "operationId": "analyze_v1_analyze_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AnalyzeRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "type": "object",
+                  "title": "Response Analyze V1 Analyze Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/classify": {
+      "post": {
+        "summary": "Classify",
+        "operationId": "classify_v1_classify_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClassifyRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ClassifyResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/papers/parse": {
+      "post": {
+        "summary": "Parse Upload",
+        "operationId": "parse_upload_v1_papers_parse_post",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_parse_upload_v1_papers_parse_post"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Paper"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/papers/parse-text": {
+      "post": {
+        "summary": "Parse Body",
+        "operationId": "parse_body_v1_papers_parse_text_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ParseTextRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Paper"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/papers/assess": {
+      "post": {
+        "summary": "Assess Paper",
+        "operationId": "assess_paper_v1_papers_assess_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AssessRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaperReport-Output"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/papers/plan": {
+      "post": {
+        "summary": "Plan",
+        "operationId": "plan_v1_papers_plan_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PlanRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/RewriteJob"
+                  },
+                  "type": "array",
+                  "title": "Response Plan V1 Papers Plan Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/rewrite": {
+      "post": {
+        "summary": "Rewrite",
+        "operationId": "rewrite_v1_rewrite_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RewriteRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RewriteResult"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/papers/rebalance": {
+      "post": {
+        "summary": "Rebalance",
+        "operationId": "rebalance_v1_papers_rebalance_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AssessRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JobState"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/jobs/{job_id}": {
+      "get": {
+        "summary": "Job",
+        "operationId": "job_v1_jobs__job_id__get",
+        "parameters": [
+          {
+            "name": "job_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Job Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JobState"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/profiles": {
+      "get": {
+        "summary": "Profiles",
+        "operationId": "profiles_v1_profiles_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/Profile"
+                  },
+                  "type": "array",
+                  "title": "Response Profiles V1 Profiles Get"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create Profile",
+        "operationId": "create_profile_v1_profiles_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ProfileRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Profile"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/profiles/{profile_id}": {
+      "delete": {
+        "summary": "Delete Profile",
+        "operationId": "delete_profile_v1_profiles__profile_id__delete",
+        "parameters": [
+          {
+            "name": "profile_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Profile Id"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Successful Response"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/experiments": {
+      "get": {
+        "summary": "Experiments",
+        "operationId": "experiments_v1_experiments_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "type": "object",
+                  "title": "Response Experiments V1 Experiments Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/experiments/tables": {
+      "get": {
+        "summary": "Experiment Tables",
+        "operationId": "experiment_tables_v1_experiments_tables_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "type": "string"
+                  },
+                  "type": "array",
+                  "title": "Response Experiment Tables V1 Experiments Tables Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/experiments/tables/{name}": {
+      "get": {
+        "summary": "Experiment Table",
+        "operationId": "experiment_table_v1_experiments_tables__name__get",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Name"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response Experiment Table V1 Experiments Tables  Name  Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AnalyzeRequest": {
+        "properties": {
+          "question": {
+            "type": "string",
+            "title": "Question"
+          }
+        },
+        "type": "object",
+        "required": [
+          "question"
+        ],
+        "title": "AnalyzeRequest"
+      },
+      "AssessRequest": {
+        "properties": {
+          "paper": {
+            "$ref": "#/components/schemas/Paper"
+          },
+          "blueprint_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Blueprint Id"
+          },
+          "blueprint": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Blueprint"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "use_llm": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Use Llm"
+          },
+          "profile_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Profile Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "paper"
+        ],
+        "title": "AssessRequest"
+      },
+      "Attempt": {
+        "properties": {
+          "number": {
+            "type": "integer",
+            "title": "Number"
+          },
+          "question": {
+            "type": "string",
+            "title": "Question"
+          },
+          "composer": {
+            "type": "string",
+            "title": "Composer"
+          },
+          "rationale": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Rationale"
+          },
+          "checks": {
+            "items": {
+              "$ref": "#/components/schemas/CheckResult"
+            },
+            "type": "array",
+            "title": "Checks"
+          },
+          "passed": {
+            "type": "boolean",
+            "title": "Passed"
+          },
+          "predicted_level": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "Remember",
+                  "Understand",
+                  "Apply",
+                  "Analyze",
+                  "Evaluate",
+                  "Create"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Predicted Level"
+          }
+        },
+        "type": "object",
+        "required": [
+          "number",
+          "question",
+          "composer",
+          "checks",
+          "passed"
+        ],
+        "title": "Attempt"
+      },
+      "Blueprint": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description",
+            "default": ""
+          },
+          "source": {
+            "type": "string",
+            "title": "Source",
+            "default": ""
+          },
+          "bounds": {
+            "items": {
+              "$ref": "#/components/schemas/LevelBound"
+            },
+            "type": "array",
+            "title": "Bounds"
+          },
+          "weight_by": {
+            "type": "string",
+            "enum": [
+              "marks",
+              "count"
+            ],
+            "title": "Weight By",
+            "default": "marks"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "bounds"
+        ],
+        "title": "Blueprint"
+      },
+      "Body_parse_upload_v1_papers_parse_post": {
+        "properties": {
+          "file": {
+            "type": "string",
+            "contentMediaType": "application/octet-stream",
+            "title": "File"
+          },
+          "bt_scheme": {
+            "type": "string",
+            "title": "Bt Scheme",
+            "default": "revised"
+          }
+        },
+        "type": "object",
+        "required": [
+          "file"
+        ],
+        "title": "Body_parse_upload_v1_papers_parse_post"
+      },
+      "BoundCheck": {
+        "properties": {
+          "bound": {
+            "$ref": "#/components/schemas/LevelBound"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description"
+          },
+          "share": {
+            "type": "number",
+            "title": "Share"
+          },
+          "ok": {
+            "type": "boolean",
+            "title": "Ok"
+          },
+          "gap": {
+            "type": "number",
+            "title": "Gap",
+            "description": "share to move in (+) or out (-) of these levels to comply"
+          }
+        },
+        "type": "object",
+        "required": [
+          "bound",
+          "description",
+          "share",
+          "ok",
+          "gap"
+        ],
+        "title": "BoundCheck"
+      },
+      "CheckResult": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "passed": {
+            "type": "boolean",
+            "title": "Passed"
+          },
+          "detail": {
+            "type": "string",
+            "title": "Detail",
+            "default": ""
+          },
+          "score": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Score"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "passed"
+        ],
+        "title": "CheckResult"
+      },
+      "ClassifyRequest": {
+        "properties": {
+          "questions": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "maxItems": 500,
+            "minItems": 1,
+            "title": "Questions"
+          },
+          "use_llm": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Use Llm",
+            "description": "None = server policy (LLM only when unsure)"
+          },
+          "profile_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Profile Id"
+          },
+          "explain": {
+            "type": "boolean",
+            "title": "Explain",
+            "default": false
+          }
+        },
+        "type": "object",
+        "required": [
+          "questions"
+        ],
+        "title": "ClassifyRequest"
+      },
+      "ClassifyResponse": {
+        "properties": {
+          "predictions": {
+            "items": {
+              "$ref": "#/components/schemas/Prediction"
+            },
+            "type": "array",
+            "title": "Predictions"
+          },
+          "model": {
+            "type": "string",
+            "title": "Model"
+          },
+          "llm_used": {
+            "type": "boolean",
+            "title": "Llm Used"
+          }
+        },
+        "type": "object",
+        "required": [
+          "predictions",
+          "model",
+          "llm_used"
+        ],
+        "title": "ClassifyResponse"
+      },
+      "DirectiveOut": {
+        "properties": {
+          "verb": {
+            "type": "string",
+            "title": "Verb"
+          },
+          "kind": {
+            "type": "string",
+            "title": "Kind"
+          },
+          "phrase": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Phrase"
+          },
+          "negated": {
+            "type": "boolean",
+            "title": "Negated",
+            "default": false
+          }
+        },
+        "type": "object",
+        "required": [
+          "verb",
+          "kind"
+        ],
+        "title": "DirectiveOut"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "JobState": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "kind": {
+            "type": "string",
+            "title": "Kind"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status",
+            "default": "queued"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          },
+          "finished_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Finished At"
+          },
+          "result": {
+            "title": "Result"
+          },
+          "error": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Error"
+          },
+          "trace": {
+            "items": {
+              "additionalProperties": true,
+              "type": "object"
+            },
+            "type": "array",
+            "title": "Trace"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "kind"
+        ],
+        "title": "JobState"
+      },
+      "LabelledExample": {
+        "properties": {
+          "question": {
+            "type": "string",
+            "title": "Question"
+          },
+          "level": {
+            "type": "string",
+            "enum": [
+              "Remember",
+              "Understand",
+              "Apply",
+              "Analyze",
+              "Evaluate",
+              "Create"
+            ],
+            "title": "Level"
+          }
+        },
+        "type": "object",
+        "required": [
+          "question",
+          "level"
+        ],
+        "title": "LabelledExample"
+      },
+      "LevelBound": {
+        "properties": {
+          "levels": {
+            "items": {
+              "type": "string",
+              "enum": [
+                "Remember",
+                "Understand",
+                "Apply",
+                "Analyze",
+                "Evaluate",
+                "Create"
+              ]
+            },
+            "type": "array",
+            "title": "Levels"
+          },
+          "min_share": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 1.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Min Share"
+          },
+          "max_share": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 1.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Max Share"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label",
+            "default": ""
+          }
+        },
+        "type": "object",
+        "required": [
+          "levels"
+        ],
+        "title": "LevelBound"
+      },
+      "Neighbour": {
+        "properties": {
+          "question": {
+            "type": "string",
+            "title": "Question"
+          },
+          "level": {
+            "type": "string",
+            "enum": [
+              "Remember",
+              "Understand",
+              "Apply",
+              "Analyze",
+              "Evaluate",
+              "Create"
+            ],
+            "title": "Level"
+          },
+          "similarity": {
+            "type": "number",
+            "title": "Similarity"
+          },
+          "source": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source"
+          }
+        },
+        "type": "object",
+        "required": [
+          "question",
+          "level",
+          "similarity"
+        ],
+        "title": "Neighbour"
+      },
+      "Paper": {
+        "properties": {
+          "title": {
+            "type": "string",
+            "title": "Title",
+            "default": ""
+          },
+          "questions": {
+            "items": {
+              "$ref": "#/components/schemas/Question"
+            },
+            "type": "array",
+            "title": "Questions"
+          },
+          "total_marks": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Total Marks"
+          },
+          "warnings": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Warnings"
+          }
+        },
+        "type": "object",
+        "required": [
+          "questions"
+        ],
+        "title": "Paper"
+      },
+      "PaperReport-Input": {
+        "properties": {
+          "paper": {
+            "$ref": "#/components/schemas/Paper"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/QuestionAssessment-Input"
+            },
+            "type": "array",
+            "title": "Items"
+          },
+          "distribution": {
+            "additionalProperties": {
+              "type": "number"
+            },
+            "type": "object",
+            "title": "Distribution",
+            "description": "share of weight per level"
+          },
+          "weight_by": {
+            "type": "string",
+            "title": "Weight By"
+          },
+          "checks": {
+            "items": {
+              "$ref": "#/components/schemas/BoundCheck"
+            },
+            "type": "array",
+            "title": "Checks"
+          },
+          "compliant": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Compliant"
+          },
+          "needs_review": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Needs Review"
+          }
+        },
+        "type": "object",
+        "required": [
+          "paper",
+          "items",
+          "distribution",
+          "weight_by"
+        ],
+        "title": "PaperReport"
+      },
+      "PaperReport-Output": {
+        "properties": {
+          "paper": {
+            "$ref": "#/components/schemas/Paper"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/QuestionAssessment-Output"
+            },
+            "type": "array",
+            "title": "Items"
+          },
+          "distribution": {
+            "additionalProperties": {
+              "type": "number"
+            },
+            "type": "object",
+            "title": "Distribution",
+            "description": "share of weight per level"
+          },
+          "weight_by": {
+            "type": "string",
+            "title": "Weight By"
+          },
+          "checks": {
+            "items": {
+              "$ref": "#/components/schemas/BoundCheck"
+            },
+            "type": "array",
+            "title": "Checks"
+          },
+          "compliant": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Compliant"
+          },
+          "needs_review": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Needs Review"
+          }
+        },
+        "type": "object",
+        "required": [
+          "paper",
+          "items",
+          "distribution",
+          "weight_by"
+        ],
+        "title": "PaperReport"
+      },
+      "ParseTextRequest": {
+        "properties": {
+          "text": {
+            "type": "string",
+            "title": "Text"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title",
+            "default": ""
+          },
+          "bt_scheme": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Bt Scheme",
+            "description": "how printed BT1-BT6 codes are numbered",
+            "default": "revised"
+          }
+        },
+        "type": "object",
+        "required": [
+          "text"
+        ],
+        "title": "ParseTextRequest"
+      },
+      "PlanRequest": {
+        "properties": {
+          "report": {
+            "$ref": "#/components/schemas/PaperReport-Input"
+          },
+          "blueprint_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Blueprint Id"
+          },
+          "blueprint": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Blueprint"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "type": "object",
+        "required": [
+          "report"
+        ],
+        "title": "PlanRequest"
+      },
+      "Prediction": {
+        "properties": {
+          "question": {
+            "type": "string",
+            "title": "Question"
+          },
+          "level": {
+            "type": "string",
+            "enum": [
+              "Remember",
+              "Understand",
+              "Apply",
+              "Analyze",
+              "Evaluate",
+              "Create"
+            ],
+            "title": "Level"
+          },
+          "level_id": {
+            "type": "integer",
+            "title": "Level Id"
+          },
+          "confidence": {
+            "type": "number",
+            "title": "Confidence"
+          },
+          "proba": {
+            "additionalProperties": {
+              "type": "number"
+            },
+            "type": "object",
+            "title": "Proba"
+          },
+          "needs_review": {
+            "type": "boolean",
+            "title": "Needs Review"
+          },
+          "lower_order": {
+            "type": "boolean",
+            "title": "Lower Order"
+          },
+          "directives": {
+            "items": {
+              "$ref": "#/components/schemas/DirectiveOut"
+            },
+            "type": "array",
+            "title": "Directives"
+          },
+          "frame": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Frame"
+          },
+          "evidence": {
+            "type": "string",
+            "title": "Evidence",
+            "default": "none"
+          },
+          "votes": {
+            "items": {
+              "$ref": "#/components/schemas/Vote"
+            },
+            "type": "array",
+            "title": "Votes"
+          },
+          "neighbours": {
+            "items": {
+              "$ref": "#/components/schemas/Neighbour"
+            },
+            "type": "array",
+            "title": "Neighbours"
+          },
+          "explanation": {
+            "items": {
+              "prefixItems": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "number"
+                }
+              ],
+              "type": "array",
+              "maxItems": 2,
+              "minItems": 2
+            },
+            "type": "array",
+            "title": "Explanation"
+          }
+        },
+        "type": "object",
+        "required": [
+          "question",
+          "level",
+          "level_id",
+          "confidence",
+          "proba",
+          "needs_review",
+          "lower_order"
+        ],
+        "title": "Prediction"
+      },
+      "Profile": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "examples": {
+            "items": {
+              "$ref": "#/components/schemas/LabelledExample"
+            },
+            "type": "array",
+            "title": "Examples"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Created At"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "examples"
+        ],
+        "title": "Profile"
+      },
+      "ProfileRequest": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "examples": {
+            "items": {
+              "$ref": "#/components/schemas/LabelledExample"
+            },
+            "type": "array",
+            "minItems": 5,
+            "title": "Examples"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "examples"
+        ],
+        "title": "ProfileRequest"
+      },
+      "Question": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id",
+            "description": "stable id inside the paper, e.g. '2b' or '3-or'"
+          },
+          "number": {
+            "type": "string",
+            "title": "Number",
+            "description": "numbering as printed, e.g. 'Q2 (b)'",
+            "default": ""
+          },
+          "text": {
+            "type": "string",
+            "title": "Text"
+          },
+          "context": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Context",
+            "description": "shared stem of a multi-part question"
+          },
+          "marks": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Marks"
+          },
+          "section": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Section"
+          },
+          "group": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Group",
+            "description": "id shared by OR-alternatives"
+          },
+          "option": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Option",
+            "description": "which alternative of the group this item belongs to"
+          },
+          "course_outcome": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Course Outcome"
+          },
+          "tagged_level": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "Remember",
+                  "Understand",
+                  "Apply",
+                  "Analyze",
+                  "Evaluate",
+                  "Create"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tagged Level",
+            "description": "level printed on the paper, if any"
+          },
+          "locked": {
+            "type": "boolean",
+            "title": "Locked",
+            "description": "teacher marked it as not to be rewritten",
+            "default": false
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "text"
+        ],
+        "title": "Question"
+      },
+      "QuestionAssessment-Input": {
+        "properties": {
+          "question": {
+            "$ref": "#/components/schemas/Question"
+          },
+          "prediction": {
+            "$ref": "#/components/schemas/Prediction"
+          }
+        },
+        "type": "object",
+        "required": [
+          "question",
+          "prediction"
+        ],
+        "title": "QuestionAssessment"
+      },
+      "QuestionAssessment-Output": {
+        "properties": {
+          "question": {
+            "$ref": "#/components/schemas/Question"
+          },
+          "prediction": {
+            "$ref": "#/components/schemas/Prediction"
+          }
+        },
+        "type": "object",
+        "required": [
+          "question",
+          "prediction"
+        ],
+        "title": "QuestionAssessment"
+      },
+      "RewriteJob": {
+        "properties": {
+          "question_id": {
+            "type": "string",
+            "title": "Question Id"
+          },
+          "original": {
+            "type": "string",
+            "title": "Original"
+          },
+          "from_level": {
+            "type": "string",
+            "enum": [
+              "Remember",
+              "Understand",
+              "Apply",
+              "Analyze",
+              "Evaluate",
+              "Create"
+            ],
+            "title": "From Level"
+          },
+          "to_level": {
+            "type": "string",
+            "enum": [
+              "Remember",
+              "Understand",
+              "Apply",
+              "Analyze",
+              "Evaluate",
+              "Create"
+            ],
+            "title": "To Level"
+          },
+          "marks": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Marks"
+          },
+          "reason": {
+            "type": "string",
+            "title": "Reason",
+            "default": ""
+          }
+        },
+        "type": "object",
+        "required": [
+          "question_id",
+          "original",
+          "from_level",
+          "to_level"
+        ],
+        "title": "RewriteJob"
+      },
+      "RewriteRequest": {
+        "properties": {
+          "question": {
+            "type": "string",
+            "title": "Question"
+          },
+          "target_level": {
+            "type": "string",
+            "enum": [
+              "Remember",
+              "Understand",
+              "Apply",
+              "Analyze",
+              "Evaluate",
+              "Create"
+            ],
+            "title": "Target Level"
+          },
+          "from_level": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "Remember",
+                  "Understand",
+                  "Apply",
+                  "Analyze",
+                  "Evaluate",
+                  "Create"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "From Level"
+          },
+          "context": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Context"
+          },
+          "marks": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Marks"
+          },
+          "other_questions": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Other Questions"
+          },
+          "profile_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Profile Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "question",
+          "target_level"
+        ],
+        "title": "RewriteRequest"
+      },
+      "RewriteResult": {
+        "properties": {
+          "job": {
+            "$ref": "#/components/schemas/RewriteJob"
+          },
+          "accepted": {
+            "type": "boolean",
+            "title": "Accepted"
+          },
+          "final_question": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Final Question"
+          },
+          "attempts": {
+            "items": {
+              "$ref": "#/components/schemas/Attempt"
+            },
+            "type": "array",
+            "title": "Attempts"
+          },
+          "needs_teacher": {
+            "type": "boolean",
+            "title": "Needs Teacher"
+          }
+        },
+        "type": "object",
+        "required": [
+          "job",
+          "accepted",
+          "final_question",
+          "attempts",
+          "needs_teacher"
+        ],
+        "title": "RewriteResult"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      },
+      "Vote": {
+        "properties": {
+          "agent": {
+            "type": "string",
+            "title": "Agent"
+          },
+          "level": {
+            "type": "string",
+            "enum": [
+              "Remember",
+              "Understand",
+              "Apply",
+              "Analyze",
+              "Evaluate",
+              "Create"
+            ],
+            "title": "Level"
+          },
+          "confidence": {
+            "type": "number",
+            "title": "Confidence"
+          },
+          "proba": {
+            "items": {
+              "type": "number"
+            },
+            "type": "array",
+            "title": "Proba"
+          },
+          "reasoning": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reasoning"
+          }
+        },
+        "type": "object",
+        "required": [
+          "agent",
+          "level",
+          "confidence",
+          "proba"
+        ],
+        "title": "Vote"
+      }
+    }
+  }
+}
