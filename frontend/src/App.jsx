@@ -20,7 +20,7 @@ export default class App extends React.Component {
     labelCount: 0, labelIdx: 0, lastLabel: null, activeProfile: 'none',
     node: 'Lexis', step: 0,
     // live API
-    online: null, llmAvailable: null, llmModel: '', error: '', busy: '',
+    online: null, llmAvailable: null, llmModel: '', error: '', busy: '', duration: '', maxMarks: '', pace: 'typical',
     apiPaper: null, report: null, D: {}, clsLive: null, labels: {}, profileId: null, progress: 0 };
 
   componentDidMount() {
@@ -85,6 +85,7 @@ export default class App extends React.Component {
       if (!paper.questions.length) throw new Error('No questions were found. Check the text has numbered questions (Q1, 1., 1 a) …).');
       const rows = A.paperRows(paper);
       await this.set({ checkStage: 'edit', apiPaper: paper, report: null, paper: rows, resolved: {},
+        duration: paper.duration_minutes ? String(paper.duration_minutes) : '', maxMarks: paper.max_marks ? String(paper.max_marks) : '',
         D: { SECTIONS: A.sections(rows), TITLE: A.paperTitle(paper, rows), OR_NOTE: A.orNote(rows) } });
     } catch (e) { this.setState({ checkStage: 'upload' }); this.fail(e); }
   }
@@ -98,9 +99,9 @@ export default class App extends React.Component {
     const gen = this.assessGen = (this.assessGen || 0) + 1;  // pressing Assess again restarts
     this.setState({ busy: 'assess', error: '', assessProgress: null });
     try {
-      const paper = A.paperForApi(s.apiPaper, s.paper);
+      const paper = { ...A.paperForApi(s.apiPaper, s.paper), duration_minutes: +s.duration || null, max_marks: +s.maxMarks || null };
       const [report, bps] = await Promise.all([
-        this.assessJob({ paper, blueprint_id: this.bpId(), use_llm: this.useLlm(), profile_id: s.profileId }, gen),
+        this.assessJob({ paper, blueprint_id: this.bpId(), use_llm: this.useLlm(), profile_id: s.profileId, pace: s.pace }, gen),
         this.blueprints || (this.blueprints = fetch(apiBase() + '/v1/blueprints').then(r => r.json())),
       ]);
       const bp = bps.find(b => b.id === this.bpId());
@@ -141,6 +142,21 @@ export default class App extends React.Component {
       if (j.status === 'failed' || j.status === 'cancelled') throw new Error(j.error || 'The assessment failed.');
       if (j.status === 'done') return j.result;
     }
+  }
+
+  // One verdict over the Bloom mix, the time and the marking (the time and marks need the live API).
+  verdict(bp, failing, report, feas) {
+    const bloom = failing ? `${failing} of ${bp.checks.length} bound${bp.checks.length > 1 ? 's' : ''} fail against ${bp.name}.` : `All ${bp.checks.length} bound${bp.checks.length > 1 ? 's' : ''} met against ${bp.name}.`;
+    const colors = st => ({ verdictIcon: st === 'bad' ? '✗' : st === 'warn' ? '!' : '✓', verdictBg: `var(--${st}bg)`, verdictBorder: `var(--${st})` });
+    if (!feas.hasTiming) return { verdictText: failing ? 'Not compliant' : 'Compliant', verdictSub: bloom, ...colors(failing ? 'bad' : 'good') };
+    const t = report.timing, markFails = report.marking.filter(c => c.ok === false).map(c => c.name.toLowerCase());
+    const parts = [`Bloom mix: ${failing ? `${failing} bound${failing > 1 ? 's' : ''} fail` : 'all bounds met'}`,
+      `Time: ${A.fmtMin(t.total_low)}–${A.fmtMin(t.total_high)} of work${t.duration_minutes ? ` for ${A.fmtMin(t.duration_minutes)}` : ' (no duration given)'}`,
+      `Marks: ${markFails.length ? markFails.join(', ') + ' ✗' : report.marking.some(c => c.ok === null) ? 'none printed' : 'consistent'}`];
+    const tight = t.verdict === 'tight';
+    const st = report.ready === false ? 'bad' : tight || t.verdict === 'unknown' ? 'warn' : 'good';
+    const text = report.ready === false ? (t.verdict === 'too_long' ? 'Not ready: too long' : 'Not ready') : tight ? 'Ready, but tight' : t.verdict === 'unknown' ? 'Bloom mix OK' : 'Ready';
+    return { verdictText: text, verdictSub: parts.join(' · ') + '.', ...colors(st) };
   }
 
   async startJob() {
@@ -246,6 +262,7 @@ export default class App extends React.Component {
     return { paper: this.title(), blueprint: bp.name, before: { distribution: B.DIST_BEFORE, checks: bp.checks.map(c => ({ bound: c.label, share: c.b })) },
       after: { distribution: B.DIST_AFTER, checks: bp.checks.map(c => ({ bound: c.label, share: c.a })) },
       rewrites: B.RW.map(r => ({ q: r.q, from: B.L[r.from - 1], to: B.L[r.to - 1], status: this.state.rwStatus[r.id] || 'pending', text: this.state.rwText[r.id] || r.rewrite })),
+      timeAndMarks: this.state.report && this.state.report.timing ? { timing: this.state.report.timing, marking: this.state.report.marking, ready: this.state.report.ready } : null,
       trace: this.state.D.TRACE || null }; }
   h() { return React.createElement; }
   lineChart(series, o) {
@@ -313,7 +330,7 @@ export default class App extends React.Component {
       return { ...sec, rows: qs.map((q, i) => {
         const inG = !!q.group, first = inG && (i === 0 || qs[i - 1].group !== q.group);
         const upd = patch => this.setState(st => ({ paper: st.paper.map(x => x.id === q.id ? { ...x, ...patch } : x), report: patch.locked === undefined ? null : st.report }));
-        return { ...q, inGroup: inG, showOr: inG && !first, groupLabel: first ? `Answer either Q${q.id} or Q${qs[i + 1] ? qs[i + 1].id : ''} · one ${q.marks}-mark slot` : '', showGroupLabel: first,
+        return { ...q, marks: q.marks == null ? '' : q.marks, inGroup: inG, showOr: inG && !first, groupLabel: first ? `Answer either Q${q.id} or Q${qs[i + 1] ? qs[i + 1].id : ''} · one ${q.marks}-mark slot` : '', showGroupLabel: first,
           rowBg: inG ? 'var(--surface2)' : 'transparent', groupBorder: inG ? 'var(--accent)' : 'transparent',
           hasTag: !!q.tag, noTag: !q.tag, tagChip: q.tag ? chip(N(q.tag)) : chip(1), coTxt: q.co || '—', hasContext: !!q.context, onText: e => upd({ text: e.target.value }), onMarks: e => upd({ marks: e.target.value === '' ? null : +e.target.value || 0 }),
           toggleLock: () => upd({ locked: !q.locked }), lockLabel: q.locked ? '🔒 Locked' : 'Lock', lockPressed: q.locked ? 'true' : 'false',
@@ -326,8 +343,10 @@ export default class App extends React.Component {
     const checkRows = (key, t) => bp.checks.map(c => { const v = key === 'b' ? c.b : c.a; const pass = key === 'a' ? c.aOk !== false : !!c.bOk;
       return { label: c.label, shareTxt: Math.round(v * t) + '%', icon: pass ? '✓' : '✗', color: pass ? 'var(--good)' : 'var(--bad)', bg: pass ? 'var(--goodbg)' : 'var(--badbg)', note: key === 'b' ? c.bn : c.an }; });
     const failing = bp.checks.filter(c => !c.bOk).length;
+    const feas = A.feasibility(s.report);
     const tableRows = s.paper.map(q => { const res = s.resolved[q.id]; const lvl = res ? N(res) : q.pred; const agree = !!q.tag && N(q.tag) === lvl, disagree = !!q.tag && !agree;
-      return { ...q, chip: chip(lvl), confTxt: q.conf.toFixed(2), confColor: q.conf < 0.6 ? 'var(--warn)' : 'var(--ink2)', lowConf: q.conf < 0.6, hasContext: !!q.context,
+      const timeTxt = feas.hasTiming ? feas.timeById[q.id] || '' : '';
+      return { ...q, marks: q.marks == null ? '–' : q.marks, timeTxt, timeSep: timeTxt ? ' · ' : '', chip: chip(lvl), confTxt: q.conf.toFixed(2), confColor: q.conf < 0.6 ? 'var(--warn)' : 'var(--ink2)', lowConf: q.conf < 0.6, hasContext: !!q.context,
         agree, disagree, untagged: !q.tag, tagName: q.tag, predName: L[lvl - 1], tagBg: disagree ? 'var(--warnbg)' : 'transparent',
         flag: q.review && !res, resolvedFlag: !!res, resolvedTxt: res ? 'Teacher: ' + res : '', noFlag: !q.review && !res, bySource: res ? 'teacher' : 'predicted' }; });
     const reviewQueue = s.paper.filter(q => q.review).map(q => { const res = s.resolved[q.id];
@@ -349,11 +368,15 @@ export default class App extends React.Component {
       blueprints, assess: () => { if (!s.busy || s.busy === 'assess') this.assessPaper(); }, assessLabel: s.busy === 'assess' ? (s.assessProgress ? `Assessing… ${s.assessProgress.done} / ${s.assessProgress.n}` : 'Assessing…') : 'Assess',
       backToEdit: () => this.setState({ checkStage: 'edit' }), uploadNew: () => this.setState({ checkStage: 'upload' }),
       bpName: bp.name, markers: bp.markers, distBefore: B.DIST_BEFORE, checksBefore: checkRows('b', s.reportT),
-      failCount: failing, verdictSub: failing ? `${failing} of ${bp.checks.length} bound${bp.checks.length > 1 ? 's' : ''} fail against ${bp.name}.` : `All ${bp.checks.length} bound${bp.checks.length > 1 ? 's' : ''} met against ${bp.name}.`,
-      verdictText: failing ? 'Not compliant' : 'Compliant', verdictIcon: failing ? '✗' : '✓', verdictBg: failing ? 'var(--badbg)' : 'var(--goodbg)', verdictBorder: failing ? 'var(--bad)' : 'var(--good)',
+      failCount: failing, ...this.verdict(bp, failing, s.report, feas), ...feas,
+      durationVal: s.duration, onDuration: e => this.setState({ duration: e.target.value, report: null }),
+      maxMarksVal: s.maxMarks, onMaxMarks: e => this.setState({ maxMarks: e.target.value, report: null }),
+      paces: [['faster', 'Faster'], ['typical', 'Typical'], ['slower', 'Slower']].map(([id, label]) => ({ label, checked: s.pace === id ? 'true' : 'false',
+        pick: () => this.setState({ pace: id, report: null }), border: s.pace === id ? 'var(--accent)' : 'var(--line)', bg: s.pace === id ? 'var(--accent-soft)' : 'var(--surface)' })),
+      examNote: !this.live() ? 'Time and marks are checked with the live API.' : s.apiPaper && s.apiPaper.duration_minutes ? 'Duration read from the paper header; change it if needed.' : 'The duration is not printed on the paper: enter it to check that the paper fits the time.',
       paperTitle, paperNote: s.apiPaper ? `Read from ${s.fileName}.` : 'Recorded sample paper (the API is not running).', orNote: B.OR_NOTE || 'OR-alternatives share one slot: Q2/Q3 are one 10-mark slot; if they get different levels, each counts 5 marks.',
       reviewQueue, openReviews, reviewTitle: openReviews ? `${openReviews} question${openReviews > 1 ? 's' : ''} to resolve first` : 'Review queue clear',
-      tableRows, tableCols: '44px minmax(220px,1fr) 48px 150px 52px 160px 92px',
+      tableRows, tableCols: '44px minmax(220px,1fr) 48px 96px 150px 52px 160px 92px',
       lockedNote: s.busy === 'assess' && s.assessProgress ? `The LLM is checking ${s.assessProgress.n} questions the classifier is unsure about (${s.assessProgress.done} done, a few seconds each). For an instant result, turn "LLM second opinion" off and press Assess again.` : lockedIds.length ? `${lockedIds.length} locked: ${lockedIds.map(i => 'Q' + i).join(', ')} — never rewritten.` : 'No questions locked.',
       profileName: s.activeProfile === 'mine' ? `My college · CSE (k = ${Object.keys(s.labels).length || s.labelCount})` : 'No profile (generic model)',
       rebalance: () => this.startJob()
@@ -448,7 +471,8 @@ export default class App extends React.Component {
       afterNote: notApplied ? `${notApplied} planned rewrite${notApplied > 1 ? 's' : ''} not applied (locked, rejected or handed back). The “after” bar assumes every accepted rewrite — assess again before you submit.` : `Projection with all ${B.RW.length} rewrites applied.`,
       afterWarn: notApplied > 0, afterOk: notApplied === 0,
       exportMd: () => this.download('rebalanced-paper.md', this.paperMd(), 'text/markdown'),
-      exportReport: () => { const o = this.reportObj(); this.download('bloombot-report.md', `# BloomBot report\n\n${o.paper}\n\nBlueprint: ${o.blueprint}\n\n| Bound | Before | After |\n|---|---:|---:|\n` + bp.checks.map(c => `| ${c.label} | ${c.b}% ${c.bOk ? '✓' : '✗'} | ${c.a}% ${c.aOk !== false ? '✓' : '✗'} |`).join('\n') + '\n\n## Rewrites\n\n' + o.rewrites.map(r => `- ${r.q} ${r.from} → ${r.to} (${r.status}): ${r.text}`).join('\n') + '\n', 'text/markdown'); },
+      exportReport: () => { const o = this.reportObj(); this.download('bloombot-report.md', `# BloomBot report\n\n${o.paper}\n\nBlueprint: ${o.blueprint}\n\n| Bound | Before | After |\n|---|---:|---:|\n` + bp.checks.map(c => `| ${c.label} | ${c.b}% ${c.bOk ? '✓' : '✗'} | ${c.a}% ${c.aOk !== false ? '✓' : '✗'} |`).join('\n') + (o.timeAndMarks ? '\n\n## Time and marks\n\n' + [`- ${o.timeAndMarks.timing.detail} (pace: ${o.timeAndMarks.timing.pace})`,
+        ...o.timeAndMarks.marking.map(c => `- ${c.ok === null ? 'ℹ' : c.ok ? '✓' : '✗'} ${c.name}: ${c.detail}`)].join('\n') : '') + '\n\n## Rewrites\n\n' + o.rewrites.map(r => `- ${r.q} ${r.from} → ${r.to} (${r.status}): ${r.text}`).join('\n') + '\n', 'text/markdown'); },
       exportJson: () => this.download('bloombot-report.json', JSON.stringify(this.reportObj(), null, 2), 'application/json') };
 
     // ---------- Profile ----------

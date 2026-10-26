@@ -137,7 +137,13 @@ button,input,textarea,select{font-family:inherit}
 </sc-for>
 </div>
 <div style="display:flex;flex-direction:column;gap:12px">
-<span style="font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3)">Step 3 of 3 · Pick a blueprint</span>
+<span style="font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3)">Step 3 of 3 · Exam details and blueprint</span>
+<div style="display:flex;flex-wrap:wrap;gap:16px;align-items:flex-end;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px 18px">
+<label style="display:flex;flex-direction:column;gap:6px;font-size:13px;font-weight:600;color:var(--ink2)">Duration (minutes)<input aria-label="Exam duration in minutes" type="number" min="1" value="{{ durationVal }}" onChange="{{ onDuration }}" placeholder="e.g. 60" style="width:130px;font:15px 'JetBrains Mono',monospace;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px 12px"></label>
+<label style="display:flex;flex-direction:column;gap:6px;font-size:13px;font-weight:600;color:var(--ink2)">Maximum marks<input aria-label="Maximum marks" type="number" min="1" value="{{ maxMarksVal }}" onChange="{{ onMaxMarks }}" placeholder="optional" style="width:130px;font:15px 'JetBrains Mono',monospace;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px 12px"></label>
+<div style="display:flex;flex-direction:column;gap:6px;font-size:13px;font-weight:600;color:var(--ink2)">Students’ pace<div role="radiogroup" aria-label="Students’ pace" style="display:flex;gap:6px"><sc-for list="{{ paces }}" as="pc" hint-placeholder-count="3"><button role="radio" aria-checked="{{ pc.checked }}" onClick="{{ pc.pick }}" style="padding:10px 14px;border-radius:10px;border:1px solid {{ pc.border }};background:{{ pc.bg }};color:var(--ink);font-size:14px;font-weight:600;cursor:pointer">{{ pc.label }}</button></sc-for></div></div>
+<span style="flex:1 1 240px;font-size:13px;color:var(--ink3)">{{ examNote }}</span>
+</div>
 <div role="radiogroup" aria-label="Blueprint" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:12px">
 <sc-for list="{{ blueprints }}" as="b" hint-placeholder-count="2"><button role="radio" aria-checked="{{ b.checked }}" onClick="{{ b.pick }}" style="display:flex;gap:12px;align-items:flex-start;text-align:left;padding:16px 18px;border:2px solid {{ b.border }};background:{{ b.bg }};color:var(--ink);border-radius:14px;cursor:pointer"><span style="flex:0 0 18px;height:18px;border-radius:50%;border:2px solid var(--accent);background:{{ b.dot }};box-shadow:inset 0 0 0 3px var(--surface);margin-top:2px"></span><span style="display:flex;flex-direction:column;gap:2px"><span style="font-weight:600">{{ b.label }}</span><span style="font-size:13px;color:var(--ink2)">{{ b.sub }}</span></span></button></sc-for>
 </div>
@@ -161,6 +167,24 @@ button,input,textarea,select{font-family:inherit}
 <button onClick="{{ backToEdit }}" style="background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:12px;padding:13px 20px;font-size:15px;font-weight:600;cursor:pointer">Edit paper</button>
 </div>
 </div>
+<sc-if value="{{ hasTiming }}" hint-placeholder-val="{{ false }}">
+<section aria-label="Time and marks" style="background:var(--surface);border:1px solid {{ timeBorder }};border-radius:16px;padding:24px;display:flex;flex-direction:column;gap:18px">
+<div style="display:flex;flex-direction:column;gap:4px"><h2 style="font-family:'Newsreader',serif;font-weight:500;font-size:26px;margin:0">Time and marks</h2><span style="font-size:13px;color:var(--ink3)">{{ timeSub }}</span></div>
+<div style="display:flex;flex-direction:column;gap:8px">
+<div style="display:flex;flex-wrap:wrap;align-items:baseline;gap:8px 16px"><span style="font-family:'Newsreader',serif;font-size:34px;line-height:1.1;color:var(--ink)">{{ timeRange }}</span><span style="font-size:15px;color:var(--ink2)">{{ timeVs }}</span></div>
+<div aria-hidden="true" style="position:relative;height:18px;border-radius:999px;background:var(--bg);border:1px solid var(--line);overflow:hidden"><div style="position:absolute;top:0;bottom:0;left:{{ barLow }};width:{{ barSpan }};background:{{ timeColor }};opacity:.35"></div><div style="position:absolute;top:0;bottom:0;left:0;width:{{ barLow }};background:{{ timeColor }}"></div><sc-if value="{{ hasDuration }}"><div style="position:absolute;top:-2px;bottom:-2px;left:{{ barDuration }};border-left:2px dashed var(--ink)"></div></sc-if></div>
+<div style="display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink3)"><span>0</span><span>{{ barCaption }}</span><span>{{ barMax }}</span></div>
+</div>
+<ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px">
+<sc-for list="{{ feasChecks }}" as="c" hint-placeholder-count="3"><li style="display:grid;grid-template-columns:28px minmax(0,1fr);gap:12px;align-items:start;padding:10px 12px;border-radius:10px;background:{{ c.bg }}"><span aria-hidden="true" style="width:24px;height:24px;border-radius:50%;background:{{ c.color }};color:var(--surface);font-weight:700;text-align:center;line-height:24px">{{ c.icon }}</span><span style="display:flex;flex-direction:column;gap:2px"><span style="font-weight:600">{{ c.name }}</span><span style="font-size:14px;color:var(--ink2)">{{ c.detail }}</span></span></li></sc-for>
+</ul>
+<div style="display:flex;flex-direction:column;gap:8px">
+<span style="font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3)">Longest questions</span>
+<sc-for list="{{ longest }}" as="lq" hint-placeholder-count="3"><div style="display:grid;grid-template-columns:52px 110px minmax(0,1fr);gap:12px;align-items:baseline;font-size:14px"><span style="font-family:'JetBrains Mono',monospace;font-weight:700">Q{{ lq.id }}</span><span style="font-family:'JetBrains Mono',monospace;color:var(--ink)">{{ lq.range }}</span><span style="color:var(--ink2)">{{ lq.why }}</span></div></sc-for>
+</div>
+<details style="font-size:13px;color:var(--ink3)"><summary style="cursor:pointer;font-weight:600;color:var(--ink2)">How the time is estimated</summary><p style="margin:8px 0 0;line-height:1.55">{{ timeMethod }}</p></details>
+</section>
+</sc-if>
 <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:20px">
 <div style="background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:24px;display:flex;flex-direction:column;gap:20px">
 <div style="display:flex;flex-direction:column;gap:4px"><h2 style="font-family:'Newsreader',serif;font-weight:500;font-size:26px;margin:0">Distribution by marks</h2><span style="font-size:13px;color:var(--ink3)">Dashed lines are the blueprint bounds. {{ orNote }}</span></div>
@@ -191,12 +215,13 @@ button,input,textarea,select{font-family:inherit}
 <div style="display:flex;flex-wrap:wrap;align-items:baseline;gap:12px;padding:20px 24px"><h2 style="font-family:'Newsreader',serif;font-weight:500;font-size:26px;margin:0">Every question</h2><span style="font-size:13px;color:var(--ink3)">Highlighted: the printed tag disagrees with BloomBot.</span></div>
 <sc-if value="{{ tableWide }}" hint-placeholder-val="{{ true }}">
 <div role="table" aria-label="Questions" style="display:flex;flex-direction:column">
-<div role="row" style="display:grid;grid-template-columns:{{ tableCols }};gap:12px;padding:10px 24px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--ink3)"><span role="columnheader">Id</span><span role="columnheader">Question</span><span role="columnheader">Marks</span><span role="columnheader">Predicted</span><span role="columnheader">Conf.</span><span role="columnheader">Printed vs predicted</span><span role="columnheader">Review</span></div>
+<div role="row" style="display:grid;grid-template-columns:{{ tableCols }};gap:12px;padding:10px 24px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--ink3)"><span role="columnheader">Id</span><span role="columnheader">Question</span><span role="columnheader">Marks</span><span role="columnheader">Time</span><span role="columnheader">Predicted</span><span role="columnheader">Conf.</span><span role="columnheader">Printed vs predicted</span><span role="columnheader">Review</span></div>
 <sc-for list="{{ tableRows }}" as="r" hint-placeholder-count="6">
 <div role="row" style="display:grid;grid-template-columns:{{ tableCols }};gap:12px;align-items:center;padding:12px 24px;border-bottom:1px solid var(--line)">
 <span role="cell" style="font-family:'JetBrains Mono',monospace;font-weight:700;font-size:13px">{{ r.id }}</span>
 <span role="cell" style="display:flex;flex-direction:column;gap:2px"><sc-if value="{{ r.hasContext }}"><span style="font-size:12px;font-style:italic;color:var(--ink3)">{{ r.context }}</span></sc-if><span style="font-size:14px;text-wrap:pretty">{{ r.text }}</span></span>
 <span role="cell" style="font-family:'JetBrains Mono',monospace;font-size:13px">{{ r.marks }}</span>
+<span role="cell" style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink2)">{{ r.timeTxt }}</span>
 <span role="cell" style="display:flex;align-items:center;gap:10px"><span style="background:{{ r.chip.bg }};color:{{ r.chip.fg }};font-size:12px;font-weight:600;padding:3px 9px;border-radius:999px;white-space:nowrap">{{ r.chip.n }} {{ r.chip.name }}</span><dc-import name="LevelLadder" proba="{{ r.proba }}" size="xs" hint-size="44px,26px"></dc-import></span>
 <span role="cell" style="font-family:'JetBrains Mono',monospace;font-size:13px;color:{{ r.confColor }};font-weight:600">{{ r.confTxt }}</span>
 <span role="cell" style="font-size:12px;padding:5px 8px;border-radius:8px;background:{{ r.tagBg }};color:var(--ink)"><sc-if value="{{ r.agree }}">✓ {{ r.tagName }}</sc-if><sc-if value="{{ r.disagree }}"><strong>≠</strong> printed {{ r.tagName }} · predicted {{ r.predName }}</sc-if><sc-if value="{{ r.untagged }}"><span style="color:var(--ink3)">— no printed tag</span></sc-if></span>
@@ -208,7 +233,7 @@ button,input,textarea,select{font-family:inherit}
 <sc-if value="{{ tableNarrow }}" hint-placeholder-val="{{ false }}">
 <div style="display:flex;flex-direction:column">
 <sc-for list="{{ tableRows }}" as="r"><div style="display:flex;flex-direction:column;gap:8px;padding:14px 16px;border-top:1px solid var(--line)">
-<div style="display:flex;gap:8px"><span style="font-family:'JetBrains Mono',monospace;font-weight:700">{{ r.id }}</span><span style="flex:1;font-size:14px">{{ r.text }}</span><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink3);white-space:nowrap;flex-shrink:0">{{ r.marks }} m</span></div>
+<div style="display:flex;gap:8px"><span style="font-family:'JetBrains Mono',monospace;font-weight:700">{{ r.id }}</span><span style="flex:1;font-size:14px">{{ r.text }}</span><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink3);white-space:nowrap;flex-shrink:0">{{ r.marks }} m{{ r.timeSep }}{{ r.timeTxt }}</span></div>
 <div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px"><span style="background:{{ r.chip.bg }};color:{{ r.chip.fg }};font-size:12px;font-weight:600;padding:3px 9px;border-radius:999px;white-space:nowrap;flex-shrink:0">{{ r.chip.n }} {{ r.chip.name }}</span><dc-import name="LevelLadder" proba="{{ r.proba }}" size="xs" hint-size="44px,26px"></dc-import><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:{{ r.confColor }}">{{ r.confTxt }}</span><sc-if value="{{ r.flag }}"><span style="font-size:12px;font-weight:700;background:var(--warnbg);border:1px solid var(--warn);border-radius:999px;padding:2px 8px">⚑ Review</span></sc-if></div>
 <sc-if value="{{ r.disagree }}"><span style="font-size:12px;background:var(--warnbg);border-radius:6px;padding:4px 8px;align-self:flex-start">≠ printed {{ r.tagName }} · predicted {{ r.predName }}</span></sc-if>
 </div></sc-for>

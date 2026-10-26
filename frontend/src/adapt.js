@@ -162,3 +162,54 @@ export function example(pred, an) {
     prior: probaArr(an.prior), votes: pred.votes.map(vote), neighbours: pred.neighbours, parse: false,
   };
 }
+
+// Minutes → "45 min" / "4 h 10 min" (as the API's fmt_minutes).
+export function fmtMin(m) {
+  if (m < 60) return `${Math.max(1, Math.round(m))} min`;
+  const r = 5 * Math.round(m / 5), h = Math.floor(r / 60), rest = r % 60;
+  return `${h} h${rest ? ` ${rest} min` : ''}`;
+}
+
+const TIME_METHOD = 'Reading at 150 words a minute, plus a range for each thing the question asks: define or state 1–3 min, '
+  + 'explain or calculate 3–8, compare or analyse 5–12, prove, derive or justify 6–15, design 15–30 (after classroom-testing '
+  + 'guides, Nitko 2001 and Oosterhof 2001). A written answer also needs time to plan and write about 25 words per mark at '
+  + '12–20 words a minute, plus about a fifth more for planning. Only the longer OR-alternative counts. These are rules of thumb, '
+  + 'not measurements: set the pace, or time one question yourself and compare. The verbs show what kind of work a question '
+  + 'asks for, not how big a calculation is, so "too long" is reliable and a calculation-heavy paper may need more than shown.';
+
+const ICON = { true: ['✓', 'var(--good)', 'var(--goodbg)'], false: ['✗', 'var(--bad)', 'var(--badbg)'], null: ['i', 'var(--ink3)', 'var(--surface2)'],
+  warn: ['!', 'var(--warn)', 'var(--warnbg)'] };
+const row = (name, detail, state) => { const [icon, color, bg] = ICON[state]; return { name, detail, icon, color, bg }; };
+
+// ["divide (compute) 3-8 min", "recompute (compute) 3-8 min", ...] → "divide, recompute ×2, …"
+function whyText(actions) {
+  const counts = new Map();
+  actions.forEach(a => { const k = a.startsWith('plan and write') ? a.replace(/ \d+-\d+ min$/, '') : a.split(' ')[0];
+    counts.set(k, (counts.get(k) || 0) + 1); });
+  return [...counts].map(([k, n]) => (n > 1 ? `${k} ×${n}` : k)).join(', ');
+}
+
+// PaperReport.timing + .marking → the "Time and marks" panel.
+export function feasibility(report) {
+  const t = report && report.timing;
+  if (!t) return { hasTiming: false };
+  const d = t.duration_minutes, max = Math.max(d || 0, t.total_high) * 1.1 || 1, pct = x => `${(x / max) * 100}%`;
+  const v = t.verdict;
+  const timeState = v === 'fits' ? true : v === 'too_long' ? false : v === 'tight' ? 'warn' : null;
+  const longest = [...t.questions].sort((a, b) => b.high - a.high).slice(0, 5).map(q => ({
+    id: q.id, range: `${fmtMin(q.low)}–${fmtMin(q.high)}`,
+    why: whyText(q.actions),
+  }));
+  return {
+    hasTiming: true, hasDuration: !!d, timeRange: `${fmtMin(t.total_low)} – ${fmtMin(t.total_high)}`,
+    timeVs: d ? `of work · the exam is ${fmtMin(d)}` : 'of work · no duration given',
+    timeSub: `What a student needs to read, think and write every answer, at a ${t.pace} pace.`,
+    timeColor: { fits: 'var(--good)', tight: 'var(--warn)', too_long: 'var(--bad)', unknown: 'var(--accent)' }[v],
+    timeBorder: { fits: 'var(--line)', tight: 'var(--warn)', too_long: 'var(--bad)', unknown: 'var(--line)' }[v],
+    barLow: pct(t.total_low), barSpan: pct(t.total_high - t.total_low), barDuration: d ? pct(d) : '0%',
+    barCaption: d ? `dashed line = ${fmtMin(d)} exam` : 'enter the duration to compare', barMax: fmtMin(max),
+    feasChecks: [row('Fits the time', t.detail, timeState), ...report.marking.map(c => row(c.name, c.detail, c.ok))],
+    longest, timeMethod: TIME_METHOD,
+    timeById: Object.fromEntries(t.questions.map(q => [q.id, `${fmtMin(q.low)}–${fmtMin(q.high)}`])),
+  };
+}

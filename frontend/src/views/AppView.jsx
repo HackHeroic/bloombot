@@ -327,8 +327,31 @@ export function view(v) {
                     </div>
                     <div style={sx(`display:flex;flex-direction:column;gap:12px`)}>
                       <span style={sx(`font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3)`)}>
-                        {"Step 3 of 3 · Pick a blueprint"}
+                        {"Step 3 of 3 · Exam details and blueprint"}
                       </span>
+                      <div style={sx(`display:flex;flex-wrap:wrap;gap:16px;align-items:flex-end;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px 18px`)}>
+                        <label style={sx(`display:flex;flex-direction:column;gap:6px;font-size:13px;font-weight:600;color:var(--ink2)`)}>
+                          {"Duration (minutes)"}
+                          <input aria-label={"Exam duration in minutes"} type={"number"} min={"1"} value={v.durationVal} onChange={v.onDuration} placeholder={"e.g. 60"} style={sx(`width:130px;font:15px 'JetBrains Mono',monospace;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px 12px`)} />
+                        </label>
+                        <label style={sx(`display:flex;flex-direction:column;gap:6px;font-size:13px;font-weight:600;color:var(--ink2)`)}>
+                          {"Maximum marks"}
+                          <input aria-label={"Maximum marks"} type={"number"} min={"1"} value={v.maxMarksVal} onChange={v.onMaxMarks} placeholder={"optional"} style={sx(`width:130px;font:15px 'JetBrains Mono',monospace;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px 12px`)} />
+                        </label>
+                        <div style={sx(`display:flex;flex-direction:column;gap:6px;font-size:13px;font-weight:600;color:var(--ink2)`)}>
+                          {"Students’ pace"}
+                          <div role={"radiogroup"} aria-label={"Students’ pace"} style={sx(`display:flex;gap:6px`)}>
+                            {(v.paces || []).map((pc, pc_i) => (<React.Fragment key={pc_i}>
+                              <button role={"radio"} aria-checked={pc.checked} onClick={pc.pick} style={sx(`padding:10px 14px;border-radius:10px;border:1px solid ${pc.border};background:${pc.bg};color:var(--ink);font-size:14px;font-weight:600;cursor:pointer`)}>
+                                {pc.label}
+                              </button>
+                            </React.Fragment>))}
+                          </div>
+                        </div>
+                        <span style={sx(`flex:1 1 240px;font-size:13px;color:var(--ink3)`)}>
+                          {v.examNote}
+                        </span>
+                      </div>
                       <div role={"radiogroup"} aria-label={"Blueprint"} style={sx(`display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:12px`)}>
                         {(v.blueprints || []).map((b, b_i) => (<React.Fragment key={b_i}>
                           <button role={"radio"} aria-checked={b.checked} onClick={b.pick} style={sx(`display:flex;gap:12px;align-items:flex-start;text-align:left;padding:16px 18px;border:2px solid ${b.border};background:${b.bg};color:var(--ink);border-radius:14px;cursor:pointer`)}>
@@ -381,6 +404,89 @@ export function view(v) {
                         </button>
                       </div>
                     </div>
+                    {v.hasTiming ? (<>
+                      <section aria-label={"Time and marks"} style={sx(`background:var(--surface);border:1px solid ${v.timeBorder};border-radius:16px;padding:24px;display:flex;flex-direction:column;gap:18px`)}>
+                        <div style={sx(`display:flex;flex-direction:column;gap:4px`)}>
+                          <h2 style={sx(`font-family:'Newsreader',serif;font-weight:500;font-size:26px;margin:0`)}>
+                            {"Time and marks"}
+                          </h2>
+                          <span style={sx(`font-size:13px;color:var(--ink3)`)}>
+                            {v.timeSub}
+                          </span>
+                        </div>
+                        <div style={sx(`display:flex;flex-direction:column;gap:8px`)}>
+                          <div style={sx(`display:flex;flex-wrap:wrap;align-items:baseline;gap:8px 16px`)}>
+                            <span style={sx(`font-family:'Newsreader',serif;font-size:34px;line-height:1.1;color:var(--ink)`)}>
+                              {v.timeRange}
+                            </span>
+                            <span style={sx(`font-size:15px;color:var(--ink2)`)}>
+                              {v.timeVs}
+                            </span>
+                          </div>
+                          <div aria-hidden={"true"} style={sx(`position:relative;height:18px;border-radius:999px;background:var(--bg);border:1px solid var(--line);overflow:hidden`)}>
+                            <div style={sx(`position:absolute;top:0;bottom:0;left:${v.barLow};width:${v.barSpan};background:${v.timeColor};opacity:.35`)} />
+                            <div style={sx(`position:absolute;top:0;bottom:0;left:0;width:${v.barLow};background:${v.timeColor}`)} />
+                            {v.hasDuration ? (<>
+                              <div style={sx(`position:absolute;top:-2px;bottom:-2px;left:${v.barDuration};border-left:2px dashed var(--ink)`)} />
+                            </>) : null}
+                          </div>
+                          <div style={sx(`display:flex;justify-content:space-between;font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink3)`)}>
+                            <span>
+                              {"0"}
+                            </span>
+                            <span>
+                              {v.barCaption}
+                            </span>
+                            <span>
+                              {v.barMax}
+                            </span>
+                          </div>
+                        </div>
+                        <ul style={sx(`list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px`)}>
+                          {(v.feasChecks || []).map((c, c_i) => (<React.Fragment key={c_i}>
+                            <li style={sx(`display:grid;grid-template-columns:28px minmax(0,1fr);gap:12px;align-items:start;padding:10px 12px;border-radius:10px;background:${c.bg}`)}>
+                              <span aria-hidden={"true"} style={sx(`width:24px;height:24px;border-radius:50%;background:${c.color};color:var(--surface);font-weight:700;text-align:center;line-height:24px`)}>
+                                {c.icon}
+                              </span>
+                              <span style={sx(`display:flex;flex-direction:column;gap:2px`)}>
+                                <span style={sx(`font-weight:600`)}>
+                                  {c.name}
+                                </span>
+                                <span style={sx(`font-size:14px;color:var(--ink2)`)}>
+                                  {c.detail}
+                                </span>
+                              </span>
+                            </li>
+                          </React.Fragment>))}
+                        </ul>
+                        <div style={sx(`display:flex;flex-direction:column;gap:8px`)}>
+                          <span style={sx(`font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3)`)}>
+                            {"Longest questions"}
+                          </span>
+                          {(v.longest || []).map((lq, lq_i) => (<React.Fragment key={lq_i}>
+                            <div style={sx(`display:grid;grid-template-columns:52px 110px minmax(0,1fr);gap:12px;align-items:baseline;font-size:14px`)}>
+                              <span style={sx(`font-family:'JetBrains Mono',monospace;font-weight:700`)}>
+                                {"Q"}{lq.id}
+                              </span>
+                              <span style={sx(`font-family:'JetBrains Mono',monospace;color:var(--ink)`)}>
+                                {lq.range}
+                              </span>
+                              <span style={sx(`color:var(--ink2)`)}>
+                                {lq.why}
+                              </span>
+                            </div>
+                          </React.Fragment>))}
+                        </div>
+                        <details style={sx(`font-size:13px;color:var(--ink3)`)}>
+                          <summary style={sx(`cursor:pointer;font-weight:600;color:var(--ink2)`)}>
+                            {"How the time is estimated"}
+                          </summary>
+                          <p style={sx(`margin:8px 0 0;line-height:1.55`)}>
+                            {v.timeMethod}
+                          </p>
+                        </details>
+                      </section>
+                    </>) : null}
                     <div style={sx(`display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:20px`)}>
                       <div style={sx(`background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:24px;display:flex;flex-direction:column;gap:20px`)}>
                         <div style={sx(`display:flex;flex-direction:column;gap:4px`)}>
@@ -505,6 +611,9 @@ export function view(v) {
                               {"Marks"}
                             </span>
                             <span role={"columnheader"}>
+                              {"Time"}
+                            </span>
+                            <span role={"columnheader"}>
                               {"Predicted"}
                             </span>
                             <span role={"columnheader"}>
@@ -534,6 +643,9 @@ export function view(v) {
                               </span>
                               <span role={"cell"} style={sx(`font-family:'JetBrains Mono',monospace;font-size:13px`)}>
                                 {r.marks}
+                              </span>
+                              <span role={"cell"} style={sx(`font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink2)`)}>
+                                {r.timeTxt}
                               </span>
                               <span role={"cell"} style={sx(`display:flex;align-items:center;gap:10px`)}>
                                 <span style={sx(`background:${r.chip.bg};color:${r.chip.fg};font-size:12px;font-weight:600;padding:3px 9px;border-radius:999px;white-space:nowrap`)}>
@@ -593,7 +705,7 @@ export function view(v) {
                                   {r.text}
                                 </span>
                                 <span style={sx(`font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink3);white-space:nowrap;flex-shrink:0`)}>
-                                  {r.marks}{" m"}
+                                  {r.marks}{" m"}{r.timeSep}{r.timeTxt}
                                 </span>
                               </div>
                               <div style={sx(`display:flex;flex-wrap:wrap;align-items:center;gap:8px`)}>
