@@ -1367,12 +1367,14 @@ export function view(v) {
                             {"⚑ "}{v.afterReviewTxt}
                           </p>
                         </div>
-                        <div style={sx(`display:flex;flex-direction:column;gap:10px`)}>
-                          <h3 style={sx(`font-family:'Newsreader',serif;font-weight:500;font-size:22px;margin:0`)}>
-                            {"When a rewrite fails, it comes back to you"}
-                          </h3>
-                          <RewriteCard rw={v.handBack} status={v.handStatus} onAction={v.onHand} />
-                        </div>
+                        {v.showHandBack ? (<>
+                          <div style={sx(`display:flex;flex-direction:column;gap:10px`)}>
+                            <h3 style={sx(`font-family:'Newsreader',serif;font-weight:500;font-size:22px;margin:0`)}>
+                              {"When a rewrite fails, it comes back to you"}
+                            </h3>
+                            <RewriteCard rw={v.handBack} status={v.handStatus} onAction={v.onHand} />
+                          </div>
+                        </>) : null}
                         <div style={sx(`background:var(--surface2);border-radius:18px;padding:24px;display:flex;flex-wrap:wrap;align-items:center;gap:12px`)}>
                           <div style={sx(`flex:1 1 280px;display:flex;flex-direction:column;gap:4px`)}>
                             <strong style={sx(`font-size:16px`)}>

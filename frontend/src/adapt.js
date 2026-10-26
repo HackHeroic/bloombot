@@ -84,8 +84,9 @@ const share = b => pctInt(b.max_share != null ? b.max_share : b.min_share);
 
 function note(c) {
   const b = c.bound, s = pctInt(c.share), lim = share(b), d = Math.abs(s - lim);
-  if (b.max_share != null) return c.ok ? (d === 0 ? 'at the cap' : `${d} points under the cap`) : `${d} points over`;
-  return c.ok ? (d === 0 ? 'meets the floor' : `${d} points clear`) : `${d} points under`;
+  const pts = `${d} point${d === 1 ? '' : 's'}`;
+  if (b.max_share != null) return c.ok ? (d === 0 ? 'at the cap' : `${pts} under the cap`) : `${pts} over`;
+  return c.ok ? (d === 0 ? 'meets the floor' : `${pts} clear`) : `${pts} under`;
 }
 
 // API blueprint + report checks → the design's BP entry (before; `after` fills the a/an columns).

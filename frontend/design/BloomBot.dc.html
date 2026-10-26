@@ -418,10 +418,10 @@ button,input,textarea,select{font-family:inherit}
 <sc-if value="{{ afterWarn }}"><p style="margin:0;font-size:13px;background:var(--warnbg);border-radius:8px;padding:10px 12px">⚑ {{ afterNote }}</p></sc-if>
 <sc-if value="{{ afterOk }}"><p style="margin:0;font-size:13px;color:var(--ink3)">{{ afterNote }}</p></sc-if><p style="margin:0;font-size:13px;color:var(--ink2)">⚑ {{ afterReviewTxt }}</p>
 </div>
-<div style="display:flex;flex-direction:column;gap:10px">
+<sc-if value="{{ showHandBack }}" hint-placeholder-val="{{ true }}"><div style="display:flex;flex-direction:column;gap:10px">
 <h3 style="font-family:'Newsreader',serif;font-weight:500;font-size:22px;margin:0">When a rewrite fails, it comes back to you</h3>
 <dc-import name="RewriteCard" rw="{{ handBack }}" status="{{ handStatus }}" on-action="{{ onHand }}" hint-size="100%,320px"></dc-import>
-</div>
+</div></sc-if>
 <div style="background:var(--surface2);border-radius:18px;padding:24px;display:flex;flex-wrap:wrap;align-items:center;gap:12px">
 <div style="flex:1 1 280px;display:flex;flex-direction:column;gap:4px"><strong style="font-size:16px">Export</strong><span style="font-size:13px;color:var(--ink2)">Only accepted and edited rewrites are written into the paper.</span></div>
 <button onClick="{{ exportMd }}" style="background:var(--accent);color:var(--accent-ink);border:none;border-radius:10px;padding:11px 18px;font-weight:600;cursor:pointer">Rebalanced paper (.md)</button>

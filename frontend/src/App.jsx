@@ -526,10 +526,12 @@ export default class App extends React.Component {
       idleText: live ? (s.apiPaper ? `Rebalance ${paperTitle} against ${bp.name}. The job runs on the API and streams every agent step here; review each rewrite as it lands.` : 'Rebalance opens from a checked paper. Start it on the sample OS paper to watch the agents work live — the job runs on the API and you can review each rewrite as it lands.')
         : 'The API is not running, so this replays a recorded run on the sample OS paper. Start `bloombot serve` (and Ollama) to run it live.',
       jobLabel: s.jobStatus === 'running' ? (live ? `Running · ${n} events` : `Running · ${n} of ${TR.length} events`) : `Done · ${TR.length} events`, jobId: B.JOB_ID,
-      afterReviewTxt: afterReview.length ? `After rewriting, ${afterReview.map(i => 'Q' + i).join(' and ')} ${afterReview.length > 1 ? 'are' : 'is'} flagged ⚑ for review — check ${afterReview.length > 1 ? 'them' : 'it'} before you submit.` : 'After rewriting, no question is flagged for review.',
+      afterReviewTxt: afterReview.length === 1 ? `After rewriting, Q${afterReview[0]} is flagged ⚑ for review — check it before you submit.`
+        : afterReview.length ? `After rewriting, ${afterReview.length} questions are flagged ⚑ for review — check them before you submit: ${afterReview.slice(0, 10).map(i => 'Q' + i).join(', ')}${afterReview.length > 10 ? ` and ${afterReview.length - 10} more` : ''}.`
+        : 'After rewriting, no question is flagged for review.',
       stages, traceRows, totalMs: (cum / 1000).toFixed(1) + ' s', progressW: live ? Math.round(s.progress * 100) + '%' : Math.round(n / TR.length * 100) + '%',
       showPlan, planRows, ...this.planText(planSrc, reasons, s),
-      rwCards, hasCards: rwCards.length > 0, handBack: { ...hand }, handStatus: s.rwStatus[hand.id] || 'pending',
+      rwCards, hasCards: rwCards.length > 0, showHandBack: !live || !!B.HANDBACK, handBack: { ...hand },  // live: only a real hand-back handStatus: s.rwStatus[hand.id] || 'pending',
       onHand: st => this.setState(x => ({ rwStatus: { ...x.rwStatus, [hand.id]: st } })),
       acceptAll: () => this.setState(x => { const r = { ...x.rwStatus }; B.RW.forEach(w => { if (!(qById(w.id) || {}).locked && (r[w.id] || 'pending') === 'pending' && rwVisibleAt(w)) r[w.id] = 'accepted'; }); return { rwStatus: r }; }),
       pendingCount: pending, hasPending: pending > 0, pendingText: pending ? `${pending} rewrite${pending > 1 ? 's' : ''} waiting for your decision` : 'All rewrites decided',
@@ -537,7 +539,7 @@ export default class App extends React.Component {
         return { label: c.label, b: Math.round(c.b) + '%', a: Math.round((c.a ?? 0) * s.afterT) + '%', bn: c.bn, an: c.an,
           bIcon: bOk ? '✓' : '✗', bColor: bOk ? 'var(--good)' : 'var(--bad)', aIcon: aOk ? '✓' : '✗', aColor: aOk ? 'var(--good)' : 'var(--bad)' }; }),
       afterBadge: afterCompliant ? `✓ Compliant · ${bp.name}` : `✗ Still not compliant · ${bp.name}`, afterColor: afterCompliant ? 'var(--good)' : 'var(--bad)', afterBg: afterCompliant ? 'var(--goodbg)' : 'var(--badbg)',
-      afterNote: notApplied ? `${notApplied} planned rewrite${notApplied > 1 ? 's' : ''} not applied (locked, rejected or handed back). The “after” bar assumes every accepted rewrite — assess again before you submit.` : `Projection with all ${B.RW.length} rewrites applied.`,
+      afterNote: notApplied ? `${notApplied} planned rewrite${notApplied > 1 ? 's' : ''} not applied (locked, rejected or handed back). The “after” bar assumes every accepted rewrite — assess again before you submit.` : B.RW.length ? `Projection with all ${B.RW.length} rewrite${B.RW.length > 1 ? 's' : ''} applied.` : 'No rewrites were made, so before and after are the same.',
       afterWarn: notApplied > 0, afterOk: notApplied === 0,
       exportMd: () => this.download('rebalanced-paper.md', this.paperMd(), 'text/markdown'),
       exportReport: () => { const o = this.reportObj(); this.download('bloombot-report.md', `# BloomBot report\n\n${o.paper}\n\nBlueprint: ${o.blueprint}\n\n| Bound | Before | After |\n|---|---:|---:|\n` + bp.checks.map(c => `| ${c.label} | ${c.b}% ${c.bOk ? '✓' : '✗'} | ${c.a}% ${c.aOk !== false ? '✓' : '✗'} |`).join('\n') + (o.timeAndMarks ? '\n\n## Time and marks\n\n' + [`- ${o.timeAndMarks.timing.detail} (pace: ${o.timeAndMarks.timing.pace})`,
