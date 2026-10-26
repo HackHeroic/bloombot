@@ -32,6 +32,8 @@ class Question(BaseModel):
     course_outcome: str | None = None
     tagged_level: LevelName | None = Field(default=None, description="level printed on the paper, if any")
     locked: bool = Field(default=False, description="teacher marked it as not to be rewritten")
+    teacher_level: LevelName | None = Field(default=None, description="level the teacher chose for a flagged question; "
+                                            "overrides the prediction in the report and in rebalancing")
 
 
 class Paper(BaseModel):

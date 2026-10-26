@@ -62,6 +62,13 @@ class AssessRequest(BaseModel):
     pace: Pace = Field(default="typical", description="students' pace for the time estimate")
 
 
+class ReportRequest(BaseModel):
+    report: PaperReport
+    blueprint_id: str | None = None
+    blueprint: Blueprint | None = None
+    pace: Pace = "typical"
+
+
 class PlanRequest(BaseModel):
     report: PaperReport
     blueprint_id: str | None = None
@@ -194,6 +201,17 @@ def create_app() -> FastAPI:
             return c.assess_paper(req.paper, bp, req.use_llm, req.pace)
 
         return s.submit("assess", work)
+
+    @app.post("/v1/papers/report")
+    def rereport(req: ReportRequest, s: Services = Depends(services)) -> PaperReport:
+        """Recompute a report without classifying again, e.g. after the teacher resolved a flagged
+        question (set ``teacher_level`` on it in ``report.paper``) or changed the duration or pace.
+        Send the predictions from the original assessment in ``report.items``."""
+        if len(req.report.items) != len(req.report.paper.questions):
+            raise HTTPException(422, "report.items must match report.paper.questions")
+        c = Conductor(s.assessor, s.settings)
+        return c.report(req.report.paper, [it.prediction for it in req.report.items],
+                        _blueprint(s, req.blueprint_id, req.blueprint), req.pace)
 
     @app.post("/v1/papers/plan")
     def plan(req: PlanRequest, s: Services = Depends(services)) -> list[RewriteJob]:

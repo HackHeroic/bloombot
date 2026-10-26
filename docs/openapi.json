@@ -299,6 +299,45 @@
         }
       }
     },
+    "/v1/papers/report": {
+      "post": {
+        "summary": "Rereport",
+        "description": "Recompute a report without classifying again, e.g. after the teacher resolved a flagged\nquestion (set ``teacher_level`` on it in ``report.paper``) or changed the duration or pace.\nSend the predictions from the original assessment in ``report.items``.",
+        "operationId": "rereport_v1_papers_report_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReportRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaperReport-Output"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v1/papers/plan": {
       "post": {
         "summary": "Plan",
@@ -1863,6 +1902,26 @@
             "title": "Locked",
             "description": "teacher marked it as not to be rewritten",
             "default": false
+          },
+          "teacher_level": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "Remember",
+                  "Understand",
+                  "Apply",
+                  "Analyze",
+                  "Evaluate",
+                  "Create"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Teacher Level",
+            "description": "level the teacher chose for a flagged question; overrides the prediction in the report and in rebalancing"
           }
         },
         "type": "object",
@@ -1951,6 +2010,49 @@
           "basis"
         ],
         "title": "QuestionTime"
+      },
+      "ReportRequest": {
+        "properties": {
+          "report": {
+            "$ref": "#/components/schemas/PaperReport-Input"
+          },
+          "blueprint_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Blueprint Id"
+          },
+          "blueprint": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Blueprint"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "pace": {
+            "type": "string",
+            "enum": [
+              "faster",
+              "typical",
+              "slower"
+            ],
+            "title": "Pace",
+            "default": "typical"
+          }
+        },
+        "type": "object",
+        "required": [
+          "report"
+        ],
+        "title": "ReportRequest"
       },
       "RewriteJob": {
         "properties": {

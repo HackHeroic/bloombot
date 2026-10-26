@@ -19,7 +19,10 @@ from bloombot.pipeline import blueprint as bp_mod
 from bloombot.pipeline import feasibility
 from bloombot.pipeline.assess import Assessor
 from bloombot.pipeline.rewrite import Rewriter
-from bloombot.pipeline.schemas import Blueprint, Pace, Paper, PaperReport, RebalanceResult, TraceEvent
+from bloombot.pipeline.schemas import (
+    Blueprint, Pace, Paper, PaperReport, Prediction, RebalanceResult, TraceEvent, Vote,
+)
+from bloombot.taxonomy import LABELS, Level
 
 
 @dataclass
@@ -42,6 +45,32 @@ class Conductor:
         t0 = time.perf_counter()
         preds = self.assessor.assess([q.text for q in paper.questions], use_llm=use_llm, trace=self.trace,
                                      cancel=self.cancel)
+        rep = self.report(paper, preds, blueprint, pace)
+        self.trace.append(TraceEvent(agent="Conductor", action="assessed paper", ms=(time.perf_counter() - t0) * 1000,
+                                     detail={"questions": len(paper.questions), "compliant": rep.compliant,
+                                             "needs_review": len(rep.needs_review), "time": rep.timing.verdict,
+                                             "minutes": [rep.timing.total_low, rep.timing.total_high]}))
+        return rep
+
+    @staticmethod
+    def teacher_levels(paper: Paper, preds: list[Prediction]) -> list[Prediction]:
+        """A level the teacher chose replaces the prediction (the votes stay, plus a Teacher vote)."""
+        out = []
+        for q, p in zip(paper.questions, preds):
+            if q.teacher_level:
+                lv = LABELS.index(q.teacher_level) + 1
+                onehot = {lab: float(lab == q.teacher_level) for lab in LABELS}
+                teacher = Vote(agent="Teacher", level=q.teacher_level, confidence=1.0, proba=list(onehot.values()))
+                p = p.model_copy(update={"level": q.teacher_level, "level_id": lv, "confidence": 1.0, "proba": onehot,
+                                         "needs_review": False, "lower_order": Level(lv).is_lower_order,
+                                         "votes": [v for v in p.votes if v.agent != "Teacher"] + [teacher]})
+            out.append(p)
+        return out
+
+    def report(self, paper: Paper, preds: list[Prediction], blueprint: Blueprint | None = None,
+               pace: Pace = "typical") -> PaperReport:
+        """Bloom mix, time and marking for already-classified questions (no model is run)."""
+        preds = self.teacher_levels(paper, preds)
         rep = bp_mod.report(paper, preds, blueprint)
         rep.timing = feasibility.estimate(paper, preds, pace)
         rep.marking = feasibility.marking(paper, preds, rep.timing)
@@ -49,10 +78,6 @@ class Conductor:
         if rep.timing.verdict != "unknown":
             verdicts.append(rep.timing.verdict != "too_long")
         rep.ready = all(verdicts) if verdicts else None
-        self.trace.append(TraceEvent(agent="Conductor", action="assessed paper", ms=(time.perf_counter() - t0) * 1000,
-                                     detail={"questions": len(paper.questions), "compliant": rep.compliant,
-                                             "needs_review": len(rep.needs_review), "time": rep.timing.verdict,
-                                             "minutes": [rep.timing.total_low, rep.timing.total_high]}))
         return rep
 
     def rebalance(self, paper: Paper, blueprint: Blueprint, use_llm: bool | None = None,
@@ -73,6 +98,6 @@ class Conductor:
         accepted = {r.job.question_id: r.final_question for r in results if r.accepted and r.final_question}
         for q in final.questions:
             if q.id in accepted:
-                q.text = accepted[q.id]
+                q.text, q.teacher_level = accepted[q.id], None  # a new question: the teacher's level no longer applies
         after = self.assess_paper(final, blueprint, use_llm, pace)
         return RebalanceResult(before=before, plan=jobs, rewrites=results, after=after, final_paper=final)

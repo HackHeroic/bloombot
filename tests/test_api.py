@@ -130,3 +130,20 @@ def test_cors_allows_private_network_preflight(client):
     r = client.options("/v1/meta", headers={"Origin": "https://bloombot.muralimadhav.com", "Access-Control-Request-Method": "GET",
                                             "Access-Control-Request-Private-Network": "true"})
     assert r.status_code == 200 and r.headers.get("access-control-allow-private-network") == "true"
+
+
+def test_teacher_level_overrides_prediction_and_report_recomputes(client):
+    text = (ROOT / "data" / "papers" / "sample_os_paper.txt").read_text()
+    paper = client.post("/v1/papers/parse-text", json={"text": text}).json()
+    rep = client.post("/v1/papers/assess", json={"paper": paper, "blueprint_id": "balanced-ug"}).json()
+    q0 = rep["paper"]["questions"][0]
+    assert rep["items"][0]["prediction"]["level"] != "Create"
+    q0["teacher_level"] = "Create"
+    new = client.post("/v1/papers/report", json={"report": rep, "blueprint_id": "balanced-ug"}).json()
+    p0 = new["items"][0]["prediction"]
+    assert p0["level"] == "Create" and p0["needs_review"] is False and p0["votes"][-1]["agent"] == "Teacher"
+    assert new["distribution"]["Create"] > rep["distribution"]["Create"]
+    assert new["timing"] and new["marking"]
+    # assessing with the teacher's level gives the same answer as recomputing
+    again = client.post("/v1/papers/assess", json={"paper": new["paper"], "blueprint_id": "balanced-ug"}).json()
+    assert again["distribution"] == new["distribution"]

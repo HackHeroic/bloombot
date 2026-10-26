@@ -19,6 +19,7 @@ Level names are always one of `Remember, Understand, Apply, Analyze, Evaluate, C
 | POST | `/v1/papers/parse-text` | pasted text → `Paper` |
 | POST | `/v1/papers/assess` | `Paper` (+ blueprint) → `PaperReport` |
 | POST | `/v1/papers/assess-job` | the same as a background job → `202 JobState`; use it when the LLM is on, since a long paper can take minutes (progress below) |
+| POST | `/v1/papers/report` | recompute a `PaperReport` without classifying again: after the teacher resolves flagged questions (`teacher_level` on them in `report.paper`) or changes the duration or pace; send the model's own predictions in `report.items` |
 | POST | `/v1/papers/plan` | `PaperReport` + blueprint → list of `RewriteJob` |
 | POST | `/v1/rewrite` | rewrite one question to a target level, with checks (synchronous) |
 | POST | `/v1/papers/rebalance` | full pipeline as a background job → `202 JobState` |
@@ -33,6 +34,15 @@ Level names are always one of `Remember, Understand, Apply, Analyze, Evaluate, C
 `use_llm`: `null` = server policy (the LLM is asked only when the fast model is unsure),
 `false` = never, `true` = when unsure. `profile_id` makes any assessment use an institution's
 adapted model.
+
+### The teacher's decision
+
+A question's `teacher_level` (set when the teacher resolves a ⚑ flagged question) replaces the
+prediction everywhere: the distribution, the checks, the time estimate, the rebalance plan and the
+"before" report of a rebalance. The prediction keeps its votes plus a `Teacher` vote, with
+`needs_review: false`. A question that gets rewritten drops its `teacher_level`, since its text
+changed. The UI keeps the model's own report and calls `/v1/papers/report` on every resolve or
+undo.
 
 ### Time and marks
 
