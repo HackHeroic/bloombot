@@ -2,6 +2,7 @@
 //
 // Where the API lives: `?api=http://host:port` (remembered), else NEXT_PUBLIC_BLOOMBOT_API,
 // else the same origin when the page is served by `bloombot serve`, else http://127.0.0.1:8000.
+// NEXT_PUBLIC_BLOOMBOT_API=replay (the hosted demo) looks for no API at all: apiBase() is null.
 
 export function apiBase() {
   if (typeof window === 'undefined') return '';
@@ -11,15 +12,18 @@ export function apiBase() {
     const saved = localStorage.getItem('bb.api');
     if (saved) return saved;
   } catch (e) { /* storage blocked: fall through */ }
+  if (process.env.NEXT_PUBLIC_BLOOMBOT_API === 'replay') return null;
   if (process.env.NEXT_PUBLIC_BLOOMBOT_API) return process.env.NEXT_PUBLIC_BLOOMBOT_API;
   return window.location.port === '8000' ? '' : 'http://127.0.0.1:8000';
 }
 
 async function req(path, opts = {}, timeoutMs = 180000) {
+  const base = apiBase();
+  if (base === null) throw new Error(`${path}: this build replays recorded runs only`);
   const ctl = new AbortController();
   const t = setTimeout(() => ctl.abort(), timeoutMs);
   try {
-    const res = await fetch(apiBase() + path, { ...opts, signal: ctl.signal });
+    const res = await fetch(base + path, { ...opts, signal: ctl.signal });
     const body = await res.json().catch(() => null);
     if (!res.ok) {
       const detail = body && body.detail ? (typeof body.detail === 'string' ? body.detail : JSON.stringify(body.detail)) : res.statusText;

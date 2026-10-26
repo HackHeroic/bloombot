@@ -476,7 +476,7 @@ export default class App extends React.Component {
     const status = {
       apiLabel: { checking: 'Connecting…', live: 'Live API', replay: 'Replay · recorded' }[apiState], apiShort: { checking: '…', live: 'Live', replay: 'Replay' }[apiState],
       apiDot: { checking: 'var(--ink3)', live: 'var(--good)', replay: 'var(--warn)' }[apiState],
-      apiTitle: s.online ? `Connected to ${apiBase() || window.location.origin}. Click to re-check.` : `No API at ${apiBase() || 'this origin'} — showing recorded runs. Start \`bloombot serve\`, then click to re-check (or add ?api=http://host:port).`,
+      apiTitle: s.online ? `Connected to ${apiBase() || window.location.origin}. Click to re-check.` : apiBase() === null ? 'Hosted demo: showing recorded runs. Run BloomBot locally for the live API, or add ?api=http://host:port.' : `No API at ${apiBase() || 'this origin'} — showing recorded runs. Start \`bloombot serve\`, then click to re-check (or add ?api=http://host:port).`,
       recheckApi: () => { this.setState({ online: null }); this.apiReady = this.checkApi(); },
       hasError: !!s.error, errorText: s.error, clearError: () => this.setState({ error: '' }),
     };
