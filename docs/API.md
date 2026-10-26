@@ -19,6 +19,9 @@ Level names are always one of `Remember, Understand, Apply, Analyze, Evaluate, C
 | POST | `/v1/papers/parse-text` | pasted text → `Paper` |
 | POST | `/v1/papers/assess` | `Paper` (+ blueprint) → `PaperReport` |
 | POST | `/v1/papers/assess-job` | the same as a background job → `202 JobState`; use it when the LLM is on, since a long paper can take minutes (progress below) |
+| GET | `/v1/samples` | the sample papers in `data/papers`: id, subject, one-line description (marks, duration, layout) |
+| GET | `/v1/samples/{id}` | one sample, parsed → `Paper` |
+| GET | `/v1/dataset` | browse the labelled questions: `source`, `level`, `q` (search), `offset`, `limit` (≤ 100) → page of questions from sources whose licence allows showing them, counts per level and source for the current filter, and every source's licence and counts (the school-board test set: counts only) |
 | POST | `/v1/papers/report` | recompute a `PaperReport` without classifying again: after the teacher resolves flagged questions (`teacher_level` on them in `report.paper`) or changes the duration or pace; send the model's own predictions in `report.items` |
 | POST | `/v1/papers/plan` | `PaperReport` + blueprint → list of `RewriteJob` |
 | POST | `/v1/rewrite` | rewrite one question to a target level, with checks (synchronous) |

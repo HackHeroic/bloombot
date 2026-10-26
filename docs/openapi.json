@@ -299,6 +299,179 @@
         }
       }
     },
+    "/v1/samples": {
+      "get": {
+        "summary": "Samples",
+        "description": "The sample papers in data/papers, with a one-line description each.",
+        "operationId": "samples_v1_samples_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/Sample"
+                  },
+                  "type": "array",
+                  "title": "Response Samples V1 Samples Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/samples/{sample_id}": {
+      "get": {
+        "summary": "Sample",
+        "operationId": "sample_v1_samples__sample_id__get",
+        "parameters": [
+          {
+            "name": "sample_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Sample Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Paper"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/dataset": {
+      "get": {
+        "summary": "Dataset",
+        "description": "Browse the labelled questions: every source's counts and licence; questions only from\nsources whose licence allows showing them (the Indian school-board test set is counts only).",
+        "operationId": "dataset_v1_dataset_get",
+        "parameters": [
+          {
+            "name": "source",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Source"
+            }
+          },
+          {
+            "name": "level",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "enum": [
+                    "Remember",
+                    "Understand",
+                    "Apply",
+                    "Analyze",
+                    "Evaluate",
+                    "Create"
+                  ],
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Level"
+            }
+          },
+          {
+            "name": "q",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "maxLength": 200
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Q"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0,
+              "title": "Offset"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 100,
+              "minimum": 1,
+              "default": 25,
+              "title": "Limit"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DatasetPage"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v1/papers/report": {
       "post": {
         "summary": "Rereport",
@@ -1056,6 +1229,93 @@
           "llm_used"
         ],
         "title": "ClassifyResponse"
+      },
+      "DatasetItem": {
+        "properties": {
+          "uid": {
+            "type": "string",
+            "title": "Uid"
+          },
+          "source": {
+            "type": "string",
+            "title": "Source"
+          },
+          "level": {
+            "type": "string",
+            "title": "Level"
+          },
+          "question": {
+            "type": "string",
+            "title": "Question"
+          }
+        },
+        "type": "object",
+        "required": [
+          "uid",
+          "source",
+          "level",
+          "question"
+        ],
+        "title": "DatasetItem"
+      },
+      "DatasetPage": {
+        "properties": {
+          "total": {
+            "type": "integer",
+            "title": "Total",
+            "description": "matching questions in public sources"
+          },
+          "offset": {
+            "type": "integer",
+            "title": "Offset"
+          },
+          "limit": {
+            "type": "integer",
+            "title": "Limit"
+          },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/DatasetItem"
+            },
+            "type": "array",
+            "title": "Items"
+          },
+          "by_level": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "type": "object",
+            "title": "By Level",
+            "description": "matching public questions per level (ignores the level filter)"
+          },
+          "by_source": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "type": "object",
+            "title": "By Source",
+            "description": "matching public questions per source (ignores the source filter)"
+          },
+          "sources": {
+            "items": {
+              "$ref": "#/components/schemas/SourceInfo"
+            },
+            "type": "array",
+            "title": "Sources",
+            "description": "every source with its full counts, public or not"
+          }
+        },
+        "type": "object",
+        "required": [
+          "total",
+          "offset",
+          "limit",
+          "items",
+          "by_level",
+          "by_source",
+          "sources"
+        ],
+        "title": "DatasetPage"
       },
       "DirectiveOut": {
         "properties": {
@@ -2240,6 +2500,144 @@
           "needs_teacher"
         ],
         "title": "RewriteResult"
+      },
+      "Sample": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "file": {
+            "type": "string",
+            "title": "File"
+          },
+          "subject": {
+            "type": "string",
+            "title": "Subject"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description"
+          },
+          "questions": {
+            "type": "integer",
+            "title": "Questions"
+          },
+          "marks": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Marks"
+          },
+          "duration_minutes": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Duration Minutes"
+          },
+          "layout": {
+            "type": "string",
+            "title": "Layout"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "file",
+          "subject",
+          "description",
+          "questions",
+          "layout"
+        ],
+        "title": "Sample"
+      },
+      "SourceInfo": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "citation": {
+            "type": "string",
+            "title": "Citation"
+          },
+          "origin": {
+            "type": "string",
+            "title": "Origin"
+          },
+          "kind": {
+            "type": "string",
+            "title": "Kind"
+          },
+          "region": {
+            "type": "string",
+            "title": "Region"
+          },
+          "licence": {
+            "type": "string",
+            "title": "Licence"
+          },
+          "licence_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Licence Url"
+          },
+          "role": {
+            "type": "string",
+            "title": "Role"
+          },
+          "public": {
+            "type": "boolean",
+            "title": "Public",
+            "description": "questions may be shown; otherwise counts only"
+          },
+          "rows": {
+            "type": "integer",
+            "title": "Rows"
+          },
+          "per_level": {
+            "additionalProperties": {
+              "type": "integer"
+            },
+            "type": "object",
+            "title": "Per Level"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "title",
+          "citation",
+          "origin",
+          "kind",
+          "region",
+          "licence",
+          "role",
+          "public",
+          "rows",
+          "per_level"
+        ],
+        "title": "SourceInfo"
       },
       "TimeEstimate": {
         "properties": {

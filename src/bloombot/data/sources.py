@@ -45,6 +45,8 @@ class Source:
     loader: Callable[[Path], pd.DataFrame]  # -> columns: question, raw_label, level
     role: Role = "train"
     notes: tuple[str, ...] = field(default_factory=tuple)
+    # may its questions be shown on a public page (the dataset explorer)? Counts are always shown.
+    public: bool = True
 
 
 # --- helpers ---------------------------------------------------------------------------------
@@ -261,7 +263,7 @@ SOURCES: tuple[Source, ...] = (
         region="India", licence="CC BY-NC 3.0 (non-commercial; used for evaluation only)",
         downloads=(Download("das_boards.zip", "https://data.mendeley.com/public-files/datasets/48nfn95jc8/files/"
                                                "f5505123-0ad8-43e2-aff6-1ee1b2493565/file_downloaded"),),
-        loader=load_indian_boards, role="test",
+        loader=load_indian_boards, role="test", public=False,  # non-commercial, and the held-out test set
         notes=("very few Evaluate/Create rows; report per-level results",),
     ),
 )

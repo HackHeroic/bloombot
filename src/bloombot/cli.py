@@ -69,11 +69,21 @@ def classify(questions: list[str], llm: bool = typer.Option(False, help="ask the
 
 
 @app.command()
+def samples() -> None:
+    """List the sample papers (use an id in place of a path: bloombot paper os)."""
+    from bloombot.pipeline.samples import list_samples
+
+    for s in list_samples():
+        typer.echo(f"{s.id:<8} {s.description}\n         {s.file}")
+
+
+@app.command()
 def paper(path: Path, blueprint: str = typer.Option("aicte-2018-example"), rebalance: bool = False,
           llm: bool = typer.Option(False), out: Optional[Path] = None,
           duration: Optional[float] = typer.Option(None, help="exam duration in minutes (if not printed)"),
           pace: str = typer.Option("typical", help="students' pace: faster, typical or slower")) -> None:
-    """Assess a question paper (PDF/DOCX/TXT/CSV) against a blueprint; optionally rebalance it."""
+    """Assess a question paper (PDF/DOCX/TXT/CSV, or a sample id from `bloombot samples`) against a
+    blueprint; optionally rebalance it."""
     _setup()
     from bloombot.pipeline.blueprint import load_blueprints
     from bloombot.pipeline.conductor import Conductor
@@ -81,6 +91,10 @@ def paper(path: Path, blueprint: str = typer.Option("aicte-2018-example"), rebal
     from bloombot.pipeline.report import render_markdown
 
     bp = load_blueprints()[blueprint]
+    if not path.exists():
+        from bloombot.pipeline.samples import sample_path
+
+        path = sample_path(str(path)) or path
     p = parse_file(path.read_bytes(), path.name)
     if duration:
         p.duration_minutes = duration

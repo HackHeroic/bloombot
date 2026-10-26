@@ -147,3 +147,14 @@ def test_teacher_level_overrides_prediction_and_report_recomputes(client):
     # assessing with the teacher's level gives the same answer as recomputing
     again = client.post("/v1/papers/assess", json={"paper": new["paper"], "blueprint_id": "balanced-ug"}).json()
     assert again["distribution"] == new["distribution"]
+
+
+def test_samples_list_and_load(client):
+    samples = client.get("/v1/samples").json()
+    ids = {s["id"] for s in samples}
+    assert {"os", "dbms", "table"} <= ids
+    os_ = next(s for s in samples if s["id"] == "os")
+    assert os_["duration_minutes"] == 180 and os_["marks"] == 50 and "Operating Systems" in os_["description"]
+    paper = client.get("/v1/samples/os").json()
+    assert len(paper["questions"]) == os_["questions"] and paper["title"].startswith("Operating Systems")
+    assert client.get("/v1/samples/nope").status_code == 404

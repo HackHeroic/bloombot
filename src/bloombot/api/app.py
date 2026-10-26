@@ -10,7 +10,7 @@ from __future__ import annotations
 from contextlib import asynccontextmanager
 from typing import Any
 
-from fastapi import Depends, FastAPI, File, Form, HTTPException, Request, UploadFile
+from fastapi import Depends, FastAPI, File, Form, HTTPException, Query, Request, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
@@ -18,6 +18,9 @@ from pydantic import BaseModel, Field
 from bloombot import __version__
 from bloombot.api.services import JobState, LabelledExample, LiveTrace, Profile, Services
 from bloombot.config import ROOT
+from bloombot.data import explore
+from bloombot.data.explore import DatasetPage
+from bloombot.pipeline.samples import Sample, list_samples, load_sample
 from bloombot.pipeline import blueprint as bp_mod
 from bloombot.pipeline.conductor import Conductor
 from bloombot.pipeline.intake import parse_file, parse_text
@@ -201,6 +204,29 @@ def create_app() -> FastAPI:
             return c.assess_paper(req.paper, bp, req.use_llm, req.pace)
 
         return s.submit("assess", work)
+
+    @app.get("/v1/samples")
+    def samples() -> list[Sample]:
+        """The sample papers in data/papers, with a one-line description each."""
+        return list_samples()
+
+    @app.get("/v1/samples/{sample_id}")
+    def sample(sample_id: str) -> Paper:
+        paper = load_sample(sample_id)
+        if paper is None:
+            raise HTTPException(404, f"unknown sample {sample_id!r}; see GET /v1/samples")
+        return paper
+
+    @app.get("/v1/dataset")
+    def dataset(source: str | None = None, level: LevelName | None = None, q: str | None = Query(None, max_length=200),
+                offset: int = Query(0, ge=0), limit: int = Query(25, ge=1, le=100),
+                s: Services = Depends(services)) -> DatasetPage:
+        """Browse the labelled questions: every source's counts and licence; questions only from
+        sources whose licence allows showing them (the Indian school-board test set is counts only)."""
+        try:
+            return explore.query(s.settings.root / "data" / "processed", source, level, q, offset, limit)
+        except FileNotFoundError as exc:
+            raise HTTPException(404, str(exc)) from exc
 
     @app.post("/v1/papers/report")
     def rereport(req: ReportRequest, s: Services = Depends(services)) -> PaperReport:

@@ -276,3 +276,23 @@ def test_paper_without_marks_or_duration(assessor, settings):
     rep = _report(assessor, settings, Paper(questions=[Question(id="1", text="Explain paging.")]))
     assert rep.timing.verdict == "unknown"
     assert rep.marking[0].ok is None and len(rep.marking) == 1
+
+
+def test_dataset_explorer_hides_non_public_sources(tmp_path):
+    import pandas as pd
+
+    from bloombot.data.explore import _load, bundle, query
+
+    rows = [("yahya2012:1", "yahya2012", "Define a stack.", "Remember"),
+            ("yahya2012:2", "yahya2012", "Design a database.", "Create"),
+            ("indian_boards:1", "indian_boards", "Find the first term.", "Apply")]
+    pd.DataFrame(rows, columns=["uid", "source", "question", "label"]).to_parquet(tmp_path / "questions.parquet")
+    _load.cache_clear()
+    page = query(tmp_path)
+    assert page.total == 2 and {i.source for i in page.items} == {"yahya2012"}
+    boards = next(s for s in page.sources if s.id == "indian_boards")
+    assert boards.public is False and boards.rows == 1 and boards.per_level["Apply"] == 1
+    assert query(tmp_path, source="indian_boards").items == []
+    assert query(tmp_path, q="DATABASE").total == 1 and query(tmp_path, level="Remember").total == 1
+    assert all(i["source"] != "indian_boards" for i in bundle(tmp_path)["items"])
+    _load.cache_clear()
