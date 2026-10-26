@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<article style="background:var(--surface);border:1px solid {{ borderColor }};border-radius:14px;overflow:hidden;display:flex;flex-direction:column">
+<sc-if value="{{ handedBack }}" hint-placeholder-val="{{ false }}"><div style="background:var(--warnbg);color:var(--ink);padding:10px 20px;font-size:13px;font-weight:600;display:flex;gap:8px;align-items:center;border-bottom:1px solid var(--line)"><span aria-hidden="true">⚑</span> Handed back to you after {{ rw.attempts }} attempts. BloomBot could not write a version that passed every check.</div></sc-if>
+<div style="padding:20px;display:flex;flex-direction:column;gap:16px">
+<header style="display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px">
+<span style="font-family:'JetBrains Mono',monospace;font-size:15px;font-weight:700">{{ rw.q }}</span>
+<span style="display:inline-flex;align-items:center;gap:6px;flex-wrap:nowrap">
+<span style="background:{{ from.bg }};color:{{ from.fg }};font-size:12px;font-weight:600;padding:3px 9px;border-radius:999px;white-space:nowrap;flex-shrink:0">{{ from.n }} {{ from.name }}</span>
+<span aria-hidden="true" style="color:var(--ink3)">→</span>
+<span style="background:{{ to.bg }};color:{{ to.fg }};font-size:12px;font-weight:600;padding:3px 9px;border-radius:999px;white-space:nowrap;flex-shrink:0">{{ to.n }} {{ to.name }}</span>
+</span>
+<span style="margin-left:auto;display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--ink3)">Attempts
+<sc-for list="{{ attemptDots }}" as="a" hint-placeholder-count="3"><span title="{{ a.title }}" style="width:18px;height:18px;border-radius:50%;border:1.5px solid {{ a.border }};background:{{ a.bg }};color:{{ a.fg }};font:600 10px/15px 'JetBrains Mono',monospace;text-align:center">{{ a.n }}</span></sc-for>
+</span>
+</header>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:14px">
+<div style="display:flex;flex-direction:column;gap:6px">
+<span style="font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3)">Original</span>
+<p style="margin:0;font-size:14px;line-height:1.55;color:var(--ink2);text-wrap:pretty"><sc-for list="{{ origTokens }}" as="t"><span style="background:{{ t.bg }};text-decoration:{{ t.deco }};border-radius:3px">{{ t.t }} </span></sc-for></p>
+</div>
+<div style="display:flex;flex-direction:column;gap:6px">
+<span style="font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3)">{{ rewriteLabel }}</span>
+<sc-if value="{{ notEditing }}" hint-placeholder-val="{{ true }}"><p style="margin:0;font-size:14px;line-height:1.55;color:var(--ink);text-wrap:pretty"><sc-for list="{{ newTokens }}" as="t"><span style="background:{{ t.bg }};border-radius:3px">{{ t.t }} </span></sc-for></p></sc-if>
+<sc-if value="{{ editing }}" hint-placeholder-val="{{ false }}"><textarea aria-label="Edit rewrite" value="{{ draft }}" onChange="{{ onDraft }}" rows="5" style="font:14px/1.5 'Instrument Sans',sans-serif;color:var(--ink);background:var(--bg);border:1px solid var(--accent);border-radius:8px;padding:10px;resize:vertical"></textarea></sc-if>
+</div>
+</div>
+<div style="display:flex;flex-wrap:wrap;gap:8px">
+<sc-for list="{{ checks }}" as="c" hint-placeholder-count="5"><span title="{{ c.detail }}" style="display:inline-flex;align-items:center;gap:6px;padding:5px 10px 5px 6px;border-radius:999px;background:{{ c.bg }};border:1px solid {{ c.border }};font-size:12px;color:var(--ink)"><span style="width:18px;height:18px;border-radius:50%;background:{{ c.dot }};color:var(--surface);font-size:11px;font-weight:700;line-height:18px;text-align:center">{{ c.icon }}</span><strong style="font-weight:600">{{ c.k }}</strong><span style="color:var(--ink2)">{{ c.detail }}</span></span></sc-for>
+</div>
+<sc-if value="{{ showActions }}" hint-placeholder-val="{{ true }}">
+<footer style="display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding-top:4px;border-top:1px solid var(--line);padding-top:14px">
+<sc-if value="{{ isPending }}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;flex-wrap:wrap;gap:8px">
+<button onClick="{{ accept }}" style="background:var(--accent);color:var(--accent-ink);border:none;border-radius:8px;padding:9px 16px;font:600 13px 'Instrument Sans',sans-serif;cursor:pointer">{{ acceptLabel }}</button>
+<button onClick="{{ startEdit }}" style="background:transparent;color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:9px 16px;font:600 13px 'Instrument Sans',sans-serif;cursor:pointer">{{ editLabel }}</button>
+<button onClick="{{ reject }}" style="background:transparent;color:var(--bad);border:1px solid var(--line);border-radius:8px;padding:9px 16px;font:600 13px 'Instrument Sans',sans-serif;cursor:pointer">{{ rejectLabel }}</button>
+</div>
+</sc-if>
+<sc-if value="{{ editing }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;gap:8px">
+<button onClick="{{ saveEdit }}" style="background:var(--accent);color:var(--accent-ink);border:none;border-radius:8px;padding:9px 16px;font:600 13px 'Instrument Sans',sans-serif;cursor:pointer">Save and accept</button>
+<button onClick="{{ cancelEdit }}" style="background:transparent;color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:9px 16px;font:600 13px 'Instrument Sans',sans-serif;cursor:pointer">Cancel</button>
+</div>
+</sc-if>
+<sc-if value="{{ isDecided }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-wrap:wrap;align-items:center;gap:12px;width:100%">
+<span style="font-size:13px;font-weight:600;color:{{ decidedColor }}">{{ decidedText }}</span>
+<button onClick="{{ undo }}" style="margin-left:auto;background:transparent;color:var(--ink2);border:none;font:600 13px 'Instrument Sans',sans-serif;cursor:pointer;text-decoration:underline">Undo</button>
+</div>
+</sc-if>
+</footer>
+</sc-if>
+</div>
+</article>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { editing: false, draft: '' };
+  diff(a, b) {
+    const A = a.split(/\s+/).filter(Boolean), B = b.split(/\s+/).filter(Boolean);
+    const norm = w => w.toLowerCase().replace(/[^a-z0-9\-]/g, '');
+    const n = A.length, m = B.length, dp = Array.from({ length: n + 1 }, () => new Array(m + 1).fill(0));
+    for (let i = n - 1; i >= 0; i--) for (let j = m - 1; j >= 0; j--)
+      dp[i][j] = norm(A[i]) === norm(B[j]) ? dp[i + 1][j + 1] + 1 : Math.max(dp[i + 1][j], dp[i][j + 1]);
+    const keepA = new Set(), keepB = new Set(); let i = 0, j = 0;
+    while (i < n && j < m) {
+      if (norm(A[i]) === norm(B[j])) { keepA.add(i); keepB.add(j); i++; j++; }
+      else if (dp[i + 1][j] >= dp[i][j + 1]) i++; else j++;
+    }
+    return {
+      orig: A.map((t, k) => ({ t, bg: keepA.has(k) ? 'transparent' : 'var(--badbg)', deco: keepA.has(k) ? 'none' : 'line-through' })),
+      next: B.map((t, k) => ({ t, bg: keepB.has(k) ? 'transparent' : 'var(--goodbg)' }))
+    };
+  }
+  renderVals() {
+    const L = ['Remember','Understand','Apply','Analyze','Evaluate','Create'];
+    const rw = this.props.rw || { q: 'Q6', from: 1, to: 3, original: '', rewrite: '', attempts: 1, checks: [] };
+    const status = this.props.status || 'pending';
+    const act = (st, text) => this.props.onAction && this.props.onAction(st, text);
+    const chip = n => ({ n, name: L[n - 1], bg: `var(--l${n})`, fg: n >= 5 ? '#fff' : '#1b1f2a' });
+    const d = this.diff(rw.original || '', rw.rewrite || '');
+    const hb = !!rw.handedBack;
+    const editing = this.state.editing;
+    const decided = !editing && status !== 'pending';
+    const texts = {
+      accepted: ['Accepted — this rewrite goes into the paper.', 'var(--good)'],
+      edited: ['Accepted with your edits.', 'var(--good)'],
+      rejected: ['Rejected — handed back to you. The original question stays in the paper.', 'var(--bad)'],
+      kept: ['Kept your original question. Rewrite it yourself when ready.', 'var(--ink2)']
+    };
+    return {
+      rw, from: chip(rw.from), to: chip(rw.to), handedBack: hb,
+      borderColor: hb ? 'var(--warn)' : status === 'rejected' ? 'var(--bad)' : 'var(--line)',
+      attemptDots: [1, 2, 3].map(n => {
+        const used = n <= rw.attempts, last = n === rw.attempts;
+        const failed = used && (!last || hb);
+        return { n, title: used ? (failed ? `Attempt ${n}: failed a check` : `Attempt ${n}: passed`) : 'Not needed',
+          border: used ? (failed ? 'var(--bad)' : 'var(--good)') : 'var(--line)',
+          bg: used ? (failed ? 'var(--bad)' : 'var(--good)') : 'transparent', fg: used ? 'var(--surface)' : 'var(--ink3)' };
+      }),
+      origTokens: d.orig, newTokens: d.next,
+      rewriteLabel: hb ? `Last attempt (${rw.attempts} of 3)` : 'Rewrite',
+      checks: (rw.checks || []).map(c => ({
+        k: c.k, detail: c.detail, icon: c.pass === true ? '✓' : c.pass === false ? '✗' : '–',
+        bg: c.pass === true ? 'var(--goodbg)' : c.pass === false ? 'var(--badbg)' : 'var(--surface2)',
+        border: c.pass === false ? 'var(--bad)' : 'transparent',
+        dot: c.pass === true ? 'var(--good)' : c.pass === false ? 'var(--bad)' : 'var(--ink3)'
+      })),
+      showActions: !this.props.compact,
+      isPending: status === 'pending' && !editing, editing, notEditing: !editing, draft: this.state.draft,
+      isDecided: decided, decidedText: (texts[status] || texts.accepted)[0], decidedColor: (texts[status] || texts.accepted)[1],
+      acceptLabel: hb ? 'Keep original' : 'Accept', editLabel: hb ? 'Write it myself' : 'Edit', rejectLabel: hb ? 'Dismiss' : 'Reject',
+      accept: () => act(hb ? 'kept' : 'accepted'),
+      reject: () => act(hb ? 'kept' : 'rejected'),
+      startEdit: () => this.setState({ editing: true, draft: hb ? rw.original : rw.rewrite }),
+      onDraft: e => this.setState({ draft: e.target.value }),
+      saveEdit: () => { this.setState({ editing: false }); act('edited', this.state.draft); },
+      cancelEdit: () => this.setState({ editing: false }),
+      undo: () => act('pending')
+    };
+  }
+}
+</script>
+</body>
+</html>

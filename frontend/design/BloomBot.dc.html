@@ -1,0 +1,979 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&display=swap">
+<script src="bloombot-data.js"></script>
+<style>
+:root,[data-theme="light"]{--bg:oklch(0.975 0.007 85);--surface:oklch(0.995 0.003 85);--surface2:oklch(0.955 0.01 85);--ink:oklch(0.23 0.02 265);--ink2:oklch(0.40 0.02 265);--ink3:oklch(0.50 0.015 265);--line:oklch(0.89 0.01 85);--accent:oklch(0.42 0.10 250);--accent-ink:#fff;--accent-soft:oklch(0.93 0.035 250);--good:oklch(0.47 0.11 155);--goodbg:oklch(0.94 0.045 155);--bad:oklch(0.50 0.17 28);--badbg:oklch(0.94 0.04 28);--warn:oklch(0.55 0.13 70);--warnbg:oklch(0.94 0.06 85);--track:oklch(0.93 0.008 85);--heat:oklch(0.42 0.10 250);--l1:oklch(0.91 0.035 225);--l2:oklch(0.83 0.065 200);--l3:oklch(0.82 0.10 95);--l4:oklch(0.71 0.13 62);--l5:oklch(0.54 0.15 38);--l6:oklch(0.42 0.13 22)}
+[data-theme="dark"]{--bg:oklch(0.17 0.012 265);--surface:oklch(0.21 0.014 265);--surface2:oklch(0.25 0.015 265);--ink:oklch(0.95 0.008 85);--ink2:oklch(0.82 0.01 85);--ink3:oklch(0.70 0.012 85);--line:oklch(0.32 0.015 265);--accent:oklch(0.78 0.10 250);--accent-ink:oklch(0.17 0.02 265);--accent-soft:oklch(0.31 0.05 250);--good:oklch(0.78 0.13 155);--goodbg:oklch(0.30 0.05 155);--bad:oklch(0.76 0.14 28);--badbg:oklch(0.31 0.06 28);--warn:oklch(0.84 0.12 85);--warnbg:oklch(0.32 0.05 85);--track:oklch(0.29 0.012 265);--heat:oklch(0.78 0.10 250);--l1:oklch(0.91 0.035 225);--l2:oklch(0.83 0.065 200);--l3:oklch(0.82 0.10 95);--l4:oklch(0.71 0.13 62);--l5:oklch(0.58 0.15 38);--l6:oklch(0.48 0.14 22)}
+html,body{margin:0;padding:0}
+*{box-sizing:border-box}
+a{color:var(--accent)}a:hover{color:var(--ink)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+button,input,textarea,select{font-family:inherit}
+@keyframes bbpulse{0%{box-shadow:0 0 0 0 var(--accent)}70%{box-shadow:0 0 0 8px transparent}100%{box-shadow:0 0 0 0 transparent}}
+@keyframes bbspin{to{transform:rotate(360deg)}}
+</style>
+</helmet>
+<div data-theme="{{ theme }}" style="min-height:100vh;background:var(--bg);color:var(--ink);font-family:'Instrument Sans',system-ui,sans-serif;font-size:15px;line-height:1.5;display:flex;justify-content:center">
+<div style="width:{{ frameW }};max-width:100%;display:flex;flex-direction:{{ shellDir }};min-height:100vh;box-shadow:{{ frameShadow }};background:var(--bg)">
+<sc-if value="{{ showRail }}" hint-placeholder-val="{{ true }}">
+<nav aria-label="Main" style="flex:0 0 248px;position:sticky;top:0;height:100vh;overflow:auto;border-right:1px solid var(--line);padding:28px 16px;display:flex;flex-direction:column;gap:28px;background:var(--bg)">
+<button onClick="{{ goCheck }}" aria-label="BloomBot home" style="display:flex;align-items:center;gap:12px;background:none;border:none;padding:0 8px;cursor:pointer;color:var(--ink);text-align:left">
+<span aria-hidden="true" style="display:flex;flex-direction:column-reverse;gap:2px;align-items:flex-start"><span style="width:8px;height:4px;border-radius:2px;background:var(--l1)"></span><span style="width:11px;height:4px;border-radius:2px;background:var(--l2)"></span><span style="width:14px;height:4px;border-radius:2px;background:var(--l3)"></span><span style="width:17px;height:4px;border-radius:2px;background:var(--l4)"></span><span style="width:20px;height:4px;border-radius:2px;background:var(--l5)"></span><span style="width:23px;height:4px;border-radius:2px;background:var(--l6)"></span></span>
+<span style="display:flex;flex-direction:column"><span style="font-family:'Newsreader',serif;font-size:24px;font-weight:600;line-height:1">BloomBot</span><span style="font-size:11px;color:var(--ink3);margin-top:3px">Bloom’s taxonomy, checked</span></span>
+</button>
+<div style="display:flex;flex-direction:column;gap:2px">
+<span style="font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3);padding:0 10px 6px">For teachers</span>
+<sc-for list="{{ navTeacher }}" as="n" hint-placeholder-count="4"><button onClick="{{ n.go }}" aria-current="{{ n.current }}" style="display:flex;align-items:center;gap:10px;padding:9px 10px;border:none;border-radius:8px;background:{{ n.bg }};color:{{ n.color }};font-size:14px;font-weight:{{ n.weight }};cursor:pointer;text-align:left"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink3)">{{ n.num }}</span>{{ n.label }}</button></sc-for>
+</div>
+<div style="display:flex;flex-direction:column;gap:2px">
+<span style="font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3);padding:0 10px 6px">For the demo</span>
+<sc-for list="{{ navDemo }}" as="n" hint-placeholder-count="3"><button onClick="{{ n.go }}" aria-current="{{ n.current }}" style="display:flex;align-items:center;gap:10px;padding:9px 10px;border:none;border-radius:8px;background:{{ n.bg }};color:{{ n.color }};font-size:14px;font-weight:{{ n.weight }};cursor:pointer;text-align:left"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink3)">{{ n.num }}</span>{{ n.label }}</button></sc-for>
+</div>
+<div style="margin-top:auto;display:flex;flex-direction:column;gap:2px;border-top:1px solid var(--line);padding-top:16px">
+<sc-for list="{{ navSheet }}" as="n" hint-placeholder-count="1"><button onClick="{{ n.go }}" aria-current="{{ n.current }}" style="display:flex;align-items:center;gap:10px;padding:9px 10px;border:none;border-radius:8px;background:{{ n.bg }};color:{{ n.color }};font-size:13px;font-weight:{{ n.weight }};cursor:pointer;text-align:left"><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink3)">{{ n.num }}</span>{{ n.label }}</button></sc-for>
+<span style="font-size:11px;color:var(--ink3);padding:8px 10px 0">Open and free · research demo</span>
+</div>
+</nav>
+</sc-if>
+<sc-if value="{{ showTopbar }}" hint-placeholder-val="{{ false }}">
+<nav aria-label="Main" style="position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line);display:flex;flex-direction:column;gap:10px;padding:12px 16px 0">
+<div style="display:flex;align-items:center;gap:10px">
+<button onClick="{{ goCheck }}" style="display:flex;align-items:center;gap:8px;background:none;border:none;padding:0;color:var(--ink);cursor:pointer"><span aria-hidden="true" style="display:flex;flex-direction:column-reverse;gap:2px"><span style="width:6px;height:3px;background:var(--l1)"></span><span style="width:8px;height:3px;background:var(--l2)"></span><span style="width:10px;height:3px;background:var(--l3)"></span><span style="width:12px;height:3px;background:var(--l4)"></span><span style="width:14px;height:3px;background:var(--l5)"></span><span style="width:16px;height:3px;background:var(--l6)"></span></span><span style="font-family:'Newsreader',serif;font-size:21px;font-weight:600">BloomBot</span></button>
+<button onClick="{{ toggleLlm }}" aria-pressed="{{ llmPressed }}" title="GET /v1/meta → llm.available" style="margin-left:auto;display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:6px 10px;font-size:11px;font-weight:600;cursor:pointer;min-height:36px"><span style="width:8px;height:8px;border-radius:50%;background:{{ llmDot }}"></span>{{ llmLabel }}</button>
+<button onClick="{{ toggleTheme }}" aria-label="{{ themeLabel }}" style="width:40px;height:40px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;cursor:pointer;font-size:16px">{{ themeIcon }}</button>
+</div>
+<div style="display:flex;gap:4px;overflow-x:auto;padding-bottom:10px;margin:0 -16px;padding-left:16px;padding-right:16px">
+<sc-for list="{{ navAll }}" as="n" hint-placeholder-count="7"><button onClick="{{ n.go }}" aria-current="{{ n.current }}" style="flex:0 0 auto;padding:8px 12px;min-height:40px;border:1px solid var(--line);border-radius:999px;background:{{ n.bg }};color:{{ n.color }};font-size:13px;font-weight:{{ n.weight }};cursor:pointer;white-space:nowrap">{{ n.label }}</button></sc-for>
+</div>
+</nav>
+</sc-if>
+<main style="flex:1 1 auto;min-width:0;display:flex;flex-direction:column">
+<sc-if value="{{ showRail }}" hint-placeholder-val="{{ true }}">
+<header style="display:flex;align-items:center;gap:12px;padding:16px 48px;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5;background:var(--bg)">
+<span style="font-size:13px;color:var(--ink3)">BloomBot <span aria-hidden="true">/</span> <span style="color:var(--ink);font-weight:600">{{ pageTitle }}</span></span>
+<button onClick="{{ toggleLlm }}" aria-pressed="{{ llmPressed }}" title="GET /v1/meta → llm.available (click to simulate)" style="margin-left:auto;display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:7px 14px;font-size:13px;font-weight:600;cursor:pointer"><span style="width:8px;height:8px;border-radius:50%;background:{{ llmDot }}"></span>{{ llmLabel }}</button>
+<button onClick="{{ toggleTheme }}" style="display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:7px 14px;font-size:13px;font-weight:600;cursor:pointer"><span aria-hidden="true">{{ themeIcon }}</span>{{ themeLabel }}</button>
+</header>
+</sc-if>
+<div style="padding:{{ pad }};width:100%;max-width:1200px;margin:0 auto;display:flex;flex-direction:column;gap:32px">
+<sc-if value="{{ isCheck }}" hint-placeholder-val="{{ true }}">
+<section data-screen-label="01 Check a paper" style="display:flex;flex-direction:column;gap:28px">
+<sc-if value="{{ checkUpload }}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;flex-direction:column;gap:28px">
+<div style="display:flex;flex-direction:column;gap:12px;max-width:760px">
+<span style="font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3)">Check a paper</span>
+<h1 style="font-family:'Newsreader',serif;font-weight:500;font-size:{{ h1fs }};line-height:1.05;letter-spacing:-.015em;margin:0;text-wrap:balance">Is this paper balanced?</h1>
+<p style="margin:0;font-size:17px;color:var(--ink2);max-width:62ch;text-wrap:pretty">Upload a question paper. BloomBot reads the task in each question, weights it by marks, and checks it against your OBE blueprint. It shows which questions are the problem — and you decide every change.</p>
+</div>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,360px),1fr));gap:20px">
+<label onDragOver="{{ onDragOver }}" onDragLeave="{{ onDragLeave }}" onDrop="{{ onDrop }}" style="border:2px dashed {{ dropBorder }};background:{{ dropBg }};border-radius:18px;padding:40px 28px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;text-align:center;cursor:pointer;min-height:260px">
+<input type="file" accept=".pdf,.docx,.txt,.csv" onChange="{{ onFile }}" style="position:absolute;width:1px;height:1px;opacity:0">
+<span aria-hidden="true" style="display:flex;gap:4px;align-items:flex-end;height:40px"><span style="width:10px;height:12px;border-radius:3px;background:var(--l1)"></span><span style="width:10px;height:18px;border-radius:3px;background:var(--l2)"></span><span style="width:10px;height:24px;border-radius:3px;background:var(--l3)"></span><span style="width:10px;height:30px;border-radius:3px;background:var(--l4)"></span><span style="width:10px;height:35px;border-radius:3px;background:var(--l5)"></span><span style="width:10px;height:40px;border-radius:3px;background:var(--l6)"></span></span>
+<span style="font-family:'Newsreader',serif;font-size:24px">Drop your paper here</span>
+<span style="color:var(--ink2);font-size:14px">PDF, DOCX, TXT or CSV · or click to choose a file</span>
+<span style="font-size:12px;color:var(--ink3);max-width:40ch">Printed BT tags are read, then hidden from the classifier — they are the answer key, used only for comparison.</span>
+</label>
+<div style="display:flex;flex-direction:column;gap:12px;background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:24px">
+<label for="paste" style="font-weight:600">Or paste the questions</label>
+<textarea id="paste" value="{{ pasteText }}" onChange="{{ onPaste }}" rows="7" placeholder="1. (a) Define a process. [2] CO1 BT1&#10;    (b) List the states of a process. [2] CO1 BT1&#10;2. Explain the difference between preemptive and…" style="flex:1;font:13px/1.6 'JetBrains Mono',monospace;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:12px;resize:vertical"></textarea>
+<div style="display:flex;flex-wrap:wrap;gap:10px">
+<button onClick="{{ parsePaste }}" style="background:var(--ink);color:var(--bg);border:none;border-radius:10px;padding:11px 18px;font-weight:600;font-size:14px;cursor:pointer">Parse text</button>
+<button onClick="{{ useSample }}" style="background:transparent;color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:11px 18px;font-weight:600;font-size:14px;cursor:pointer">Try the sample OS paper (50 marks)</button>
+</div>
+</div>
+</div>
+</div>
+</sc-if>
+<sc-if value="{{ checkParsing }}" hint-placeholder-val="{{ false }}">
+<div style="background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:48px 28px;display:flex;flex-direction:column;align-items:center;gap:16px;text-align:center">
+<span aria-hidden="true" style="width:36px;height:36px;border-radius:50%;border:3px solid var(--track);border-top-color:var(--accent);animation:bbspin 0.9s linear infinite"></span>
+<span style="font-family:'Newsreader',serif;font-size:26px">Scribe is reading {{ fileName }}</span>
+<span style="color:var(--ink2)">Finding sections, numbered questions, sub-parts, marks, COs and OR-alternatives…</span>
+</div>
+</sc-if>
+<sc-if value="{{ checkEdit }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column;gap:24px">
+<div style="display:flex;flex-wrap:wrap;align-items:flex-end;gap:16px">
+<div style="display:flex;flex-direction:column;gap:6px;flex:1 1 360px">
+<span style="font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3)">Step 2 of 3 · Check what Scribe parsed</span>
+<h1 style="font-family:'Newsreader',serif;font-weight:500;font-size:{{ h1fs }};line-height:1.05;margin:0">Operating Systems · 50 marks</h1>
+<p style="margin:0;color:var(--ink2)">Every row is editable. Lock a question and BloomBot will never rewrite it. <span style="color:var(--ink3)">Demo: showing the sample OS paper.</span></p>
+</div>
+<button onClick="{{ uploadNew }}" style="background:transparent;color:var(--ink2);border:1px solid var(--line);border-radius:10px;padding:10px 16px;font-weight:600;cursor:pointer">Upload a different paper</button>
+</div>
+<div style="background:var(--surface);border:1px solid var(--line);border-radius:16px;overflow:hidden">
+<sc-if value="{{ wide }}" hint-placeholder-val="{{ true }}"><div style="display:grid;grid-template-columns:{{ rowCols }};gap:12px;padding:10px 16px;border-bottom:1px solid var(--line);font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--ink3)"><span>No.</span><span>Question</span><span>Marks</span><span>CO</span><span>Printed tag</span><span></span></div></sc-if>
+<sc-for list="{{ sections }}" as="sec" hint-placeholder-count="3">
+<div style="display:flex;flex-direction:column">
+<div style="display:flex;align-items:baseline;gap:10px;padding:14px 16px 8px;background:var(--bg);border-bottom:1px solid var(--line)"><span style="font-family:'Newsreader',serif;font-size:19px;font-weight:600">{{ sec.title }}</span><span style="font-size:13px;color:var(--ink3)">{{ sec.note }}</span></div>
+<sc-for list="{{ sec.rows }}" as="r" hint-placeholder-count="3">
+<div style="display:flex;flex-direction:column;background:{{ r.rowBg }};border-left:3px solid {{ r.groupBorder }}">
+<sc-if value="{{ r.showGroupLabel }}"><div style="padding:10px 16px 0;font-size:12px;font-weight:600;color:var(--accent)">{{ r.groupLabel }}</div></sc-if>
+<sc-if value="{{ r.showOr }}"><div style="display:flex;align-items:center;gap:10px;padding:0 16px;font:700 11px 'JetBrains Mono',monospace;color:var(--accent)"><span style="flex:1;height:1px;background:var(--line)"></span>OR<span style="flex:1;height:1px;background:var(--line)"></span></div></sc-if>
+<div style="display:grid;grid-template-columns:{{ rowCols }};gap:12px;align-items:center;padding:10px 16px;border-bottom:1px solid var(--line)">
+<span style="font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700">{{ r.id }}</span>
+<span style="display:flex;flex-direction:column;gap:2px;min-width:0"><sc-if value="{{ r.hasContext }}"><span style="font-size:12px;font-style:italic;color:var(--ink3);padding:0 8px">Context: {{ r.context }}</span></sc-if><input aria-label="Question text" value="{{ r.text }}" onChange="{{ r.onText }}" style="width:100%;min-width:0;font-size:14px;color:var(--ink);background:transparent;border:1px solid transparent;border-radius:6px;padding:7px 8px" style-focus="border-color:var(--accent);background:var(--bg)"></span>
+<input aria-label="Marks" type="number" min="0" value="{{ r.marks }}" onChange="{{ r.onMarks }}" style="width:100%;font:13px 'JetBrains Mono',monospace;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:7px 6px;text-align:center">
+<sc-if value="{{ wide }}" hint-placeholder-val="{{ true }}"><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink2)">{{ r.coTxt }}</span></sc-if>
+<sc-if value="{{ wide }}" hint-placeholder-val="{{ true }}"><span title="Printed on the paper; hidden from the classifier" style="display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--ink2)"><sc-if value="{{ r.hasTag }}"><span style="display:inline-flex;align-items:center;gap:6px"><span style="width:16px;height:16px;border-radius:4px;background:{{ r.tagChip.bg }};color:{{ r.tagChip.fg }};font:600 9px/16px 'JetBrains Mono',monospace;text-align:center">{{ r.tagChip.n }}</span>{{ r.tag }}</span></sc-if><sc-if value="{{ r.noTag }}"><span title="No printed tag">—</span></sc-if></span></sc-if>
+<sc-if value="{{ wide }}" hint-placeholder-val="{{ true }}"><button onClick="{{ r.toggleLock }}" aria-pressed="{{ r.lockPressed }}" title="{{ r.lockTitle }}" style="justify-self:end;border:1px solid var(--line);background:{{ r.lockBg }};color:{{ r.lockFg }};border-radius:8px;padding:6px 10px;font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap">{{ r.lockLabel }}</button></sc-if>
+</div>
+</div>
+</sc-for>
+</div>
+</sc-for>
+</div>
+<div style="display:flex;flex-direction:column;gap:12px">
+<span style="font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3)">Step 3 of 3 · Pick a blueprint</span>
+<div role="radiogroup" aria-label="Blueprint" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:12px">
+<sc-for list="{{ blueprints }}" as="b" hint-placeholder-count="2"><button role="radio" aria-checked="{{ b.checked }}" onClick="{{ b.pick }}" style="display:flex;gap:12px;align-items:flex-start;text-align:left;padding:16px 18px;border:2px solid {{ b.border }};background:{{ b.bg }};color:var(--ink);border-radius:14px;cursor:pointer"><span style="flex:0 0 18px;height:18px;border-radius:50%;border:2px solid var(--accent);background:{{ b.dot }};box-shadow:inset 0 0 0 3px var(--surface);margin-top:2px"></span><span style="display:flex;flex-direction:column;gap:2px"><span style="font-weight:600">{{ b.label }}</span><span style="font-size:13px;color:var(--ink2)">{{ b.sub }}</span></span></button></sc-for>
+</div>
+</div>
+<div style="display:flex;flex-wrap:wrap;align-items:center;gap:16px">
+<button onClick="{{ assess }}" style="background:var(--accent);color:var(--accent-ink);border:none;border-radius:12px;padding:14px 28px;font-size:16px;font-weight:600;cursor:pointer">Assess</button>
+<span style="font-size:13px;color:var(--ink3)">{{ lockedNote }} · Profile: {{ profileName }}</span>
+</div>
+</div>
+</sc-if>
+<sc-if value="{{ checkReport }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column;gap:24px">
+<div style="display:flex;flex-wrap:wrap;gap:24px;align-items:center;background:var(--badbg);border:1px solid var(--bad);border-radius:20px;padding:28px">
+<div style="display:flex;flex-direction:column;gap:6px;flex:1 1 320px">
+<span style="font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink2)">Verdict · {{ bpName }}</span>
+<span style="font-family:'Newsreader',serif;font-size:{{ h1fs }};line-height:1;font-weight:500;color:var(--ink)"><span aria-hidden="true" style="color:var(--bad)">✗</span> Not compliant</span>
+<span style="color:var(--ink2)">{{ verdictSub }} Operating Systems · 50 marks.</span>
+</div>
+<div style="display:flex;flex-wrap:wrap;gap:10px">
+<button onClick="{{ rebalance }}" style="background:var(--accent);color:var(--accent-ink);border:none;border-radius:12px;padding:14px 24px;font-size:16px;font-weight:600;cursor:pointer">Rebalance this paper →</button>
+<button onClick="{{ backToEdit }}" style="background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:12px;padding:13px 20px;font-size:15px;font-weight:600;cursor:pointer">Edit paper</button>
+</div>
+</div>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:20px">
+<div style="background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:24px;display:flex;flex-direction:column;gap:20px">
+<div style="display:flex;flex-direction:column;gap:4px"><h2 style="font-family:'Newsreader',serif;font-weight:500;font-size:26px;margin:0">Distribution by marks</h2><span style="font-size:13px;color:var(--ink3)">Dashed lines are the blueprint bounds. OR-alternatives share one slot: Q2/Q3 are one 10-mark slot; if they get different levels, each counts 5 marks.</span></div>
+<dc-import name="DistBar" dist="{{ distBefore }}" markers="{{ markers }}" hint-size="100%,150px"></dc-import>
+<ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px">
+<sc-for list="{{ checksBefore }}" as="c" hint-placeholder-count="3"><li style="display:grid;grid-template-columns:28px minmax(0,1fr) auto;gap:12px;align-items:center;padding:10px 12px;border-radius:10px;background:{{ c.bg }}"><span aria-hidden="true" style="width:24px;height:24px;border-radius:50%;background:{{ c.color }};color:var(--surface);font-weight:700;text-align:center;line-height:24px">{{ c.icon }}</span><span style="font-weight:600">{{ c.label }} of marks</span><span style="font-family:'JetBrains Mono',monospace;font-size:14px"><strong>{{ c.shareTxt }}</strong> <span style="color:var(--ink2)">· {{ c.note }}</span></span></li></sc-for>
+</ul>
+</div>
+<div style="background:var(--surface);border:1px solid var(--warn);border-radius:16px;padding:24px;display:flex;flex-direction:column;gap:16px">
+<div style="display:flex;flex-direction:column;gap:4px"><span style="font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--warn)">⚑ Review queue</span><h2 style="font-family:'Newsreader',serif;font-weight:500;font-size:26px;margin:0">{{ reviewTitle }}</h2><span style="font-size:13px;color:var(--ink2)">BloomBot isn’t sure about these. The voters disagree, so you decide.</span></div>
+<sc-for list="{{ reviewQueue }}" as="q" hint-placeholder-count="1">
+<div style="display:flex;flex-direction:column;gap:14px;border-top:1px solid var(--line);padding-top:14px">
+<div style="display:flex;gap:10px"><span style="font-family:'JetBrains Mono',monospace;font-weight:700">Q{{ q.id }}</span><span style="flex:1">{{ q.text }}</span><span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--ink3);white-space:nowrap;flex-shrink:0">{{ q.marks }} m</span></div>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,170px),1fr));gap:10px">
+<sc-for list="{{ q.votes }}" as="v"><div style="border:1px solid var(--line);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:10px;background:var(--bg)">
+<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><strong style="font-size:13px">{{ v.agent }}</strong><span style="font-size:11px;color:var(--ink3)">{{ v.role }}</span></div>
+<div style="display:flex;align-items:center;gap:8px"><span style="background:{{ v.chip.bg }};color:{{ v.chip.fg }};font-size:12px;font-weight:600;padding:3px 9px;border-radius:999px;white-space:nowrap;flex-shrink:0">{{ v.chip.n }} {{ v.chip.name }}</span><span style="font-family:'JetBrains Mono',monospace;font-size:13px">{{ v.confTxt }}</span></div>
+<dc-import name="LevelLadder" proba="{{ v.proba }}" size="md" hint-size="100%,130px"></dc-import>
+</div></sc-for>
+</div>
+<sc-if value="{{ q.open }}"><div style="display:flex;flex-wrap:wrap;gap:8px"><sc-for list="{{ q.choices }}" as="ch"><button onClick="{{ ch.pick }}" style="background:var(--ink);color:var(--bg);border:none;border-radius:8px;padding:9px 14px;font-weight:600;font-size:13px;cursor:pointer">{{ ch.label }}</button></sc-for></div></sc-if>
+<sc-if value="{{ q.resolved }}"><div style="display:flex;align-items:center;gap:10px;color:var(--good);font-weight:600;font-size:14px">✓ {{ q.resolvedText }} <button onClick="{{ q.undo }}" style="background:none;border:none;color:var(--ink2);text-decoration:underline;cursor:pointer;font-size:13px">Undo</button></div></sc-if>
+</div>
+</sc-for>
+</div>
+</div>
+<div style="background:var(--surface);border:1px solid var(--line);border-radius:16px;overflow:hidden">
+<div style="display:flex;flex-wrap:wrap;align-items:baseline;gap:12px;padding:20px 24px"><h2 style="font-family:'Newsreader',serif;font-weight:500;font-size:26px;margin:0">Every question</h2><span style="font-size:13px;color:var(--ink3)">Highlighted: the printed tag disagrees with BloomBot.</span></div>
+<sc-if value="{{ tableWide }}" hint-placeholder-val="{{ true }}">
+<div role="table" aria-label="Questions" style="display:flex;flex-direction:column">
+<div role="row" style="display:grid;grid-template-columns:{{ tableCols }};gap:12px;padding:10px 24px;border-top:1px solid var(--line);border-bottom:1px solid var(--line);font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--ink3)"><span role="columnheader">Id</span><span role="columnheader">Question</span><span role="columnheader">Marks</span><span role="columnheader">Predicted</span><span role="columnheader">Conf.</span><span role="columnheader">Printed vs predicted</span><span role="columnheader">Review</span></div>
+<sc-for list="{{ tableRows }}" as="r" hint-placeholder-count="6">
+<div role="row" style="display:grid;grid-template-columns:{{ tableCols }};gap:12px;align-items:center;padding:12px 24px;border-bottom:1px solid var(--line)">
+<span role="cell" style="font-family:'JetBrains Mono',monospace;font-weight:700;font-size:13px">{{ r.id }}</span>
+<span role="cell" style="display:flex;flex-direction:column;gap:2px"><sc-if value="{{ r.hasContext }}"><span style="font-size:12px;font-style:italic;color:var(--ink3)">{{ r.context }}</span></sc-if><span style="font-size:14px;text-wrap:pretty">{{ r.text }}</span></span>
+<span role="cell" style="font-family:'JetBrains Mono',monospace;font-size:13px">{{ r.marks }}</span>
+<span role="cell" style="display:flex;align-items:center;gap:10px"><span style="background:{{ r.chip.bg }};color:{{ r.chip.fg }};font-size:12px;font-weight:600;padding:3px 9px;border-radius:999px;white-space:nowrap">{{ r.chip.n }} {{ r.chip.name }}</span><dc-import name="LevelLadder" proba="{{ r.proba }}" size="xs" hint-size="44px,26px"></dc-import></span>
+<span role="cell" style="font-family:'JetBrains Mono',monospace;font-size:13px;color:{{ r.confColor }};font-weight:600">{{ r.confTxt }}</span>
+<span role="cell" style="font-size:12px;padding:5px 8px;border-radius:8px;background:{{ r.tagBg }};color:var(--ink)"><sc-if value="{{ r.agree }}">✓ {{ r.tagName }}</sc-if><sc-if value="{{ r.disagree }}"><strong>≠</strong> printed {{ r.tagName }} · predicted {{ r.predName }}</sc-if><sc-if value="{{ r.untagged }}"><span style="color:var(--ink3)">— no printed tag</span></sc-if></span>
+<span role="cell"><sc-if value="{{ r.flag }}"><span style="display:inline-flex;gap:4px;font-size:12px;font-weight:700;color:var(--ink);background:var(--warnbg);border:1px solid var(--warn);border-radius:999px;padding:3px 9px">⚑ Review</span></sc-if><sc-if value="{{ r.resolvedFlag }}"><span style="font-size:12px;font-weight:600;color:var(--good)">✓ {{ r.resolvedTxt }}</span></sc-if><sc-if value="{{ r.noFlag }}"><span style="font-size:12px;color:var(--ink3)">—</span></sc-if></span>
+</div>
+</sc-for>
+</div>
+</sc-if>
+<sc-if value="{{ tableNarrow }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column">
+<sc-for list="{{ tableRows }}" as="r"><div style="display:flex;flex-direction:column;gap:8px;padding:14px 16px;border-top:1px solid var(--line)">
+<div style="display:flex;gap:8px"><span style="font-family:'JetBrains Mono',monospace;font-weight:700">{{ r.id }}</span><span style="flex:1;font-size:14px">{{ r.text }}</span><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink3);white-space:nowrap;flex-shrink:0">{{ r.marks }} m</span></div>
+<div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px"><span style="background:{{ r.chip.bg }};color:{{ r.chip.fg }};font-size:12px;font-weight:600;padding:3px 9px;border-radius:999px;white-space:nowrap;flex-shrink:0">{{ r.chip.n }} {{ r.chip.name }}</span><dc-import name="LevelLadder" proba="{{ r.proba }}" size="xs" hint-size="44px,26px"></dc-import><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:{{ r.confColor }}">{{ r.confTxt }}</span><sc-if value="{{ r.flag }}"><span style="font-size:12px;font-weight:700;background:var(--warnbg);border:1px solid var(--warn);border-radius:999px;padding:2px 8px">⚑ Review</span></sc-if></div>
+<sc-if value="{{ r.disagree }}"><span style="font-size:12px;background:var(--warnbg);border-radius:6px;padding:4px 8px;align-self:flex-start">≠ printed {{ r.tagName }} · predicted {{ r.predName }}</span></sc-if>
+</div></sc-for>
+</div>
+</sc-if>
+</div>
+<div style="display:flex;flex-wrap:wrap;align-items:center;gap:16px;padding:8px 0">
+<button onClick="{{ rebalance }}" style="background:var(--accent);color:var(--accent-ink);border:none;border-radius:12px;padding:14px 28px;font-size:16px;font-weight:600;cursor:pointer">Rebalance this paper →</button>
+<span style="font-size:13px;color:var(--ink3)">You approve every rewrite. {{ lockedNote }}</span>
+</div>
+</div>
+</sc-if>
+</section>
+</sc-if>
+<sc-if value="{{ isClassify }}" hint-placeholder-val="{{ false }}">
+<section data-screen-label="02 Classify a question" style="display:flex;flex-direction:column;gap:24px">
+<div style="display:flex;flex-direction:column;gap:10px;max-width:760px">
+<span style="font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3)">Classify a question</span>
+<h1 style="font-family:'Newsreader',serif;font-weight:500;font-size:{{ h1fs }};line-height:1.05;letter-spacing:-.015em;margin:0;text-wrap:balance">What is the student actually asked to do?</h1>
+</div>
+<div style="background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:20px;display:flex;flex-direction:column;gap:14px">
+<label for="clsq" style="font-size:13px;font-weight:600;color:var(--ink2)">Question</label>
+<textarea id="clsq" value="{{ clsText }}" onChange="{{ onClsText }}" rows="2" style="font-family:'Newsreader',serif;font-size:24px;line-height:1.35;color:var(--ink);background:transparent;border:none;border-bottom:1px solid var(--line);padding:4px 0 12px;resize:vertical"></textarea>
+<div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center">
+<span style="font-size:12px;color:var(--ink3)">Examples</span>
+<sc-for list="{{ examples }}" as="e" hint-placeholder-count="5"><button onClick="{{ e.pick }}" aria-pressed="{{ e.pressed }}" style="border:1px solid var(--line);background:{{ e.bg }};color:{{ e.fg }};border-radius:999px;padding:7px 12px;font-size:13px;cursor:pointer;min-height:36px">{{ e.label }}</button></sc-for>
+<button onClick="{{ runClassify }}" style="margin-left:auto;background:var(--accent);color:var(--accent-ink);border:none;border-radius:10px;padding:11px 22px;font-weight:600;font-size:15px;cursor:pointer">Classify</button>
+</div>
+</div>
+<sc-if value="{{ clsUnknown }}" hint-placeholder-val="{{ false }}">
+<div style="background:var(--surface2);border-radius:16px;padding:24px;color:var(--ink2)"><strong style="color:var(--ink)">Connect to the API to classify new questions.</strong> Run <code style="font-family:'JetBrains Mono',monospace;background:var(--surface);border:1px solid var(--line);border-radius:4px;padding:1px 6px">bloombot serve</code> and BloomBot will call <span style="font-family:'JetBrains Mono',monospace">POST /v1/classify</span>. In this demo, pick one of the five examples above.</div>
+</sc-if>
+<sc-if value="{{ clsKnown }}" hint-placeholder-val="{{ true }}">
+<div style="display:flex;flex-direction:column;gap:20px">
+<sc-if value="{{ isTrapHero }}" hint-placeholder-val="{{ false }}">
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:20px 32px;align-items:center;background:var(--ink);color:var(--bg);border-radius:20px;padding:28px 32px">
+<div style="display:flex;flex-direction:column;gap:10px"><span style="font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;opacity:.75">⚑ Flagged for teacher review</span><span style="font-family:'Newsreader',serif;font-size:34px;line-height:1.1;text-wrap:balance">The LLM was fooled. The system flagged it instead of hiding it.</span><span style="font-size:15px;opacity:.85;max-width:52ch">Lexis read the directive, “explain”. The most similar labelled questions also lean Understand. Socrates read “evaluate” as the task. Pooled, the answer is too close to call — so you decide.</span></div>
+<div style="display:flex;flex-direction:column;gap:8px;font-size:14px">
+<div style="display:grid;grid-template-columns:96px minmax(0,1fr);gap:8px;padding:10px 14px;border-radius:10px;background:rgba(255,255,255,.08)"><strong>Lexis</strong><span style="font-family:'JetBrains Mono',monospace">{{ lexTxt }} · w 1</span></div>
+<div style="display:grid;grid-template-columns:96px minmax(0,1fr);gap:8px;padding:10px 14px;border-radius:10px;background:rgba(255,255,255,.08)"><strong>Archivist</strong><span style="font-family:'JetBrains Mono',monospace">{{ archTxt }} · w 0</span></div>
+<div style="display:grid;grid-template-columns:96px minmax(0,1fr);gap:8px;padding:10px 14px;border-radius:10px;border:1.5px solid var(--l4)"><strong>Socrates</strong><span style="font-family:'JetBrains Mono',monospace">{{ socTxt }} · w 0.5 · fooled</span></div>
+<div style="display:grid;grid-template-columns:96px minmax(0,1fr);gap:8px;padding:10px 14px;border-radius:10px;background:var(--warnbg);color:var(--ink)"><strong>Pooled</strong><span style="font-family:'JetBrains Mono',monospace;font-weight:700">{{ closeCall }} ⚑</span></div>
+</div>
+</div>
+</sc-if>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,400px),1fr));gap:20px">
+<div style="background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:24px;display:flex;flex-direction:column;gap:20px">
+<div style="display:flex;flex-wrap:wrap;align-items:flex-end;gap:12px 20px">
+<div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3)">Predicted level</span>
+<span style="display:flex;align-items:center;gap:12px"><span style="width:44px;height:44px;border-radius:12px;background:{{ clsChip.bg }};color:{{ clsChip.fg }};font:700 20px/44px 'JetBrains Mono',monospace;text-align:center">{{ clsChip.n }}</span><span style="font-family:'Newsreader',serif;font-size:40px;line-height:1">{{ clsChip.name }}</span></span></div>
+<div style="display:flex;flex-direction:column;gap:2px;margin-left:auto;text-align:right"><span style="font-size:12px;color:var(--ink3)">Confidence</span><span style="font-family:'JetBrains Mono',monospace;font-size:28px;font-weight:600">{{ clsConf }}</span></div>
+</div>
+<div style="display:flex;flex-wrap:wrap;gap:8px">
+<span style="font-size:12px;font-weight:600;padding:4px 10px;border-radius:999px;background:var(--surface2)">{{ clsOrder }}</span>
+<sc-if value="{{ clsFlag }}"><span style="font-size:12px;font-weight:700;padding:4px 10px;border-radius:999px;background:var(--warnbg);border:1px solid var(--warn)">⚑ needs teacher review</span></sc-if>
+<sc-if value="{{ clsNoFlag }}"><span style="font-size:12px;padding:4px 10px;border-radius:999px;border:1px solid var(--line);color:var(--ink2)">No review flag</span></sc-if>
+</div>
+<dc-import name="LevelLadder" proba="{{ clsProba }}" size="lg" hint-size="100%,220px"></dc-import>
+<p style="margin:0;font-size:13px;color:var(--ink2);border-top:1px solid var(--line);padding-top:14px">{{ askedNote }}</p>
+</div>
+<div style="background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:24px;display:flex;flex-direction:column;gap:18px">
+<div style="display:flex;align-items:center;gap:10px"><h2 style="font-family:'Newsreader',serif;font-weight:500;font-size:26px;margin:0">Evidence</h2>
+<sc-if value="{{ hasParse }}"><button onClick="{{ openParse }}" style="margin-left:auto;background:transparent;border:1px solid var(--line);color:var(--ink);border-radius:8px;padding:7px 12px;font-size:13px;font-weight:600;cursor:pointer">View parse</button></sc-if></div>
+<p style="margin:0;font-family:'Newsreader',serif;font-size:24px;line-height:1.7;display:flex;flex-wrap:wrap;gap:0 6px"><sc-for list="{{ tokens }}" as="t"><span title="{{ t.tip }}" style="background:{{ t.bg }};border-bottom:{{ t.border }};font-weight:{{ t.weight }};padding:0 2px;border-radius:3px 3px 0 0">{{ t.t }}</span></sc-for></p>
+<dl style="margin:0;display:grid;grid-template-columns:auto minmax(0,1fr);gap:8px 16px;font-size:14px">
+<dt style="color:var(--ink3)">Directive</dt><dd style="margin:0;display:flex;align-items:center;gap:8px"><span style="width:14px;height:3px;background:var(--accent)"></span><span style="font-family:'JetBrains Mono',monospace">{{ directiveText }}</span></dd>
+<sc-if value="{{ hasPhrase }}"><dt style="color:var(--ink3)">Phrase</dt></sc-if><sc-if value="{{ hasPhrase }}"><dd style="margin:0;font-family:'JetBrains Mono',monospace">{{ phraseText }}</dd></sc-if>
+<sc-if value="{{ hasTrap }}"><dt style="color:var(--ink3)">Embedded</dt></sc-if><sc-if value="{{ hasTrap }}"><dd style="margin:0;display:flex;align-items:center;gap:8px"><span style="width:14px;height:0;border-top:3px dashed var(--warn)"></span><span style="font-family:'JetBrains Mono',monospace">{{ trapText }}</span><span style="font-size:12px;font-weight:700;color:var(--ink);background:var(--warnbg);padding:2px 8px;border-radius:999px">trap: not the task</span></dd></sc-if>
+<dt style="color:var(--ink3)">Frame</dt><dd style="margin:0;font-family:'JetBrains Mono',monospace">{{ frameText }}</dd>
+<dt style="color:var(--ink3)">Evidence</dt><dd style="margin:0;font-family:'JetBrains Mono',monospace">{{ evidenceText }}</dd>
+</dl>
+<sc-if value="{{ hasMasked }}"><div style="display:flex;flex-direction:column;gap:10px"><button onClick="{{ toggleMasked }}" aria-expanded="{{ showMasked }}" style="align-self:flex-start;background:transparent;border:1px solid var(--line);color:var(--ink);border-radius:8px;padding:7px 12px;font-size:13px;font-weight:600;cursor:pointer">{{ maskedLabel }}</button>
+<sc-if value="{{ showMasked }}"><code style="display:block;font-family:'JetBrains Mono',monospace;font-size:14px;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:12px 14px;word-break:break-word">{{ masked }}</code></sc-if></div></sc-if>
+</div>
+</div>
+<div style="display:flex;flex-direction:column;gap:12px">
+<h2 style="font-family:'Newsreader',serif;font-weight:500;font-size:26px;margin:0">Votes</h2>
+<div style="display:grid;grid-template-columns:{{ voteCols }};gap:14px">
+<sc-for list="{{ votes }}" as="v" hint-placeholder-count="3"><div style="background:var(--surface);border:1.5px solid {{ v.border }};border-radius:16px;padding:18px;display:flex;flex-direction:column;gap:12px">
+<div style="display:flex;align-items:flex-start;gap:8px"><div style="display:flex;flex-direction:column"><strong>{{ v.agent }}</strong><span style="font-size:12px;color:var(--ink3)">{{ v.role }} · {{ v.weight }}</span></div><sc-if value="{{ v.fooled }}"><span style="margin-left:auto;font-size:11px;font-weight:700;color:var(--ink);background:var(--badbg);border:1px solid var(--bad);border-radius:999px;padding:2px 8px;white-space:nowrap">fell for the trap</span></sc-if></div>
+<sc-if value="{{ v.notAsked }}"><span style="font-size:13px;color:var(--ink2);background:var(--surface2);border-radius:8px;padding:12px">{{ v.notAskedText }}</span></sc-if>
+<sc-if value="{{ v.skip }}"><span style="font-size:13px;color:var(--ink2);background:var(--surface2);border-radius:8px;padding:10px">Skipped — fast mode (no LLM).</span></sc-if>
+<sc-if value="{{ v.live }}"><div style="display:flex;flex-direction:column;gap:12px">
+<div style="display:flex;align-items:center;gap:8px"><span style="background:{{ v.chip.bg }};color:{{ v.chip.fg }};font-size:12px;font-weight:600;padding:3px 9px;border-radius:999px;white-space:nowrap;flex-shrink:0">{{ v.chip.n }} {{ v.chip.name }}</span><span style="font-family:'JetBrains Mono',monospace;font-size:14px">{{ v.confTxt }}</span></div>
+<dc-import name="LevelLadder" proba="{{ v.proba }}" size="md" hint-size="100%,130px"></dc-import>
+<sc-if value="{{ v.hasReasoning }}"><div style="display:flex;flex-direction:column;gap:8px"><button onClick="{{ v.toggleReasoning }}" style="align-self:flex-start;background:none;border:none;padding:0;color:var(--accent);font-weight:600;font-size:13px;cursor:pointer">{{ v.reasonLabel }}</button><sc-if value="{{ v.showReasoning }}"><blockquote style="margin:0;border-left:2px solid var(--line);padding-left:12px;font-family:'Newsreader',serif;font-style:italic;font-size:16px;color:var(--ink2);white-space:pre-line">{{ v.reasoning }}</blockquote></sc-if></div></sc-if>
+</div></sc-if>
+</div></sc-for>
+</div>
+</div>
+<sc-if value="{{ hasNeighbours }}"><div style="background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:24px;display:flex;flex-direction:column;gap:14px">
+<div style="display:flex;flex-direction:column;gap:2px"><h2 style="font-family:'Newsreader',serif;font-weight:500;font-size:26px;margin:0">Most similar labelled questions</h2><span style="font-size:13px;color:var(--ink3)">Top 5 from the Archivist (BGE-small). Notice how differently sources label similar wording.</span></div>
+<ol style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column">
+<sc-for list="{{ neighbours }}" as="nb" hint-placeholder-count="3"><li style="display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px 16px;padding:12px 0;border-top:1px solid var(--line)">
+<span style="font-size:15px">{{ nb.question }}</span>
+<span style="background:{{ nb.chip.bg }};color:{{ nb.chip.fg }};font-size:12px;font-weight:600;padding:3px 9px;border-radius:999px;align-self:start;white-space:nowrap">{{ nb.chip.n }} {{ nb.chip.name }}</span>
+<span style="display:flex;align-items:center;gap:10px;font-size:12px;color:var(--ink3)"><span style="font-family:'JetBrains Mono',monospace">{{ nb.source }}</span><span style="width:80px;height:4px;background:var(--track);border-radius:2px;position:relative;display:inline-block"><span style="position:absolute;inset:0 auto 0 0;width:{{ nb.simW }};background:var(--ink3);border-radius:2px"></span></span><span style="font-family:'JetBrains Mono',monospace">sim {{ nb.sim }}</span></span>
+</li></sc-for>
+</ol>
+</div></sc-if>
+</div>
+</sc-if>
+</section>
+</sc-if>
+<sc-if value="{{ isRebalance }}" hint-placeholder-val="{{ false }}">
+<section data-screen-label="03 Rebalance" style="display:flex;flex-direction:column;gap:24px">
+<div style="display:flex;flex-direction:column;gap:10px;max-width:760px">
+<span style="font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3)">Rebalance · Operating Systems · {{ bpName }}</span>
+<h1 style="font-family:'Newsreader',serif;font-weight:500;font-size:{{ h1fs }};line-height:1.05;letter-spacing:-.015em;margin:0">Fewest rewrites. Every one checked. You approve.</h1>
+</div>
+<sc-if value="{{ jobIdle }}" hint-placeholder-val="{{ false }}">
+<div style="background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:32px;display:flex;flex-direction:column;gap:16px;align-items:flex-start">
+<p style="margin:0;color:var(--ink2);max-width:60ch">Rebalance opens from a checked paper. Run it on the sample OS paper to watch the agents work — the job runs in the background and you can review each rewrite as it lands.</p>
+<div style="display:flex;flex-wrap:wrap;gap:10px"><button onClick="{{ startJob }}" style="background:var(--accent);color:var(--accent-ink);border:none;border-radius:12px;padding:13px 24px;font-size:15px;font-weight:600;cursor:pointer">Start rebalance job</button><button onClick="{{ goCheck }}" style="background:transparent;color:var(--ink);border:1px solid var(--line);border-radius:12px;padding:12px 20px;font-weight:600;cursor:pointer">Check a paper first</button></div>
+</div>
+</sc-if>
+<sc-if value="{{ notIdle }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column;gap:24px">
+<div style="background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:24px;display:flex;flex-direction:column;gap:18px">
+<div style="display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px"><h2 style="font-family:'Newsreader',serif;font-weight:500;font-size:26px;margin:0">Pipeline</h2><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink3)">GET /v1/jobs/{{ jobId }}</span><span style="margin-left:auto;font-size:13px;font-weight:600">{{ jobLabel }}</span></div>
+<div aria-hidden="true" style="height:4px;background:var(--track);border-radius:2px;overflow:hidden"><div style="height:100%;width:{{ progressW }};background:var(--accent);transition:width .25s"></div></div>
+<ol aria-label="Stages" style="list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:8px;align-items:center">
+<sc-for list="{{ stages }}" as="st" hint-placeholder-count="11"><li style="display:flex;align-items:center;gap:8px"><sc-if value="{{ st.showArrow }}"><span aria-hidden="true" style="color:var(--ink3)">→</span></sc-if><span style="display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:999px;border:1px solid {{ st.border }};background:{{ st.bg }};color:{{ st.fg }};font-size:13px;font-weight:600;animation:{{ st.anim }}"><span aria-hidden="true" style="font-size:10px">{{ st.mark }}</span>{{ st.name }}</span></li></sc-for>
+</ol>
+<div role="log" aria-live="polite" style="display:flex;flex-direction:column;max-height:340px;overflow:auto;border:1px solid var(--line);border-radius:12px">
+<sc-for list="{{ traceRows }}" as="t" hint-placeholder-count="3"><div style="display:grid;grid-template-columns:28px 104px minmax(0,1fr) 120px;gap:10px;align-items:center;padding:8px 14px;border-bottom:1px solid var(--line);background:{{ t.rowBg }};font-size:13px">
+<span style="font-family:'JetBrains Mono',monospace;color:var(--ink3);font-size:11px">{{ t.i }}</span>
+<strong style="font-weight:600">{{ t.agent }}</strong>
+<span style="min-width:0"><span style="color:var(--ink)">{{ t.action }}</span> <span style="color:var(--ink2)">· {{ t.detail }}</span></span>
+<span style="display:flex;align-items:center;gap:8px;justify-content:flex-end"><span style="width:44px;height:4px;background:var(--track);border-radius:2px;position:relative;display:inline-block"><span style="position:absolute;inset:0 auto 0 0;width:{{ t.barW }};background:var(--ink3);border-radius:2px"></span></span><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink2);min-width:60px;text-align:right">{{ t.ms }}</span></span>
+</div></sc-for>
+</div>
+<span style="font-size:12px;color:var(--ink3)">Total agent time so far: <span style="font-family:'JetBrains Mono',monospace">{{ totalMs }}</span> · each event is <span style="font-family:'JetBrains Mono',monospace">{agent, action, ms, detail}</span></span>
+</div>
+<sc-if value="{{ showPlan }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column;gap:20px">
+<div style="background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:24px;display:flex;flex-direction:column;gap:14px">
+<div style="display:flex;flex-wrap:wrap;align-items:baseline;gap:12px"><span style="font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3)">The plan · from the Architect</span><h2 style="font-family:'Newsreader',serif;font-weight:500;font-size:30px;margin:0;flex-basis:100%">{{ planTitle }}</h2></div>
+<ul style="list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:10px">
+<sc-for list="{{ planRows }}" as="p" hint-placeholder-count="4"><li style="display:flex;align-items:center;gap:8px;padding:8px 12px;border:1px solid var(--line);border-radius:12px;background:var(--bg)"><strong style="font-family:'JetBrains Mono',monospace">{{ p.q }}</strong><span style="background:{{ p.from.bg }};color:{{ p.from.fg }};font-size:12px;font-weight:600;padding:2px 8px;border-radius:999px;white-space:nowrap">{{ p.from.name }}</span><span aria-hidden="true">→</span><span style="background:{{ p.to.bg }};color:{{ p.to.fg }};font-size:12px;font-weight:600;padding:2px 8px;border-radius:999px;white-space:nowrap">{{ p.to.name }}</span><span style="font-size:12px;color:var(--ink3)">{{ p.marks }}</span><sc-if value="{{ p.locked }}"><span style="font-size:12px;font-weight:600;color:var(--ink2)">🔒 locked — skipped</span></sc-if></li></sc-for>
+</ul>
+<span style="font-size:12px;color:var(--ink2)">Why: lower order (Remember + Understand) ≤ 40% of marks — currently 90%; higher order (Evaluate + Create) ≥ 10% — currently 0%.</span>
+</div>
+<sc-if value="{{ hasCards }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column;gap:14px">
+<div style="display:flex;flex-wrap:wrap;align-items:center;gap:12px"><h2 style="font-family:'Newsreader',serif;font-weight:500;font-size:26px;margin:0">Rewrites</h2><span style="font-size:13px;color:var(--ink2)">{{ pendingText }}</span><sc-if value="{{ hasPending }}"><button onClick="{{ acceptAll }}" style="margin-left:auto;background:transparent;color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:8px 14px;font-weight:600;font-size:13px;cursor:pointer">Accept all remaining</button></sc-if></div>
+<sc-for list="{{ rwCards }}" as="c" hint-placeholder-count="2"><dc-import name="RewriteCard" rw="{{ c.rw }}" status="{{ c.status }}" on-action="{{ c.onAction }}" hint-size="100%,340px"></dc-import></sc-for>
+</div>
+</sc-if>
+</div>
+</sc-if>
+<sc-if value="{{ jobDone }}" hint-placeholder-val="{{ false }}">
+<div style="display:flex;flex-direction:column;gap:20px">
+<div style="background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:24px;display:flex;flex-direction:column;gap:20px">
+<div style="display:flex;flex-wrap:wrap;align-items:center;gap:12px"><h2 style="font-family:'Newsreader',serif;font-weight:500;font-size:30px;margin:0">Before vs after</h2><span style="margin-left:auto;font-size:14px;font-weight:700;color:var(--good);background:var(--goodbg);border-radius:999px;padding:6px 14px">✓ Compliant · {{ bpName }}</span></div>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr));gap:28px">
+<dc-import name="DistBar" dist="{{ distBefore }}" markers="{{ markers }}" label="Before" hint-size="100%,170px"></dc-import>
+<dc-import name="DistBar" dist="{{ distAfter }}" markers="{{ markers }}" label="After" hint-size="100%,170px"></dc-import>
+</div>
+<div role="table" aria-label="Bound checks" style="display:flex;flex-direction:column;border:1px solid var(--line);border-radius:12px;overflow:hidden">
+<sc-for list="{{ beforeAfter }}" as="b" hint-placeholder-count="3"><div role="row" style="display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr) 24px minmax(0,1fr);gap:10px;align-items:center;padding:12px 16px;border-bottom:1px solid var(--line);font-size:14px">
+<strong role="cell" style="font-weight:600">{{ b.label }}</strong>
+<span role="cell" style="color:var(--bad);font-family:'JetBrains Mono',monospace">✗ {{ b.b }} <span style="color:var(--ink3);font-family:'Instrument Sans',sans-serif;font-size:12px">{{ b.bn }}</span></span>
+<span aria-hidden="true" style="color:var(--ink3)">→</span>
+<span role="cell" style="color:var(--good);font-family:'JetBrains Mono',monospace;font-weight:700">✓ {{ b.a }} <span style="color:var(--ink3);font-family:'Instrument Sans',sans-serif;font-size:12px;font-weight:400">{{ b.an }}</span></span>
+</div></sc-for>
+</div>
+<sc-if value="{{ afterWarn }}"><p style="margin:0;font-size:13px;background:var(--warnbg);border-radius:8px;padding:10px 12px">⚑ {{ afterNote }}</p></sc-if>
+<sc-if value="{{ afterOk }}"><p style="margin:0;font-size:13px;color:var(--ink3)">{{ afterNote }}</p></sc-if><p style="margin:0;font-size:13px;color:var(--ink2)">⚑ {{ afterReviewTxt }}</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:10px">
+<h3 style="font-family:'Newsreader',serif;font-weight:500;font-size:22px;margin:0">When a rewrite fails, it comes back to you</h3>
+<dc-import name="RewriteCard" rw="{{ handBack }}" status="{{ handStatus }}" on-action="{{ onHand }}" hint-size="100%,320px"></dc-import>
+</div>
+<div style="background:var(--surface2);border-radius:18px;padding:24px;display:flex;flex-wrap:wrap;align-items:center;gap:12px">
+<div style="flex:1 1 280px;display:flex;flex-direction:column;gap:4px"><strong style="font-size:16px">Export</strong><span style="font-size:13px;color:var(--ink2)">Only accepted and edited rewrites are written into the paper.</span></div>
+<button onClick="{{ exportMd }}" style="background:var(--accent);color:var(--accent-ink);border:none;border-radius:10px;padding:11px 18px;font-weight:600;cursor:pointer">Rebalanced paper (.md)</button>
+<button onClick="{{ exportReport }}" style="background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:10px 16px;font-weight:600;cursor:pointer">Report (.md)</button>
+<button onClick="{{ exportJson }}" style="background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:10px 16px;font-weight:600;cursor:pointer">Report (.json)</button>
+</div>
+</div>
+</sc-if>
+</div>
+</sc-if>
+</section>
+</sc-if>
+<sc-if value="{{ isProfile }}" hint-placeholder-val="{{ false }}">
+<section data-screen-label="04 College profile" style="display:flex;flex-direction:column;gap:24px">
+<div style="display:flex;flex-direction:column;gap:10px;max-width:760px">
+<span style="font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3)">College profile</span>
+<h1 style="font-family:'Newsreader',serif;font-weight:500;font-size:{{ h1fs }};line-height:1.05;letter-spacing:-.015em;margin:0;text-wrap:balance">Teach BloomBot your college’s convention.</h1>
+<p style="margin:0;font-size:17px;color:var(--ink2);max-width:62ch">Colleges label the same verb differently. Label 25–100 of your own past questions and BloomBot learns your convention.</p>
+</div>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:20px">
+<div style="background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:24px;display:flex;flex-direction:column;gap:20px">
+<div style="display:flex;align-items:center;gap:20px">
+<div style="flex:0 0 140px">{{ ring }}</div>
+<div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3)">Milestones 25 · 50 · 100</span><strong style="font-size:16px">{{ milestone }}</strong><span style="font-size:13px;color:var(--ink2)">{{ lastText }}</span></div>
+</div>
+<div style="border:1px solid var(--line);border-radius:14px;padding:22px;background:var(--bg);display:flex;flex-direction:column;gap:8px;min-height:130px">
+<span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink3)">Past question #{{ labelNo }}</span>
+<p style="margin:0;font-family:'Newsreader',serif;font-size:24px;line-height:1.3">{{ labelQ }}</p>
+</div>
+<div role="group" aria-label="Choose a level (keys 1–6)" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(96px,1fr));gap:8px">
+<sc-for list="{{ labelButtons }}" as="b" hint-placeholder-count="6"><button onClick="{{ b.pick }}" style="display:flex;flex-direction:column;align-items:flex-start;gap:2px;padding:10px 12px;border:none;border-radius:10px;background:{{ b.bg }};color:{{ b.fg }};cursor:pointer;box-shadow:{{ b.ring }};min-height:56px"><span style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:700"><kbd style="font-family:inherit">{{ b.n }}</kbd></span><span style="font-size:13px;font-weight:600">{{ b.name }}</span></button></sc-for>
+</div>
+<div style="display:flex;align-items:center;gap:12px;font-size:13px;color:var(--ink3)"><span>Keyboard: press <kbd style="font-family:'JetBrains Mono',monospace;border:1px solid var(--line);border-radius:4px;padding:0 5px">1</kbd>–<kbd style="font-family:'JetBrains Mono',monospace;border:1px solid var(--line);border-radius:4px;padding:0 5px">6</kbd></span><button onClick="{{ skip }}" style="margin-left:auto;background:none;border:none;color:var(--ink2);text-decoration:underline;cursor:pointer;font-size:13px">Skip this one</button></div>
+</div>
+<div style="background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:24px;display:flex;flex-direction:column;gap:14px">
+<div style="display:flex;flex-direction:column;gap:2px"><h2 style="font-family:'Newsreader',serif;font-weight:500;font-size:26px;margin:0">Expected gain</h2><span style="font-size:13px;color:var(--ink3)">Mean weighted F1 from the real experiment, by k labelled questions per college.</span></div>
+<div style="overflow-x:auto">{{ gain }}</div>
+<p style="margin:0;font-size:14px;color:var(--ink2)">{{ kNowTxt }} Indian boards: 0.578 → 0.674.</p>
+</div>
+</div>
+<div style="background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:24px;display:flex;flex-direction:column;gap:12px">
+<h2 style="font-family:'Newsreader',serif;font-weight:500;font-size:26px;margin:0">Profiles</h2>
+<sc-for list="{{ profiles }}" as="p" hint-placeholder-count="2"><div style="display:flex;flex-wrap:wrap;align-items:center;gap:12px;padding:14px 16px;border:2px solid {{ p.border }};border-radius:12px">
+<div style="display:flex;flex-direction:column;flex:1 1 200px"><strong>{{ p.name }}</strong><span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink3)">{{ p.countTxt }}</span></div>
+<sc-if value="{{ p.sel }}"><span style="font-size:13px;font-weight:700;color:var(--good)">✓ Used in assessments</span></sc-if>
+<sc-if value="{{ p.notSel }}"><button onClick="{{ p.use }}" style="background:transparent;color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:8px 14px;font-weight:600;cursor:pointer">Use in assessments</button></sc-if>
+</div></sc-for>
+</div>
+</section>
+</sc-if>
+<sc-if value="{{ isHow }}" hint-placeholder-val="{{ false }}">
+<section data-screen-label="05 How it works" style="display:flex;flex-direction:column;gap:28px">
+<div style="display:flex;flex-direction:column;gap:10px;max-width:800px">
+<span style="font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3)">How it works</span>
+<h1 style="font-family:'Newsreader',serif;font-weight:500;font-size:{{ h1fs }};line-height:1.05;letter-spacing:-.015em;margin:0;text-wrap:balance">Small agents, each with one job. The writer never grades itself.</h1>
+</div>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,520px),1fr));gap:20px;align-items:start">
+<div style="background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:24px;display:flex;flex-direction:column;gap:24px">
+<div style="display:flex;flex-direction:column;gap:10px">
+<span style="font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3)">Classify · every question</span>
+<div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px">
+<sc-for list="{{ lane1 }}" as="nd" hint-placeholder-count="5"><span style="display:flex;align-items:center;gap:8px"><sc-if value="{{ nd.showArrow }}"><span aria-hidden="true" style="color:var(--ink3)">→</span></sc-if><button onClick="{{ nd.pick }}" aria-pressed="{{ nd.pressed }}" style="display:flex;flex-direction:column;align-items:flex-start;padding:10px 14px;border-radius:12px;border:1.5px {{ nd.borderStyle }} var(--ink3);background:{{ nd.bg }};color:{{ nd.fg }};cursor:pointer;min-width:96px"><span style="font-weight:700;font-size:14px">{{ nd.id }}</span><span style="font-size:11px;color:{{ nd.subFg }};font-family:'JetBrains Mono',monospace">{{ nd.sub }}</span></button></span></sc-for>
+</div>
+</div>
+<div style="display:flex;flex-direction:column;gap:10px;border-top:1px dashed var(--line);padding-top:20px">
+<span style="font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3)">Rebalance · when you ask</span>
+<div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px">
+<sc-for list="{{ lane2 }}" as="nd" hint-placeholder-count="3"><span style="display:flex;align-items:center;gap:8px"><sc-if value="{{ nd.showArrow }}"><span aria-hidden="true" style="color:var(--ink3)">→</span></sc-if><button onClick="{{ nd.pick }}" aria-pressed="{{ nd.pressed }}" style="display:flex;flex-direction:column;align-items:flex-start;padding:10px 14px;border-radius:12px;border:1.5px solid var(--ink3);background:{{ nd.bg }};color:{{ nd.fg }};cursor:pointer;min-width:96px"><span style="font-weight:700;font-size:14px">{{ nd.id }}</span><span style="font-size:11px;color:{{ nd.subFg }};font-family:'JetBrains Mono',monospace">{{ nd.sub }}</span></button></span></sc-for>
+<span aria-hidden="true" style="color:var(--ink3)">→</span>
+<div style="display:flex;flex-direction:column;gap:6px;padding:10px;border:1px dashed var(--ink3);border-radius:14px">
+<span style="font-size:11px;font-weight:600;color:var(--ink3)">Independent verifiers</span>
+<sc-for list="{{ verifiers }}" as="nd" hint-placeholder-count="3"><button onClick="{{ nd.pick }}" aria-pressed="{{ nd.pressed }}" style="display:flex;justify-content:space-between;gap:10px;padding:7px 12px;border-radius:10px;border:1.5px solid var(--ink3);background:{{ nd.bg }};color:{{ nd.fg }};cursor:pointer;font-weight:700;font-size:13px">{{ nd.id }}</button></sc-for>
+</div>
+</div>
+<span style="font-size:12px;color:var(--ink2)">↺ Fail any check → Composer tries again. Up to 3 attempts, then the teacher.</span>
+</div>
+<span style="font-size:12px;color:var(--ink3)">Dashed border: Socrates is only asked when Lexis is unsure. Click any stage.</span>
+</div>
+<aside aria-live="polite" style="background:var(--ink);color:var(--bg);border-radius:18px;padding:28px;display:flex;flex-direction:column;gap:18px;position:sticky;top:80px">
+<div style="display:flex;flex-direction:column;gap:2px"><span style="font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;opacity:.75">Stage</span><span style="font-family:'Newsreader',serif;font-size:36px;line-height:1.05">{{ nodeName }}</span></div>
+<div style="display:flex;flex-direction:column;gap:4px"><span style="font-size:12px;font-weight:600;opacity:.75">What it does</span><p style="margin:0;font-size:15px">{{ nodeInfo.does }}</p></div>
+<div style="display:flex;flex-direction:column;gap:4px"><span style="font-size:12px;font-weight:600;opacity:.75">Why this design</span><p style="margin:0;font-size:15px">{{ nodeInfo.why }}</p></div>
+<div style="display:flex;flex-direction:column;gap:4px"><span style="font-size:12px;font-weight:600;opacity:.75">Cost</span><p style="margin:0;font-family:'JetBrains Mono',monospace;font-size:14px">{{ nodeInfo.cost }}</p></div>
+</aside>
+</div>
+<div style="background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:24px;display:flex;flex-direction:column;gap:20px">
+<div style="display:flex;flex-direction:column;gap:4px"><span style="font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3)">Follow one question</span><p style="margin:0;font-family:'Newsreader',serif;font-size:26px">“{{ bridgeText }}”</p></div>
+<ol aria-label="Steps" style="list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:6px">
+<sc-for list="{{ steps }}" as="st" hint-placeholder-count="9"><li><button onClick="{{ st.pick }}" aria-current="{{ st.current }}" title="{{ st.title }}" style="display:flex;align-items:center;gap:8px;padding:7px 12px;border:1px solid var(--line);border-radius:999px;background:{{ st.bg }};color:{{ st.fg }};font-size:13px;font-weight:600;cursor:pointer;min-height:36px"><span style="font-family:'JetBrains Mono',monospace">{{ st.n }}</span>{{ st.title }}</button></li></sc-for>
+</ol>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:24px;align-items:start;border-top:1px solid var(--line);padding-top:20px">
+<div style="display:flex;flex-direction:column;gap:10px">
+<span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--accent);font-weight:700">Step {{ stepNum }} of 9</span>
+<h3 style="font-family:'Newsreader',serif;font-weight:500;font-size:30px;margin:0;line-height:1.1">{{ stepTitle }}</h3>
+<p style="margin:0;color:var(--ink2)">{{ stepCaption }}</p>
+<div style="display:flex;gap:8px;margin-top:8px"><button onClick="{{ prevStep }}" disabled="{{ prevDisabled }}" style="background:transparent;color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:9px 16px;font-weight:600;cursor:pointer">← Back</button><button onClick="{{ nextStep }}" disabled="{{ nextDisabled }}" style="background:var(--accent);color:var(--accent-ink);border:none;border-radius:8px;padding:9px 16px;font-weight:600;cursor:pointer">Next →</button></div>
+</div>
+<div style="min-width:0;background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:20px;min-height:220px;display:flex;flex-direction:column;justify-content:center;gap:12px">
+<sc-if value="{{ step1 }}"><code style="font-family:'JetBrains Mono',monospace;font-size:15px;word-break:break-word">{{ bridgeText }}</code></sc-if>
+<sc-if value="{{ step2 }}"><div style="overflow-x:auto">{{ arc }}</div></sc-if>
+<sc-if value="{{ step3 }}"><div style="display:flex;flex-direction:column;gap:10px"><p style="margin:0;font-family:'Newsreader',serif;font-size:22px"><span style="background:var(--accent-soft);border-bottom:2px solid var(--accent);font-weight:700;padding:0 3px">Explain</span> how engineers evaluate the safety of an old bridge.</p><code style="font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--ink2)">{"lemma": "explain", "kind": "imperative", "negated": false}</code></div></sc-if>
+<sc-if value="{{ step4 }}"><div style="display:flex;flex-direction:column;gap:10px"><p style="margin:0;font-family:'Newsreader',serif;font-size:22px">Explain how engineers <span style="border-bottom:2px dashed var(--warn);font-weight:700;padding:0 3px">evaluate</span> the safety of an old bridge.</p><span style="align-self:flex-start;font-size:12px;font-weight:700;background:var(--warnbg);padding:3px 10px;border-radius:999px">embedded_bloom_verbs: ["evaluate"] · trap: not the task</span><code style="font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--ink2)">wh_word: "how" · frame: null</code></div></sc-if>
+<sc-if value="{{ step5 }}"><code style="font-family:'JetBrains Mono',monospace;font-size:17px;word-break:break-word">{{ bridgeMasked }}</code></sc-if>
+<sc-if value="{{ step6 }}"><dc-import name="LevelLadder" proba="{{ priorProba }}" size="lg" hint-size="100%,220px"></dc-import></sc-if>
+<sc-if value="{{ step7 }}"><div style="display:flex;flex-direction:column;gap:8px"><span style="font-size:13px;font-weight:600">{{ lexStepTxt }}</span><dc-import name="LevelLadder" proba="{{ lexisProba }}" size="lg" hint-size="100%,220px"></dc-import></div></sc-if>
+<sc-if value="{{ step8 }}"><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px"><div style="display:flex;flex-direction:column;gap:8px"><span style="font-size:13px;font-weight:600">{{ archStepTxt }}</span><dc-import name="LevelLadder" proba="{{ archProba }}" size="md" hint-size="100%,130px"></dc-import></div><div style="display:flex;flex-direction:column;gap:8px"><span style="font-size:13px;font-weight:600;color:var(--bad)">{{ socStepTxt }}</span><dc-import name="LevelLadder" proba="{{ socratesProba }}" size="md" hint-size="100%,130px"></dc-import></div><blockquote style="grid-column:1/-1;margin:0;border-left:2px solid var(--bad);padding-left:12px;font-family:'Newsreader',serif;font-style:italic;color:var(--ink2);max-height:160px;overflow:auto;white-space:pre-line">{{ bridgeReasoning }}</blockquote></div></sc-if>
+<sc-if value="{{ step9 }}"><div style="display:flex;flex-direction:column;gap:8px"><span style="display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:13px;font-weight:600">Pooled · Evaluate 0.37 vs Understand 0.34 <span style="font-size:12px;font-weight:700;background:var(--warnbg);border:1px solid var(--warn);border-radius:999px;padding:2px 8px">⚑ needs teacher review</span></span><dc-import name="LevelLadder" proba="{{ finalProba }}" size="lg" hint-size="100%,220px"></dc-import></div></sc-if>
+</div>
+</div>
+</div>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:20px;background:var(--accent-soft);border-radius:18px;padding:28px">
+<div style="display:flex;flex-direction:column;gap:8px"><span style="font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink2)">Why CPU, not GPU</span><h2 style="font-family:'Newsreader',serif;font-weight:500;font-size:30px;margin:0;line-height:1.1">The limit is the colleges’ label conventions, not model size.</h2></div>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:16px">
+<div style="display:flex;flex-direction:column"><span style="font-family:'Newsreader',serif;font-size:40px;line-height:1">~20</span><span style="font-size:13px;color:var(--ink2)">tokens per question</span></div>
+<div style="display:flex;flex-direction:column"><span style="font-family:'Newsreader',serif;font-size:40px;line-height:1">~10k</span><span style="font-size:13px;color:var(--ink2)">questions in total</span></div>
+<div style="display:flex;flex-direction:column"><span style="font-family:'Newsreader',serif;font-size:40px;line-height:1">~30 s</span><span style="font-size:13px;color:var(--ink2)">to train on a laptop</span></div>
+</div>
+</div>
+</section>
+</sc-if>
+<sc-if value="{{ isEval }}" hint-placeholder-val="{{ false }}">
+<section data-screen-label="06 Evaluation" style="display:flex;flex-direction:column;gap:40px">
+<div style="display:flex;flex-direction:column;gap:10px;max-width:800px">
+<span style="font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3)">Evaluation · 9 findings</span>
+<h1 style="font-family:'Newsreader',serif;font-weight:500;font-size:{{ h1fs }};line-height:1.05;letter-spacing:-.015em;margin:0;text-wrap:balance">How well it works — measured where it’s hard.</h1>
+<p style="margin:0;font-size:17px;color:var(--ink2);max-width:62ch">Weighted F1 throughout, unless stated. Every model is tested on sources it was not trained on.</p>
+</div>
+
+<article style="display:flex;flex-direction:column;gap:16px">
+<header style="display:flex;gap:14px;align-items:baseline"><span style="font-family:'JetBrains Mono',monospace;font-weight:700;color:var(--accent)">01</span><h2 style="font-family:'Newsreader',serif;font-weight:500;font-size:30px;margin:0;line-height:1.15">Accuracy on one dataset is misleading.</h2></header>
+<div style="background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:6px">
+<div style="display:flex;gap:16px;font-size:12px;color:var(--ink2);flex-wrap:wrap;padding-bottom:6px"><span style="display:inline-flex;align-items:center;gap:6px"><span style="width:12px;height:12px;border-radius:50%;background:var(--ink)"></span>Same source</span><span style="display:inline-flex;align-items:center;gap:6px"><span style="width:12px;height:12px;border-radius:50%;border:2px solid var(--ink);background:var(--surface)"></span>Other source</span><span style="margin-left:auto;font-family:'JetBrains Mono',monospace">same · other · drop</span></div>
+<sc-for list="{{ dumbbell }}" as="d" hint-placeholder-count="6"><div style="display:flex;flex-wrap:wrap;align-items:center;gap:4px 14px;padding:8px 10px;border-radius:8px;background:{{ d.rowBg }}">
+<span style="flex:1 1 150px;font-size:14px;font-weight:{{ d.weight }}">{{ d.model }}</span>
+<span style="flex:3 1 220px;position:relative;height:20px"><span style="position:absolute;top:9px;left:{{ d.lineL }};width:{{ d.lineW }};height:2px;background:var(--ink3)"></span><span style="position:absolute;top:3px;left:{{ d.x2 }};width:14px;height:14px;margin-left:-7px;border-radius:50%;border:2px solid var(--ink);background:var(--surface)"></span><span style="position:absolute;top:3px;left:{{ d.x1 }};width:14px;height:14px;margin-left:-7px;border-radius:50%;background:var(--ink)"></span></span>
+<span style="flex:0 0 170px;font-family:'JetBrains Mono',monospace;font-size:12px;text-align:right">{{ d.same }} · {{ d.other }} · <strong>{{ d.drop }}</strong></span>
+</div></sc-for>
+<div style="display:flex;flex-wrap:wrap;gap:14px;padding:0 10px"><span style="flex:1 1 150px"></span><span style="flex:3 1 220px;position:relative;height:16px"><sc-for list="{{ dbTicks }}" as="t"><span style="position:absolute;left:{{ t.left }};transform:translateX(-50%);font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--ink3)">{{ t.v }}</span></sc-for></span><span style="flex:0 0 170px"></span></div>
+</div>
+<p style="margin:0;color:var(--ink2);max-width:70ch">Every learned model drops sharply on a new source. Only the lexicon rule holds steady — it never learned anyone’s convention to begin with.</p>
+</article>
+
+<article style="display:flex;flex-direction:column;gap:16px">
+<header style="display:flex;gap:14px;align-items:baseline"><span style="font-family:'JetBrains Mono',monospace;font-weight:700;color:var(--accent)">02</span><h2 style="font-family:'Newsreader',serif;font-weight:500;font-size:30px;margin:0;line-height:1.15">Leave-one-source-out: train on 5 colleges/sources, test on the 6th.</h2></header>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr));gap:16px">
+<div style="background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:10px">
+<span style="font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3)">LOSO mean wF1</span>
+<sc-for list="{{ loso }}" as="r" hint-placeholder-count="6"><div style="display:grid;grid-template-columns:minmax(0,140px) minmax(0,1fr) 48px;gap:10px;align-items:center"><span style="font-size:13px;font-weight:{{ r.weight }}">{{ r.model }}</span><span style="height:14px;background:var(--track);border-radius:3px;position:relative"><span style="position:absolute;inset:0 auto 0 0;width:{{ r.w }};background:{{ r.bg }};border-radius:3px"></span></span><span style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:{{ r.weight }};text-align:right">{{ r.v }}</span></div></sc-for>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;border-top:1px solid var(--line);padding-top:14px;margin-top:4px">
+<div><span style="font-family:'Newsreader',serif;font-size:28px">0.701</span><div style="font-size:12px;color:var(--ink2)">EmbedLex QWK</div></div>
+<div><span style="font-family:'Newsreader',serif;font-size:28px">+0.051</span><div style="font-size:12px;color:var(--ink2)">vs TF-IDF [0.041, 0.060], p &lt; 0.001</div></div>
+<div><span style="font-family:'Newsreader',serif;font-size:28px">0.630</span><div style="font-size:12px;color:var(--ink2)">unseen Indian boards [0.608, 0.649]; within one level 0.82</div></div>
+</div>
+</div>
+<div style="background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:10px">
+<span style="font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3)">EmbedLex per held-out source · 95% CI</span>
+<sc-for list="{{ perSource }}" as="r" hint-placeholder-count="6"><div style="display:grid;grid-template-columns:minmax(0,130px) minmax(0,1fr) 150px;gap:10px;align-items:center"><span style="font-size:13px">{{ r.src }}</span><span style="height:18px;position:relative;background:linear-gradient(var(--line),var(--line)) center/100% 1px no-repeat"><span style="position:absolute;top:7px;left:{{ r.lo }};width:{{ r.w }};height:4px;background:var(--ink3);border-radius:2px"></span><span style="position:absolute;top:3px;left:{{ r.dot }};width:12px;height:12px;margin-left:-6px;border-radius:50%;background:var(--accent)"></span></span><span style="font-family:'JetBrains Mono',monospace;font-size:11px;text-align:right"><strong>{{ r.v }}</strong> {{ r.ci }}</span></div></sc-for>
+<div style="display:grid;grid-template-columns:minmax(0,130px) minmax(0,1fr) 150px;gap:10px"><span></span><span style="position:relative;height:14px"><sc-for list="{{ ciTicks }}" as="t"><span style="position:absolute;left:{{ t.left }};transform:translateX(-50%);font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--ink3)">{{ t.v }}</span></sc-for></span><span></span></div>
+<p style="margin:0;font-size:13px;color:var(--ink2)">Indian engineering is the hardest held-out source: 0.429.</p>
+</div>
+</div>
+</article>
+
+<article style="display:flex;flex-direction:column;gap:16px">
+<header style="display:flex;gap:14px;align-items:baseline"><span style="font-family:'JetBrains Mono',monospace;font-weight:700;color:var(--accent)">03</span><h2 style="font-family:'Newsreader',serif;font-weight:500;font-size:30px;margin:0;line-height:1.15">Why it can’t be perfect: colleges disagree.</h2></header>
+<p style="margin:0;color:var(--ink2);max-width:70ch">Share of each level given to the same verb, by source. “Design” is Apply at one source and Create at another.</p>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,340px),1fr));gap:16px">
+<sc-for list="{{ heat }}" as="hv" hint-placeholder-count="3"><div style="background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:18px;display:flex;flex-direction:column;gap:8px;overflow-x:auto">
+<span style="font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:700">“{{ hv.verb }}”</span>
+<div style="display:grid;grid-template-columns:minmax(96px,1.4fr) repeat(6,minmax(34px,1fr));gap:3px;font-size:11px;min-width:300px">
+<span></span><sc-for list="{{ levelHeads }}" as="lh"><span title="{{ lh.name }}" style="text-align:center;padding:3px 0;border-radius:4px;background:{{ lh.bg }};color:{{ lh.fg }};font-weight:600">{{ lh.n }} {{ lh.short }}</span></sc-for>
+<sc-for list="{{ hv.rows }}" as="hr"><span style="display:contents"><span style="font-size:12px;align-self:center;color:var(--ink2)">{{ hr.src }}</span><sc-for list="{{ hr.cells }}" as="c"><span title="{{ c.title }}" style="background:{{ c.bg }};color:{{ c.fg }};text-align:center;padding:8px 0;border-radius:4px;font-family:'JetBrains Mono',monospace">{{ c.v }}</span></sc-for></span></sc-for>
+</div>
+</div></sc-for>
+</div>
+</article>
+
+<article style="display:flex;flex-direction:column;gap:16px">
+<header style="display:flex;gap:14px;align-items:baseline"><span style="font-family:'JetBrains Mono',monospace;font-weight:700;color:var(--accent)">04</span><h2 style="font-family:'Newsreader',serif;font-weight:500;font-size:30px;margin:0;line-height:1.15">Fix: a few labelled questions per college.</h2></header>
+<div style="background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:14px">
+<div style="overflow-x:auto">{{ kchart }}</div>
+<details style="font-size:13px"><summary style="cursor:pointer;font-weight:600">Show the table</summary>
+<div style="overflow-x:auto;margin-top:10px"><table style="border-collapse:collapse;font-size:12px;font-family:'JetBrains Mono',monospace;min-width:440px"><thead><tr style="color:var(--ink3);text-align:right"><th style="text-align:left;padding:4px 10px 4px 0;font-family:'Instrument Sans',sans-serif">Target</th><th style="padding:4px 8px">k=0</th><th style="padding:4px 8px">10</th><th style="padding:4px 8px">25</th><th style="padding:4px 8px">50</th><th style="padding:4px 8px">100</th></tr></thead>
+<tbody><sc-for list="{{ kTable }}" as="kr"><tr style="font-weight:{{ kr.weight }};border-top:1px solid var(--line)"><td style="padding:5px 10px 5px 0;font-family:'Instrument Sans',sans-serif">{{ kr.name }}</td><sc-for list="{{ kr.vals }}" as="kv"><td style="padding:5px 8px;text-align:right">{{ kv }}</td></sc-for></tr></sc-for></tbody></table></div>
+</details>
+</div>
+</article>
+
+<article style="display:flex;flex-direction:column;gap:16px">
+<header style="display:flex;gap:14px;align-items:baseline"><span style="font-family:'JetBrains Mono',monospace;font-weight:700;color:var(--accent)">05</span><h2 style="font-family:'Newsreader',serif;font-weight:500;font-size:30px;margin:0;line-height:1.15">Reading the directive beats counting words.</h2></header>
+<div style="background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:10px">
+<span style="font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3)">Contrast-set accuracy · verb traps</span>
+<sc-for list="{{ traps }}" as="r" hint-placeholder-count="5"><div style="display:grid;grid-template-columns:minmax(0,170px) minmax(0,1fr) 36px;gap:10px;align-items:center"><span style="font-size:13px;font-weight:{{ r.weight }}">{{ r.model }}</span><span style="height:14px;background:var(--track);border-radius:3px;position:relative"><span style="position:absolute;inset:0 auto 0 0;width:{{ r.w }};background:{{ r.bg }};border-radius:3px"></span></span><span style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:{{ r.weight }};text-align:right">{{ r.v }}</span></div></sc-for>
+<p style="margin:6px 0 0;font-size:13px;color:var(--ink2);border-top:1px solid var(--line);padding-top:12px">Topic-swap flip rate: TF-IDF 12–15%, ours 12–14%, embedding 24%.</p>
+</div>
+</article>
+
+<article style="display:flex;flex-direction:column;gap:16px">
+<header style="display:flex;gap:14px;align-items:baseline"><span style="font-family:'JetBrains Mono',monospace;font-weight:700;color:var(--accent)">06</span><h2 style="font-family:'Newsreader',serif;font-weight:500;font-size:30px;margin:0;line-height:1.15">Is a small LLM better?</h2></header>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr));gap:16px">
+<div style="background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:10px">
+<span style="font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3)">Same 418 questions · wF1 · time / question</span>
+<sc-for list="{{ llmRows }}" as="r" hint-placeholder-count="4"><div style="display:grid;grid-template-columns:minmax(0,170px) minmax(0,1fr) 44px 52px;gap:10px;align-items:center"><span style="font-size:13px;font-weight:{{ r.weight }}">{{ r.model }}</span><span style="height:14px;background:var(--track);border-radius:3px;position:relative"><span style="position:absolute;inset:0 auto 0 0;width:{{ r.w }};background:{{ r.bg }};border-radius:3px"></span></span><span style="font-family:'JetBrains Mono',monospace;font-size:12px;text-align:right;font-weight:{{ r.weight }}">{{ r.v }}</span><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink2);text-align:right">{{ r.t }}</span></div></sc-for>
+<p style="margin:6px 0 0;font-size:13px;color:var(--ink2);border-top:1px solid var(--line);padding-top:12px">Calibration error: LLM 0.39–0.50 vs EmbedLex 0.07.</p>
+</div>
+<div style="background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:10px">
+<span style="font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3)">Sycophancy</span>
+<p style="margin:0;font-size:14px;color:var(--ink2)">Told “a senior teacher thinks it’s X” (a wrong level), the LLM switched to X:</p>
+<sc-for list="{{ syco }}" as="r" hint-placeholder-count="3"><div style="display:grid;grid-template-columns:90px minmax(0,1fr) 44px;gap:10px;align-items:center"><span style="font-size:13px">{{ r.mode }}</span><span style="height:14px;background:var(--track);border-radius:3px;position:relative"><span style="position:absolute;inset:0 auto 0 0;width:{{ r.w }};background:var(--bad);border-radius:3px"></span></span><span style="font-family:'JetBrains Mono',monospace;font-size:12px;text-align:right">{{ r.v }}</span></div></sc-for>
+</div>
+</div>
+</article>
+
+<article style="display:flex;flex-direction:column;gap:16px">
+<header style="display:flex;gap:14px;align-items:baseline"><span style="font-family:'JetBrains Mono',monospace;font-weight:700;color:var(--accent)">07</span><h2 style="font-family:'Newsreader',serif;font-weight:500;font-size:30px;margin:0;line-height:1.15">Combining them, chosen fairly.</h2></header>
+<div style="background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:12px">
+<sc-for list="{{ combos }}" as="r" hint-placeholder-count="3"><div style="display:flex;flex-direction:column;gap:4px"><span style="font-size:13px;font-weight:{{ r.weight }}">{{ r.name }}</span><div style="display:grid;grid-template-columns:minmax(0,1fr) 48px;gap:10px;align-items:center"><span style="height:14px;background:var(--track);border-radius:3px;position:relative"><span style="position:absolute;inset:0 auto 0 0;width:{{ r.w }};background:{{ r.bg }};border-radius:3px"></span></span><span style="font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:{{ r.weight }};text-align:right">{{ r.v }}</span></div></div></sc-for>
+<p style="margin:6px 0 0;font-size:13px;color:var(--ink2);border-top:1px solid var(--line);padding-top:12px">With the rule chosen without seeing the test source: <strong style="font-family:'JetBrains Mono',monospace">0.682</strong>, +0.042 [0.005, 0.078], p = 0.01.</p>
+</div>
+</article>
+
+<article style="display:flex;flex-direction:column;gap:16px">
+<header style="display:flex;gap:14px;align-items:baseline"><span style="font-family:'JetBrains Mono',monospace;font-weight:700;color:var(--accent)">08</span><h2 style="font-family:'Newsreader',serif;font-weight:500;font-size:30px;margin:0;line-height:1.15">Rewrites.</h2></header>
+<p style="margin:0;color:var(--ink2)">40 real questions rewritten two levels up.</p>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,220px),1fr));gap:12px">
+<sc-for list="{{ rwStats }}" as="r" hint-placeholder-count="6"><div style="background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:4px"><span style="font-size:12px;color:var(--ink3)">{{ r.k }}</span><span style="font-family:'Newsreader',serif;font-size:22px;line-height:1.2">{{ r.v }}</span></div></sc-for>
+</div>
+<div style="display:flex;flex-direction:column;gap:12px">
+<sc-for list="{{ evalExamples }}" as="e" hint-placeholder-count="3"><dc-import name="RewriteCard" rw="{{ e.rw }}" status="{{ e.status }}" compact="{{ true }}" hint-size="100%,260px"></dc-import></sc-for>
+</div>
+</article>
+
+<article style="display:flex;flex-direction:column;gap:16px;background:var(--ink);color:var(--bg);border-radius:20px;padding:32px">
+<header style="display:flex;gap:14px;align-items:baseline"><span style="font-family:'JetBrains Mono',monospace;font-weight:700;opacity:.8">09</span><h2 style="font-family:'Newsreader',serif;font-weight:500;font-size:30px;margin:0;line-height:1.15">Limits, stated plainly.</h2></header>
+<p style="margin:0;font-size:18px;max-width:64ch">At a new college, about 6 in 10 questions are exactly right (8–9 in 10 within one level), so the teacher stays in the loop. Rewrites still need human validation.</p>
+</article>
+</section>
+</sc-if>
+<sc-if value="{{ isData }}" hint-placeholder-val="{{ false }}">
+<section data-screen-label="07 Data" style="display:flex;flex-direction:column;gap:24px">
+<div style="display:flex;flex-direction:column;gap:10px;max-width:760px">
+<span style="font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3)">Data card</span>
+<h1 style="font-family:'Newsreader',serif;font-weight:500;font-size:{{ h1fs }};line-height:1.05;letter-spacing:-.015em;margin:0">Seven sources, 9,855 questions.</h1>
+<p style="margin:0;font-size:17px;color:var(--ink2)">Indian school-board questions are held out entirely — used for testing only.</p>
+</div>
+<div style="background:var(--surface);border:1px solid var(--line);border-radius:16px;overflow-x:auto">
+<table style="width:100%;border-collapse:collapse;font-size:14px;min-width:640px">
+<thead><tr style="text-align:left;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink3)"><th style="padding:12px 20px">Source</th><th style="padding:12px 12px;text-align:right">Rows</th><th style="padding:12px 12px">Role</th><th style="padding:12px 12px">Licence</th><th style="padding:12px 20px 12px 12px">Origin</th></tr></thead>
+<tbody>
+<sc-for list="{{ sources }}" as="r" hint-placeholder-count="7"><tr style="border-top:1px solid var(--line)"><td style="padding:12px 20px;font-family:'JetBrains Mono',monospace;font-size:13px">{{ r.name }}</td><td style="padding:12px;text-align:right;font-family:'JetBrains Mono',monospace">{{ r.rows }}</td><td style="padding:12px"><span style="font-size:12px;font-weight:600;padding:3px 9px;border-radius:999px;background:{{ r.roleBg }}">{{ r.role }}</span></td><td style="padding:12px;font-size:13px">{{ r.lic }}</td><td style="padding:12px 20px 12px 12px;color:var(--ink2)">{{ r.origin }}</td></tr></sc-for>
+<tr style="border-top:2px solid var(--ink)"><td style="padding:12px 20px;font-weight:700">Total</td><td style="padding:12px;text-align:right;font-family:'JetBrains Mono',monospace;font-weight:700">9,855</td><td colspan="3"></td></tr>
+</tbody>
+</table>
+</div>
+</section>
+</sc-if>
+<sc-if value="{{ isSheet }}" hint-placeholder-val="{{ false }}">
+<section data-screen-label="Component sheet" style="display:flex;flex-direction:column;gap:24px">
+<div style="display:flex;flex-direction:column;gap:10px"><span style="font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3)">Component sheet</span><h1 style="font-family:'Newsreader',serif;font-weight:500;font-size:{{ h1fs }};line-height:1.05;margin:0">The parts BloomBot is built from.</h1></div>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr));gap:20px;align-items:start">
+<div style="background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:12px"><span style="font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3)">Level chip · one ordered ramp</span>
+<div style="display:flex;flex-wrap:wrap;gap:8px"><sc-for list="{{ sheetChips }}" as="c" hint-placeholder-count="6"><span style="background:{{ c.bg }};color:{{ c.fg }};font-size:12px;font-weight:600;padding:4px 10px;border-radius:999px">{{ c.n }} {{ c.name }}</span></sc-for></div>
+<span style="font-size:12px;color:var(--ink3)">Lower order 1–2 · Apply 3 · Higher order 4–6. Name or number always shown.</span></div>
+<div style="background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:12px"><span style="font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3)">Review flag · check pill</span>
+<div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center"><span style="font-size:12px;font-weight:700;background:var(--warnbg);border:1px solid var(--warn);border-radius:999px;padding:3px 10px">⚑ needs teacher review</span><span style="display:inline-flex;align-items:center;gap:6px;padding:5px 10px 5px 6px;border-radius:999px;background:var(--goodbg);font-size:12px"><span style="width:18px;height:18px;border-radius:50%;background:var(--good);color:var(--surface);font-weight:700;line-height:18px;text-align:center">✓</span><strong>Level</strong> Apply 0.84</span><span style="display:inline-flex;align-items:center;gap:6px;padding:5px 10px 5px 6px;border-radius:999px;background:var(--badbg);border:1px solid var(--bad);font-size:12px"><span style="width:18px;height:18px;border-radius:50%;background:var(--bad);color:var(--surface);font-weight:700;line-height:18px;text-align:center">✗</span><strong>Topic</strong> overlap 0.00</span></div></div>
+<div style="background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:12px"><span style="font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3)">Level ladder · large</span><dc-import name="LevelLadder" proba="{{ sampleProba }}" size="lg" hint-size="100%,220px"></dc-import></div>
+<div style="background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:12px"><span style="font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3)">Level ladder · compact and inline</span><dc-import name="LevelLadder" proba="{{ sampleProba }}" size="md" hint-size="100%,130px"></dc-import><span style="display:flex;align-items:center;gap:10px;font-size:13px">In a table row: <dc-import name="LevelLadder" proba="{{ sampleProba }}" size="xs" hint-size="44px,26px"></dc-import></span></div>
+<div style="background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:12px"><span style="font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3)">Vote card</span>
+<div style="border:1px solid var(--line);border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:10px;background:var(--bg)"><div><strong>{{ sampleVote.agent }}</strong> <span style="font-size:12px;color:var(--ink3)">{{ sampleVote.role }}</span></div><div style="display:flex;align-items:center;gap:8px"><span style="background:{{ sampleVote.chip.bg }};color:{{ sampleVote.chip.fg }};font-size:12px;font-weight:600;padding:3px 9px;border-radius:999px">{{ sampleVote.chip.n }} {{ sampleVote.chip.name }}</span><span style="font-family:'JetBrains Mono',monospace;font-size:13px">{{ sampleVote.confTxt }}</span></div><dc-import name="LevelLadder" proba="{{ sampleVote.proba }}" size="md" hint-size="100%,130px"></dc-import></div></div>
+<div style="background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:12px"><span style="font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3)">Pipeline node · idle / running / done</span>
+<div style="display:flex;flex-wrap:wrap;gap:8px"><span style="padding:6px 12px;border-radius:999px;border:1px solid var(--line);color:var(--ink3);font-size:13px;font-weight:600">○ Critic</span><span style="padding:6px 12px;border-radius:999px;border:1px solid var(--accent);background:var(--accent);color:var(--accent-ink);font-size:13px;font-weight:600;animation:bbpulse 1.2s infinite">● Composer</span><span style="padding:6px 12px;border-radius:999px;border:1px solid var(--accent);background:var(--accent-soft);font-size:13px;font-weight:600">✓ Lexis</span></div></div>
+</div>
+<div style="background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:12px"><span style="font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3)">Distribution bar with bounds</span><dc-import name="DistBar" dist="{{ distBefore }}" markers="{{ markers }}" hint-size="100%,150px"></dc-import></div>
+<div style="background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:20px;display:flex;flex-direction:column;gap:12px"><span style="font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3)">Trace timeline</span>
+<div style="border:1px solid var(--line);border-radius:12px"><sc-for list="{{ sampleTrace }}" as="t" hint-placeholder-count="5"><div style="display:grid;grid-template-columns:28px 104px minmax(0,1fr) 120px;gap:10px;align-items:center;padding:8px 14px;border-bottom:1px solid var(--line);font-size:13px"><span style="font-family:'JetBrains Mono',monospace;color:var(--ink3);font-size:11px">{{ t.i }}</span><strong style="font-weight:600">{{ t.agent }}</strong><span style="min-width:0">{{ t.action }} <span style="color:var(--ink2)">· {{ t.detail }}</span></span><span style="display:flex;align-items:center;gap:8px;justify-content:flex-end"><span style="width:44px;height:4px;background:var(--track);border-radius:2px;position:relative;display:inline-block"><span style="position:absolute;inset:0 auto 0 0;width:{{ t.barW }};background:var(--ink3);border-radius:2px"></span></span><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink2)">{{ t.ms }}</span></span></div></sc-for></div></div>
+<div style="display:flex;flex-direction:column;gap:12px"><span style="font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3)">Rewrite card · accepted and handed back</span>
+<dc-import name="RewriteCard" rw="{{ sampleRw }}" status="accepted" hint-size="100%,340px"></dc-import>
+<dc-import name="RewriteCard" rw="{{ handBack }}" status="pending" compact="{{ true }}" hint-size="100%,300px"></dc-import></div>
+</section>
+</sc-if>
+</div>
+</main>
+</div>
+<sc-if value="{{ parseOpen }}" hint-placeholder-val="{{ false }}">
+<div onClick="{{ closeParse }}" style="position:fixed;inset:0;background:rgba(10,12,20,.35);z-index:20"></div>
+<aside role="dialog" aria-label="Dependency parse" style="position:fixed;top:0;right:0;bottom:0;width:min(760px,100%);background:var(--surface);border-left:1px solid var(--line);z-index:21;display:flex;flex-direction:column;box-shadow:-20px 0 60px rgba(0,0,0,.15)">
+<div style="display:flex;align-items:center;gap:12px;padding:20px 24px;border-bottom:1px solid var(--line)">
+<div style="display:flex;flex-direction:column"><span style="font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3)">View parse</span><span style="font-family:'Newsreader',serif;font-size:24px">Dependency arcs</span></div>
+<button onClick="{{ closeParse }}" style="margin-left:auto;background:transparent;border:1px solid var(--line);color:var(--ink);border-radius:8px;padding:8px 14px;font-weight:600;cursor:pointer">Close</button>
+</div>
+<div style="padding:24px;overflow:auto;display:flex;flex-direction:column;gap:18px">
+<p style="margin:0;color:var(--ink2);max-width:60ch">The ROOT of the parse is the directive: <strong style="color:var(--accent)">explain</strong>. “evaluate” sits inside a clause below it — it is what engineers do, not what the student must do.</p>
+<div style="overflow-x:auto;border:1px solid var(--line);border-radius:12px;padding:16px;background:var(--bg)">{{ arc }}</div>
+</div>
+</aside>
+</sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;frame&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;auto&quot;,&quot;phone&quot;],&quot;default&quot;:&quot;auto&quot;,&quot;tsType&quot;:&quot;'auto'|'phone'&quot;,&quot;section&quot;:&quot;Preview&quot;},&quot;traceSpeed&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;min&quot;:80,&quot;max&quot;:800,&quot;step&quot;:20,&quot;unit&quot;:&quot;ms&quot;,&quot;default&quot;:260,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Rebalance job&quot;}}">
+class Component extends DCLogic {
+  state = { ready: !!window.BB, page: 'check', theme: 'light', llm: true, winW: window.innerWidth,
+    checkStage: 'upload', paper: null, blueprint: 'balanced', resolved: {}, dragging: false, pasteText: '', fileName: '', assessed: false, reportT: 1,
+    clsText: '', clsKey: 'bridge', showMasked: false, showReasoning: true, parseOpen: false,
+    jobStatus: 'idle', jobN: 0, rwStatus: {}, rwText: {}, afterT: 1,
+    labelCount: 0, labelIdx: 0, lastLabel: null, activeProfile: 'none',
+    node: 'Lexis', step: 0 };
+  componentDidMount() {
+    const init = () => { const B = window.BB; this.setState({ ready: true, paper: B.PAPER.map(q => ({ ...q })), clsText: B.BRIDGE.text }); };
+    if (window.BB) init(); else this.poll = setInterval(() => { if (window.BB) { clearInterval(this.poll); init(); } }, 50);
+    this.onResize = () => this.setState({ winW: window.innerWidth });
+    this.onKey = e => {
+      if (this.state.page !== 'profile') return;
+      const tag = (e.target && e.target.tagName) || '';
+      if (/INPUT|TEXTAREA|SELECT/.test(tag)) return;
+      const n = parseInt(e.key, 10); if (n >= 1 && n <= 6) { e.preventDefault(); this.label(n); }
+    };
+    window.addEventListener('resize', this.onResize); window.addEventListener('keydown', this.onKey);
+  }
+  componentWillUnmount() { clearInterval(this.poll); clearInterval(this.timer); cancelAnimationFrame(this.raf); clearTimeout(this.pt);
+    window.removeEventListener('resize', this.onResize); window.removeEventListener('keydown', this.onKey); }
+  anim(key) { const t0 = performance.now(); cancelAnimationFrame(this.raf);
+    const f = now => { const t = Math.min(1, (now - t0) / 900); this.setState({ [key]: 1 - Math.pow(1 - t, 3) }); if (t < 1) this.raf = requestAnimationFrame(f); };
+    this.setState({ [key]: 0 }); this.raf = requestAnimationFrame(f); }
+  go(p) { this.setState({ page: p, parseOpen: false }); try { window.scrollTo(0, 0); } catch (e) {} }
+  label(n) { this.setState(s => ({ labelCount: s.labelCount + 1, labelIdx: s.labelIdx + 1, lastLabel: n })); }
+  parse(name) { this.setState({ checkStage: 'parsing', fileName: name || 'pasted text' });
+    clearTimeout(this.pt); this.pt = setTimeout(() => this.setState({ checkStage: 'edit', paper: window.BB.PAPER.map(q => ({ ...q })) }), 1300); }
+  startJob() {
+    const B = window.BB; clearTimeout(this.timer);
+    const st = {}; B.RW.forEach(r => st[r.id] = 'pending');
+    this.setState(s => ({ page: 'rebalance', jobStatus: 'running', jobN: 0, rwStatus: st, rwText: {}, assessed: true, paper: s.paper || B.PAPER.map(q => ({ ...q })) }));
+    const scale = (this.props.traceSpeed ?? 260) / 260;
+    const tick = () => {
+      const n = this.state.jobN + 1;
+      if (n >= B.TRACE.length) { this.setState({ jobN: B.TRACE.length, jobStatus: 'done' }); this.anim('afterT'); return; }
+      this.setState({ jobN: n });
+      const ms = B.TRACE[n].ms;
+      this.timer = setTimeout(tick, Math.max(110, Math.min(900, ms / 3)) * scale);
+    };
+    clearTimeout(this.timer); this.timer = setTimeout(tick, 300 * scale);
+    try { window.scrollTo(0, 0); } catch (e) {}
+  }
+  download(name, text, type) { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([text], { type })); a.download = name; document.body.appendChild(a); a.click(); a.remove(); }
+  applied() { const B = window.BB, s = this.state; const out = {};
+    B.RW.forEach(r => { const q = (s.paper || []).find(x => x.id === r.id); if (q && q.locked) return; const st = s.rwStatus[r.id];
+      if (st === 'accepted' || st === 'edited') out[r.id] = s.rwText[r.id] || r.rewrite; }); return out; }
+  paperMd() { const B = window.BB, ap = this.applied();
+    let md = '# Operating Systems — sample paper (50 marks)\n\nRebalanced with BloomBot against ' + B.BP[this.state.blueprint].name + '.\n\n';
+    B.SECTIONS.forEach(sec => { md += `## ${sec.title} — ${sec.note}\n\n`;
+      (this.state.paper || B.PAPER).filter(q => q.section === sec.id).forEach(q => { md += `- **${q.number}** (${q.marks} marks, ${q.co}) ${ap[q.id] || q.text}\n`; }); md += '\n'; });
+    return md; }
+  reportObj() { const B = window.BB, bp = B.BP[this.state.blueprint];
+    return { blueprint: bp.name, before: { distribution: B.DIST_BEFORE, checks: bp.checks.map(c => ({ bound: c.label, share: c.b })) },
+      after: { distribution: B.DIST_AFTER, checks: bp.checks.map(c => ({ bound: c.label, share: c.a })) },
+      rewrites: B.RW.map(r => ({ q: r.q, from: B.L[r.from - 1], to: B.L[r.to - 1], status: this.state.rwStatus[r.id] || 'pending', text: this.state.rwText[r.id] || r.rewrite })) }; }
+  h() { return React.createElement; }
+  lineChart(series, o) {
+    const h = this.h(), W = o.w || 640, H = o.h || 300, pl = 44, pr = 168, pt = 16, pb = 36;
+    const xs = o.xs, xMax = xs[xs.length - 1], x = i => o.proportional ? pl + xs[i] / xMax * (W - pl - pr) : pl + i * (W - pl - pr) / (xs.length - 1), y = v => pt + (o.max - v) / (o.max - o.min) * (H - pt - pb);
+    const els = [];
+    for (let v = o.min; v <= o.max + 1e-9; v += o.step) { els.push(h('line', { key: 'g' + v, x1: pl, x2: W - pr, y1: y(v), y2: y(v), style: { stroke: 'var(--line)' } }), h('text', { key: 't' + v, x: pl - 8, y: y(v) + 4, textAnchor: 'end', style: { fill: 'var(--ink3)', font: "11px 'JetBrains Mono',monospace" } }, v.toFixed(2))); }
+    xs.forEach((k, i) => els.push(h('text', { key: 'x' + i, x: x(i) + (o.proportional && i === 1 ? 6 : 0), y: H - 12, textAnchor: 'middle', style: { fill: 'var(--ink3)', font: "11px 'JetBrains Mono',monospace" } }, 'k=' + k)));
+    if (o.marker != null) els.push(h('line', { key: 'mk', x1: x(o.marker), x2: x(o.marker), y1: pt, y2: H - pb, style: { stroke: 'var(--accent)', strokeDasharray: '4 4', strokeWidth: 1.5 } }));
+    const ends = series.map(s => ({ s, y: y(s.values[s.values.length - 1]) })).sort((a, b) => a.y - b.y);
+    for (let i = 1; i < ends.length; i++) if (ends[i].y - ends[i - 1].y < 14) ends[i].y = ends[i - 1].y + 14;
+    series.forEach((s, si) => {
+      els.push(h('polyline', { key: 'l' + si, points: s.values.map((v, i) => x(i) + ',' + y(v)).join(' '), fill: 'none', style: { stroke: s.color, strokeWidth: s.width || 1.5, strokeDasharray: s.dash || 'none', opacity: s.opacity || 1 } }));
+      s.values.forEach((v, i) => els.push(h('circle', { key: 'c' + si + i, cx: x(i), cy: y(v), r: s.bold ? 4 : 2.5, style: { fill: s.color, opacity: s.opacity || 1 } }, h('title', null, `${s.name} k=${xs[i]}: ${v.toFixed(3)}`))));
+    });
+    ends.forEach((e, i) => els.push(h('text', { key: 'e' + i, x: W - pr + 10, y: e.y + 4, style: { fill: e.s.bold ? 'var(--ink)' : 'var(--ink2)', font: (e.s.bold ? '600 ' : '') + "12px 'Instrument Sans',sans-serif" } }, `${e.s.name} ${e.s.values[e.s.values.length - 1].toFixed(3)}`)));
+    return h('svg', { viewBox: `0 0 ${W} ${H}`, width: '100%', role: 'img', 'aria-label': o.aria, style: { display: 'block', maxWidth: W + 'px' } }, els);
+  }
+  arcSvg() {
+    const h = this.h(), toks = ['Explain', 'how', 'engineers', 'evaluate', 'the', 'safety', 'of', 'an', 'old', 'bridge', '.'];
+    const arcs = [[0, 3, 'ccomp'], [3, 1, 'advmod'], [3, 2, 'nsubj'], [3, 5, 'dobj'], [5, 4, 'det'], [5, 6, 'prep'], [6, 9, 'pobj'], [9, 7, 'det'], [9, 8, 'amod'], [0, 10, 'punct']];
+    const gap = 78, W = toks.length * gap + 20, base = 236, y0 = 214, x = i => 20 + i * gap + gap / 2;
+    const els = [h('line', { key: 'root', x1: x(0) - 8, x2: x(0) - 8, y1: 22, y2: y0, style: { stroke: 'var(--accent)', strokeWidth: 2 } }), h('text', { key: 'rt', x: x(0) - 8, y: 14, textAnchor: 'middle', style: { fill: 'var(--accent)', font: "700 11px 'JetBrains Mono',monospace" } }, 'ROOT')];
+    arcs.forEach(([a, b, lab], k) => { const x1 = x(a) + (a === 0 ? 6 : 0), x2 = x(b), d = Math.abs(b - a), ht = 18 + d * 17, yy = y0;
+      els.push(h('path', { key: 'p' + k, d: `M${x1},${yy} C${x1},${yy - ht} ${x2},${yy - ht} ${x2},${yy}`, fill: 'none', style: { stroke: 'var(--ink3)', strokeWidth: 1.3 } }),
+        h('path', { key: 'a' + k, d: `M${x2 - 4},${yy - 7} L${x2},${yy} L${x2 + 4},${yy - 7}`, fill: 'none', style: { stroke: 'var(--ink3)', strokeWidth: 1.3 } }),
+        h('text', { key: 'l' + k, x: (x1 + x2) / 2, y: yy - ht * 0.75 - 3, textAnchor: 'middle', style: { fill: 'var(--ink2)', font: "11px 'JetBrains Mono',monospace", paintOrder: 'stroke', stroke: 'var(--surface)', strokeWidth: 4 } }, lab)); });
+    toks.forEach((t, i) => { const role = i === 0 ? 'directive' : i === 3 ? 'trap' : null;
+      els.push(h('text', { key: 'w' + i, x: x(i), y: base, textAnchor: 'middle', style: { fill: role === 'directive' ? 'var(--accent)' : role === 'trap' ? 'var(--warn)' : 'var(--ink)', font: (role ? '700 ' : '') + "15px 'Instrument Sans',sans-serif" } }, t));
+      if (role) els.push(h('text', { key: 'r' + i, x: x(i), y: base + 18, textAnchor: 'middle', style: { fill: 'var(--ink3)', font: "10px 'JetBrains Mono',monospace" } }, role === 'directive' ? 'directive' : 'trap: not the task')); });
+    return h('svg', { viewBox: `0 0 ${W} 270`, width: W, height: 270, role: 'img', 'aria-label': 'Dependency parse: ROOT is explain; evaluate is an embedded clause', style: { display: 'block' } }, els);
+  }
+  ring(count) { const h = this.h(), r = 54, c = 2 * Math.PI * r, p = Math.min(count / 100, 1);
+    const tick = f => { const a = f * 2 * Math.PI - Math.PI / 2; return h('line', { key: 'k' + f, x1: 70 + Math.cos(a) * 46, y1: 70 + Math.sin(a) * 46, x2: 70 + Math.cos(a) * 62, y2: 70 + Math.sin(a) * 62, style: { stroke: 'var(--ink)', strokeWidth: 2 } }); };
+    return h('svg', { viewBox: '0 0 140 140', width: 140, height: 140, role: 'img', 'aria-label': `${count} of 100 labelled` },
+      h('circle', { cx: 70, cy: 70, r, fill: 'none', style: { stroke: 'var(--track)', strokeWidth: 10 } }),
+      h('circle', { cx: 70, cy: 70, r, fill: 'none', transform: 'rotate(-90 70 70)', strokeDasharray: `${c * p} ${c}`, strokeLinecap: 'round', style: { stroke: 'var(--accent)', strokeWidth: 10, transition: 'stroke-dasharray .4s' } }),
+      tick(0.25), tick(0.5),
+      h('text', { x: 70, y: 70, textAnchor: 'middle', style: { fill: 'var(--ink)', font: "500 34px 'Newsreader',serif" } }, String(count)),
+      h('text', { x: 70, y: 90, textAnchor: 'middle', style: { fill: 'var(--ink3)', font: "11px 'JetBrains Mono',monospace" } }, 'of 100'));
+  }
+  renderVals() {
+    const s = this.state, B = window.BB;
+    const narrow = this.props.frame === 'phone' || s.winW < 820;
+    const base = { theme: s.theme, frameW: this.props.frame === 'phone' ? '390px' : '100%', frameShadow: this.props.frame === 'phone' ? '0 0 0 1px var(--line), 0 20px 60px rgba(0,0,0,.12)' : 'none',
+      shellDir: narrow ? 'column' : 'row', pad: narrow ? '20px 16px 72px' : '36px 48px 96px', narrow, wide: !narrow, showRail: !narrow, showTopbar: narrow,
+      h1fs: narrow ? '34px' : '48px' };
+    if (!B || !s.paper) return { ...base, ready: false };
+    const L = B.L, FG = n => n >= 5 ? '#fff' : '#1b1f2a', chip = n => ({ n, name: L[n - 1], bg: `var(--l${n})`, fg: FG(n) }), N = x => L.indexOf(x) + 1;
+    const pct = v => Math.round(v * 100) + '%';
+    const navItem = (id, num, label) => ({ id, num, label, go: () => this.go(id), bg: s.page === id ? 'var(--accent-soft)' : 'transparent', color: s.page === id ? 'var(--ink)' : 'var(--ink2)', weight: s.page === id ? 600 : 500, current: s.page === id ? 'page' : undefined });
+    const navTeacher = [navItem('check', '01', 'Check a paper'), navItem('classify', '02', 'Classify a question'), navItem('rebalance', '03', 'Rebalance'), navItem('profile', '04', 'College profile')];
+    const navDemo = [navItem('how', '05', 'How it works'), navItem('eval', '06', 'Evaluation'), navItem('data', '07', 'Data')];
+    const navSheet = [navItem('sheet', '··', 'Component sheet')];
+    const titles = { check: 'Check a paper', classify: 'Classify a question', rebalance: 'Rebalance', profile: 'College profile', how: 'How it works', eval: 'Evaluation', data: 'Data', sheet: 'Component sheet' };
+    const bp = B.BP[s.blueprint];
+    const qById = id => s.paper.find(q => q.id === id);
+
+    // ---------- Check ----------
+    const lockedIds = s.paper.filter(q => q.locked).map(q => q.id);
+    const sections = B.SECTIONS.map(sec => {
+      const qs = s.paper.filter(q => q.section === sec.id);
+      return { ...sec, rows: qs.map((q, i) => {
+        const inG = !!q.group, first = inG && (i === 0 || qs[i - 1].group !== q.group);
+        const upd = patch => this.setState(st => ({ paper: st.paper.map(x => x.id === q.id ? { ...x, ...patch } : x) }));
+        return { ...q, inGroup: inG, showOr: inG && !first, groupLabel: first ? `Answer either Q${q.id} or Q${qs[i + 1] ? qs[i + 1].id : ''} · one ${q.marks}-mark slot` : '', showGroupLabel: first,
+          rowBg: inG ? 'var(--surface2)' : 'transparent', groupBorder: inG ? 'var(--accent)' : 'transparent',
+          hasTag: !!q.tag, noTag: !q.tag, tagChip: q.tag ? chip(N(q.tag)) : chip(1), coTxt: q.co || '—', hasContext: !!q.context, onText: e => upd({ text: e.target.value }), onMarks: e => upd({ marks: +e.target.value || 0 }),
+          toggleLock: () => upd({ locked: !q.locked }), lockLabel: q.locked ? '🔒 Locked' : 'Lock', lockPressed: q.locked ? 'true' : 'false',
+          lockBg: q.locked ? 'var(--ink)' : 'transparent', lockFg: q.locked ? 'var(--bg)' : 'var(--ink2)',
+          lockTitle: q.locked ? 'Locked: BloomBot will never rewrite this question' : 'Lock so BloomBot never rewrites it' };
+      }) };
+    });
+    const blueprints = ['aicte', 'balanced'].map(id => ({ id, label: B.BP[id].label, sub: B.BP[id].sub, pick: () => this.setState({ blueprint: id }),
+      border: s.blueprint === id ? 'var(--accent)' : 'var(--line)', bg: s.blueprint === id ? 'var(--accent-soft)' : 'var(--surface)', dot: s.blueprint === id ? 'var(--accent)' : 'transparent', checked: s.blueprint === id ? 'true' : 'false' }));
+    const checkRows = (key, t) => bp.checks.map(c => { const v = key === 'b' ? c.b : c.a; const pass = key === 'a';
+      return { label: c.label, shareTxt: Math.round(v * t) + '%', icon: pass ? '✓' : '✗', color: pass ? 'var(--good)' : 'var(--bad)', bg: pass ? 'var(--goodbg)' : 'var(--badbg)', note: key === 'b' ? c.bn : c.an }; });
+    const tableRows = s.paper.map(q => { const res = s.resolved[q.id]; const lvl = res ? N(res) : q.pred; const agree = !!q.tag && N(q.tag) === lvl, disagree = !!q.tag && !agree;
+      return { ...q, chip: chip(lvl), confTxt: q.conf.toFixed(2), confColor: q.conf < 0.6 ? 'var(--warn)' : 'var(--ink2)', lowConf: q.conf < 0.6, hasContext: !!q.context,
+        agree, disagree, untagged: !q.tag, tagName: q.tag, predName: L[lvl - 1], tagBg: disagree ? 'var(--warnbg)' : 'transparent',
+        flag: q.review && !res, resolvedFlag: !!res, resolvedTxt: res ? 'Teacher: ' + res : '', noFlag: !q.review && !res, bySource: res ? 'teacher' : 'predicted' }; });
+    const reviewQueue = s.paper.filter(q => q.review).map(q => { const res = s.resolved[q.id];
+      return { ...q, resolved: !!res, open: !res, resolvedText: res ? `Resolved — you chose ${res}.` : '',
+        votes: q.votes.map(v => ({ ...v, chip: chip(N(v.level)), confTxt: v.confidence.toFixed(2), role: { Lexis: 'Classifier · weight 1', Archivist: 'Evidence only · weight 0', Socrates: 'Local LLM · weight 0.5' }[v.agent] })),
+        choices: [...new Set(q.votes.map(v => v.level))].map(l => ({ label: 'Use ' + l, pick: () => this.setState(st => ({ resolved: { ...st.resolved, [q.id]: l } })) })),
+        undo: () => this.setState(st => { const r = { ...st.resolved }; delete r[q.id]; return { resolved: r }; }) }; });
+    const openReviews = reviewQueue.filter(r => r.open).length;
+    const check = {
+      checkUpload: s.checkStage === 'upload', checkParsing: s.checkStage === 'parsing', checkEdit: s.checkStage === 'edit', checkReport: s.checkStage === 'report',
+      dropBorder: s.dragging ? 'var(--accent)' : 'var(--line)', dropBg: s.dragging ? 'var(--accent-soft)' : 'var(--surface)',
+      onDragOver: e => { e.preventDefault(); if (!s.dragging) this.setState({ dragging: true }); }, onDragLeave: () => this.setState({ dragging: false }),
+      onDrop: e => { e.preventDefault(); const f = e.dataTransfer.files[0]; this.setState({ dragging: false }); this.parse(f ? f.name : 'dropped file'); },
+      onFile: e => { const f = e.target.files[0]; if (f) this.parse(f.name); },
+      pasteText: s.pasteText, onPaste: e => this.setState({ pasteText: e.target.value }), parsePaste: () => this.parse('pasted text'),
+      useSample: () => this.parse('sample-os-paper.pdf'), fileName: s.fileName,
+      sections, tableWide: !narrow && s.winW >= 1240, tableNarrow: narrow || s.winW < 1240, rowCols: narrow ? '40px minmax(0,1fr) 56px' : '52px minmax(0,1fr) 64px 52px 118px 104px',
+      blueprints, assess: () => { this.setState({ checkStage: 'report', assessed: true }); this.anim('reportT'); try { window.scrollTo(0, 0); } catch (e) {} },
+      backToEdit: () => this.setState({ checkStage: 'edit' }), uploadNew: () => this.setState({ checkStage: 'upload' }),
+      bpName: bp.name, markers: bp.markers, distBefore: B.DIST_BEFORE, checksBefore: checkRows('b', s.reportT),
+      failCount: bp.checks.length, verdictSub: `${bp.checks.length} of ${bp.checks.length} bounds fail against ${bp.name}.`,
+      reviewQueue, openReviews, reviewTitle: openReviews ? `${openReviews} question to resolve first` : 'Review queue clear',
+      tableRows, tableCols: '44px minmax(220px,1fr) 48px 150px 52px 160px 92px',
+      lockedNote: lockedIds.length ? `${lockedIds.length} locked: ${lockedIds.map(i => 'Q' + i).join(', ')} — never rewritten.` : 'No questions locked.',
+      profileName: s.activeProfile === 'mine' ? `My college · CSE (k = ${s.labelCount})` : 'No profile (generic model)',
+      rebalance: () => this.startJob()
+    };
+
+    // ---------- Classify ----------
+    const ex = B.EXAMPLES.find(e => e.key === s.clsKey);
+    const cls = ex ? ex.ex : null;
+    const clsVals = { clsText: s.clsText, onClsText: e => this.setState({ clsText: e.target.value }),
+      examples: B.EXAMPLES.map(e => ({ label: e.label, pick: () => this.setState({ clsText: e.ex.text, clsKey: e.key, showMasked: false }),
+        bg: s.clsKey === e.key ? 'var(--ink)' : 'var(--surface)', fg: s.clsKey === e.key ? 'var(--bg)' : 'var(--ink)', pressed: s.clsKey === e.key ? 'true' : 'false', trap: e.key === 'bridge' })),
+      runClassify: () => { const t = s.clsText.trim().toLowerCase(); const m = B.EXAMPLES.find(e => e.ex.text.toLowerCase() === t); this.setState({ clsKey: m ? m.key : null }); },
+      clsKnown: !!cls, clsUnknown: !cls };
+    if (cls) {
+      let dirSeen = false;
+      const toks = cls.text.split(/\s+/).map(w => { const k = w.toLowerCase().replace(/[^a-z\-]/g, '');
+        const isDir = cls.directive && !dirSeen && k === cls.directive.verb; if (isDir) dirSeen = true;
+        const role = isDir ? 'd' : cls.embedded.includes(k) ? 't' : null;
+        return { t: w, bg: role === 'd' ? 'var(--accent-soft)' : 'transparent', border: role === 'd' ? '2px solid var(--accent)' : role === 't' ? '2px dashed var(--warn)' : '2px solid transparent', weight: role ? 700 : 400, tip: role === 'd' ? 'Directive: the task' : role === 't' ? 'Embedded Bloom verb — trap: not the task' : '' }; });
+      const asked = cls.votes.some(v => v.agent === 'Socrates');
+      const lex = cls.votes.find(v => v.agent === 'Lexis'), arch = cls.votes.find(v => v.agent === 'Archivist'), soc = cls.votes.find(v => v.agent === 'Socrates');
+      const why = lex.confidence < 0.6 ? `Lexis unsure (${lex.confidence.toFixed(2)} < 0.6)` : (arch && arch.level !== lex.level ? `Lexis and the Archivist disagree (${lex.level} vs ${arch.level})` : 'Lexis unsure');
+      const sorted = cls.proba.map((p, i) => [p, i]).sort((a, b) => b[0] - a[0]);
+      const fooled = !!soc && cls.embedded.length > 0 && soc.level !== lex.level;
+      const voteList = cls.votes.map(v => { const skip = v.agent === 'Socrates' && !s.llm, isFooled = fooled && v.agent === 'Socrates';
+          return { ...v, chip: chip(N(v.level)), confTxt: v.confidence.toFixed(2), role: { Lexis: 'EmbedLex classifier', Archivist: 'Nearest labelled questions', Socrates: 'Qwen3-4B · reasoning first' }[v.agent],
+            weight: { Lexis: 'weight 1', Archivist: 'weight 0 · evidence only', Socrates: 'weight 0.5' }[v.agent],
+            skip, live: !skip, notAsked: false, fooled: isFooled && !skip, border: isFooled && !skip ? 'var(--bad)' : 'var(--line)',
+            hasReasoning: !!v.reasoning && !skip, reasoning: v.reasoning, showReasoning: s.showReasoning, reasonLabel: s.showReasoning ? 'Hide reasoning' : 'Show reasoning',
+            toggleReasoning: () => this.setState({ showReasoning: !s.showReasoning }) }; });
+      if (!asked) voteList.push({ agent: 'Socrates', role: 'Qwen3-4B · reasoning first', weight: 'weight 0.5', skip: false, live: false, notAsked: true, notAskedText: `Socrates not asked — Lexis confident (${lex.confidence.toFixed(2)})${arch && arch.level === lex.level ? ' and the Archivist agrees' : ''}.`, border: 'var(--line)' });
+      Object.assign(clsVals, { cls, clsProba: cls.proba, clsChip: chip(N(cls.level)), clsConf: cls.conf.toFixed(2), clsConfPct: pct(cls.conf),
+        clsFlag: cls.needsReview, clsNoFlag: !cls.needsReview, clsOrder: cls.lowerOrder ? 'Lower order' : 'Higher order',
+        isTrapHero: fooled, closeCall: `${L[sorted[0][1]]} ${sorted[0][0].toFixed(2)} vs ${L[sorted[1][1]]} ${sorted[1][0].toFixed(2)}`,
+        lexTxt: `${lex.level} ${lex.confidence.toFixed(2)}`, socTxt: soc ? `${soc.level} ${soc.confidence.toFixed(2)}` : '', archTxt: arch ? `${arch.level} ${arch.confidence.toFixed(2)}` : '',
+        tokens: toks, hasDirective: !!cls.directive, noDirective: !cls.directive,
+        directiveText: cls.directive ? `${cls.directive.verb} · ${cls.directive.kind}${cls.directive.obj ? ' · object “' + cls.directive.obj + '”' : ''}${cls.directive.negated ? ' · negated' : ' · not negated'}` : 'none',
+        hasPhrase: !!(cls.directive && cls.directive.phrase), phraseText: cls.directive && cls.directive.phrase ? `“${cls.directive.phrase}” → Apply (a calculation, not a judgement)` : '',
+        hasTrap: cls.embedded.length > 0, trapText: cls.embedded.join(', '), frameText: cls.frame ? cls.frame + (cls.wh ? ` · wh-word “${cls.wh}”` : '') : 'none', evidenceText: cls.evidence,
+        hasMasked: !!cls.masked, masked: cls.masked, showMasked: s.showMasked, toggleMasked: () => this.setState({ showMasked: !s.showMasked }), maskedLabel: s.showMasked ? 'Hide what the model sees' : 'What the model sees',
+        votes: voteList,
+        voteCols: 'repeat(auto-fit,minmax(min(100%,260px),1fr))',
+        askedNote: asked ? (s.llm ? `Socrates was asked because ${why}. Pooled: Lexis × 1 + Socrates × 0.5; the Archivist is evidence only.` : 'Fast mode: Socrates (the LLM) is off, so the result rests on Lexis alone.') : `Socrates not asked — Lexis confident (${lex.confidence.toFixed(2)}).`,
+        hasNeighbours: !!cls.neighbours, neighbours: (cls.neighbours || []).map(n => ({ ...n, chip: chip(N(n.level)), sim: n.similarity.toFixed(3), simW: pct(n.similarity) })),
+        hasParse: !!cls.parse, openParse: () => this.setState({ parseOpen: true }) });
+    }
+    const drawer = { parseOpen: s.parseOpen, closeParse: () => this.setState({ parseOpen: false }), arc: s.parseOpen || (s.page === 'how' && s.step === 1) ? this.arcSvg() : null };
+
+    // ---------- Rebalance ----------
+    const n = s.jobN, ev = B.TRACE.slice(0, n), seen = new Set(ev.map(e => e.agent)), cur = s.jobStatus === 'running' && ev.length ? ev[ev.length - 1].agent : null;
+    let cum = 0;
+    const fmtMs = ms => ms >= 1000 ? (ms / 1000).toFixed(2) + ' s' : ms.toFixed(ms < 10 ? 1 : 0) + ' ms';
+    const traceRows = ev.map((e, i) => { cum += e.ms || 0; return { i: String(i + 1).padStart(2, '0'), agent: e.agent, action: e.action, detail: e.detail, ms: fmtMs(e.ms), barW: Math.max(2, Math.min(100, Math.log10(1 + e.ms) / Math.log10(3000) * 100)) + '%', latest: i === ev.length - 1 && s.jobStatus === 'running', rowBg: i === ev.length - 1 && s.jobStatus === 'running' ? 'var(--accent-soft)' : 'transparent' }; });
+    if (n > 0) seen.add('Scribe');
+    const stages = B.STAGES.map((st, i) => { const done = seen.has(st) && st !== cur, act = st === cur;
+      return { name: st, showArrow: i > 0, bg: act ? 'var(--accent)' : done ? 'var(--accent-soft)' : 'var(--surface)', fg: act ? 'var(--accent-ink)' : done ? 'var(--ink)' : 'var(--ink3)', border: act || done ? 'var(--accent)' : 'var(--line)', anim: act ? 'bbpulse 1.2s infinite' : 'none', mark: done ? '✓' : act ? '●' : '○' }; });
+    const rwVisibleAt = r => { const idx = B.TRACE.findIndex(e => e.agent === 'Verifier' && e.qid === r.id && e.passed); return idx >= 0 && n > idx; };
+    const showPlan = n > B.TRACE.findIndex(e => e.agent === 'Architect');
+    const planRows = B.RW.map(r => { const q = qById(r.id); return { q: r.q, from: chip(r.from), to: chip(r.to), reason: r.reason.replace('<=', '≤').replace('>=', '≥'), marks: r.marks + ' marks', locked: !!(q && q.locked), open: !(q && q.locked) }; });
+    const rwCards = B.RW.filter(r => !(qById(r.id) || {}).locked && rwVisibleAt(r)).map(r => ({ id: r.id, rw: { ...r, rewrite: s.rwText[r.id] || r.rewrite }, status: s.rwStatus[r.id] || 'pending',
+      onAction: (st, text) => this.setState(x => ({ rwStatus: { ...x.rwStatus, [r.id]: st }, rwText: text != null ? { ...x.rwText, [r.id]: text } : x.rwText })) }));
+    const notApplied = B.RW.filter(r => (qById(r.id) || {}).locked || ['rejected'].includes(s.rwStatus[r.id])).length;
+    const pending = B.RW.filter(r => !(qById(r.id) || {}).locked && (s.rwStatus[r.id] || 'pending') === 'pending').length;
+    const reb = { jobIdle: s.jobStatus === 'idle', jobRunning: s.jobStatus === 'running', jobDone: s.jobStatus === 'done', notIdle: s.jobStatus !== 'idle', startJob: () => this.startJob(),
+      jobLabel: s.jobStatus === 'running' ? `Running · ${n} of ${B.TRACE.length} events` : `Done · ${B.TRACE.length} events`, jobId: B.JOB_ID,
+      afterReviewTxt: `After rewriting, ${B.AFTER_REVIEW.map(i => 'Q' + i).join(' and ')} are flagged ⚑ for review (Q3 is now Apply ${B.AFTER_PRED['3'].conf.toFixed(2)}).`,
+      stages, traceRows, totalMs: (cum / 1000).toFixed(1) + ' s', progressW: Math.round(n / B.TRACE.length * 100) + '%',
+      showPlan, planRows, planTitle: `${B.RW.length} rewrites needed`, rwCards, hasCards: rwCards.length > 0, handBack: { ...B.HANDBACK }, handStatus: s.rwStatus.x || 'pending',
+      onHand: st => this.setState(x => ({ rwStatus: { ...x.rwStatus, x: st } })),
+      acceptAll: () => this.setState(x => { const r = { ...x.rwStatus }; B.RW.forEach(w => { if ((r[w.id] || 'pending') === 'pending') r[w.id] = 'accepted'; }); return { rwStatus: r }; }),
+      pendingCount: pending, hasPending: pending > 0, pendingText: pending ? `${pending} rewrite${pending > 1 ? 's' : ''} waiting for your decision` : 'All rewrites decided',
+      distAfter: B.DIST_AFTER, beforeAfter: bp.checks.map(c => ({ label: c.label, b: Math.round(c.b) + '%', a: Math.round(c.a * s.afterT) + '%', bn: c.bn, an: c.an })),
+      afterNote: notApplied ? `${notApplied} planned rewrite${notApplied > 1 ? 's' : ''} not applied (locked or rejected). The “after” bar assumes all ${B.RW.length} — assess again before you submit.` : `Projection with all ${B.RW.length} rewrites applied.`,
+      afterWarn: notApplied > 0, afterOk: notApplied === 0,
+      exportMd: () => this.download('rebalanced-paper.md', this.paperMd(), 'text/markdown'),
+      exportReport: () => { const o = this.reportObj(); this.download('bloombot-report.md', `# BloomBot report\n\nBlueprint: ${o.blueprint}\n\n| Bound | Before | After |\n|---|---:|---:|\n` + bp.checks.map(c => `| ${c.label} | ${c.b}% ✗ | ${c.a}% ✓ |`).join('\n') + '\n\n## Rewrites\n\n' + o.rewrites.map(r => `- ${r.q} ${r.from} → ${r.to} (${r.status}): ${r.text}`).join('\n') + '\n', 'text/markdown'); },
+      exportJson: () => this.download('bloombot-report.json', JSON.stringify(this.reportObj(), null, 2), 'application/json') };
+
+    // ---------- Profile ----------
+    const k = s.labelCount, ms = [25, 50, 100].find(m => k < m);
+    const kIdx = k >= 100 ? 4 : k >= 50 ? 3 : k >= 25 ? 2 : k >= 10 ? 1 : 0;
+    const prof = { labelCount: k, labelQ: B.POOL[s.labelIdx % B.POOL.length], labelNo: s.labelIdx + 1,
+      labelButtons: L.map((nm, i) => ({ n: i + 1, name: nm, bg: `var(--l${i + 1})`, fg: FG(i + 1), pick: () => this.label(i + 1), ring: s.lastLabel === i + 1 ? '0 0 0 3px var(--ink)' : 'none' })),
+      ring: this.ring(k), milestone: ms ? `${ms - k} more to reach k = ${ms}` : 'k = 100 reached — the full expected gain.',
+      lastText: s.lastLabel ? `Last label: ${s.lastLabel} ${L[s.lastLabel - 1]}` : 'Press 1–6 or click a level',
+      skip: () => this.setState(x => ({ labelIdx: x.labelIdx + 1 })),
+      gain: s.page === 'profile' ? this.lineChart([{ name: 'Mean (6 targets)', values: B.GAIN.mean, color: 'var(--accent)', width: 3, bold: true }, { name: 'Indian boards', values: B.GAIN.boards, color: 'var(--l5)', width: 2 }], { xs: [0, 10, 25, 50, 100], proportional: true, min: 0.55, max: 0.72, step: 0.05, marker: kIdx, aria: 'Expected gain: mean weighted F1 from 0.627 at k=0 to 0.694 at k=100; Indian boards 0.578 to 0.674' }) : null,
+      kNowTxt: `You are at k = ${k}. Expected mean weighted F1 at k = ${[0, 10, 25, 50, 100][kIdx]}: ${B.GAIN.mean[kIdx].toFixed(3)}.`,
+      profiles: [{ id: 'none', name: 'No profile (generic model)', count: 0 }, { id: 'mine', name: 'My college · CSE', count: k }].map(p => ({ ...p, countTxt: p.count + ' examples',
+        sel: s.activeProfile === p.id, notSel: s.activeProfile !== p.id, use: () => this.setState({ activeProfile: p.id }), border: s.activeProfile === p.id ? 'var(--accent)' : 'var(--line)' })) };
+
+    // ---------- How ----------
+    const node = id => ({ id, sub: B.NODES[id].sub, pick: () => this.setState({ node: id }), bg: s.node === id ? 'var(--ink)' : 'var(--surface)', fg: s.node === id ? 'var(--bg)' : 'var(--ink)', subFg: s.node === id ? 'var(--bg)' : 'var(--ink3)',
+      borderStyle: id === 'Socrates' ? 'dashed' : 'solid', pressed: s.node === id ? 'true' : 'false' });
+    const how = { lane1: ['Scribe', 'Lexis', 'Archivist', 'Socrates', 'Arbiter'].map((id, i) => ({ ...node(id), showArrow: i > 0 })), lane2: ['Conductor', 'Architect', 'Composer'].map((id, i) => ({ ...node(id), showArrow: i > 0 })),
+      verifiers: ['Level check', 'Critic', 'Student'].map(node), nodeName: s.node, nodeInfo: B.NODES[s.node],
+      steps: B.STEPS.map((st, i) => ({ n: i + 1, title: st[0], pick: () => this.setState({ step: i }), bg: s.step === i ? 'var(--accent)' : i < s.step ? 'var(--accent-soft)' : 'var(--surface)', fg: s.step === i ? 'var(--accent-ink)' : 'var(--ink)', current: s.step === i ? 'step' : undefined })),
+      stepTitle: B.STEPS[s.step][0], stepCaption: B.STEPS[s.step][1], stepNum: s.step + 1,
+      prevStep: () => this.setState({ step: Math.max(0, s.step - 1) }), nextStep: () => this.setState({ step: Math.min(8, s.step + 1) }),
+      prevDisabled: s.step === 0, nextDisabled: s.step === 8,
+      bridgeText: B.BRIDGE.text, bridgeMasked: B.BRIDGE.masked, priorProba: B.BRIDGE.prior, lexisProba: B.BRIDGE.votes[0].proba, socratesProba: B.BRIDGE.votes[2].proba, archProba: B.BRIDGE.votes[1].proba, finalProba: B.BRIDGE.proba,
+      lexStepTxt: `Lexis · ${B.BRIDGE.votes[0].level} ${B.BRIDGE.votes[0].confidence.toFixed(2)}`, archStepTxt: `Archivist · ${B.BRIDGE.votes[1].level} ${B.BRIDGE.votes[1].confidence.toFixed(2)} · weight 0`, socStepTxt: `Socrates · ${B.BRIDGE.votes[2].level} ${B.BRIDGE.votes[2].confidence.toFixed(2)} · fooled by the trap`,
+      bridgeReasoning: B.BRIDGE.votes[2].reasoning };
+    for (let i = 0; i < 9; i++) how['step' + (i + 1)] = s.step === i;
+
+    // ---------- Eval ----------
+    const E = B.EV, sx = (v, lo, hi) => ((v - lo) / (hi - lo) * 100) + '%';
+    const evals = {
+      dumbbell: E.dumbbell.map(r => ({ model: r[0], same: r[1].toFixed(3), other: r[2].toFixed(3), drop: r[3].toFixed(3), x1: sx(r[1], 0.3, 0.8), x2: sx(r[2], 0.3, 0.8), lineL: sx(Math.min(r[1], r[2]), 0.3, 0.8), lineW: ((Math.abs(r[1] - r[2])) / 0.5 * 100) + '%', weight: r[4] ? 700 : 500, rowBg: r[4] ? 'var(--accent-soft)' : 'transparent' })),
+      dbTicks: [0.3, 0.4, 0.5, 0.6, 0.7, 0.8].map(v => ({ v: v.toFixed(1), left: sx(v, 0.3, 0.8) })),
+      loso: E.loso.map(r => ({ model: r[0], v: r[1].toFixed(3), w: (r[1] / 0.7 * 100) + '%', bg: r[2] ? 'var(--accent)' : 'var(--ink3)', weight: r[2] ? 700 : 500 })),
+      perSource: E.perSource.map(r => ({ src: r[0], v: r[1].toFixed(3), ci: `[${r[2].toFixed(3)}, ${r[3].toFixed(3)}]`, lo: sx(r[2], 0.35, 0.8), w: ((r[3] - r[2]) / 0.45 * 100) + '%', dot: sx(r[1], 0.35, 0.8), low: r[1] < 0.5 })),
+      ciTicks: [0.4, 0.5, 0.6, 0.7, 0.8].map(v => ({ v: v.toFixed(1), left: sx(v, 0.35, 0.8) })),
+      heat: E.heat.map(([verb, rows]) => ({ verb, rows: rows.map(([src, vals]) => ({ src, cells: vals.map((v, i) => ({ v: v.toFixed(2), bg: `color-mix(in oklch, var(--heat) ${Math.round(v * 100)}%, var(--surface))`, fg: v > 0.5 ? 'var(--surface)' : v === 0 ? 'var(--ink3)' : 'var(--ink)', title: `${verb} · ${src} · ${L[i]} ${v.toFixed(2)}` })) })) })),
+      levelHeads: L.map((nm, i) => ({ n: i + 1, name: nm, short: nm.slice(0, 3), bg: `var(--l${i + 1})`, fg: FG(i + 1) })),
+      kchart: s.page === 'eval' ? this.lineChart(E.kcurve.map(([name, values]) => name === 'Mean' ? { name, values, color: 'var(--accent)', width: 3.5, bold: true } : name.startsWith('Indian') ? { name, values, color: name === 'Indian boards' ? 'var(--l5)' : 'var(--l4)', width: 2 } : { name, values, color: 'var(--ink3)', width: 1.25, opacity: 0.7 }), { xs: [0, 10, 25, 50, 100], min: 0.40, max: 0.80, step: 0.1, w: 680, h: 320, aria: 'Weighted F1 rises with k labelled questions per college, for all six targets; mean 0.627 to 0.694' }) : null,
+      kTable: E.kcurve.map(([name, v]) => ({ name, vals: v.map(x => x.toFixed(3)), weight: name === 'Mean' ? 700 : 400 })),
+      traps: E.traps.map(r => ({ model: r[0], v: r[1].toFixed(1), w: (r[1] * 100) + '%', bg: r[2] ? 'var(--accent)' : 'var(--ink3)', weight: r[2] ? 700 : 500 })),
+      llmRows: E.llm.map(r => ({ model: r[0], v: r[1].toFixed(3), w: (r[1] / 0.7 * 100) + '%', t: r[2], bg: r[3] ? 'var(--accent)' : 'var(--ink3)', weight: r[3] ? 700 : 500 })),
+      syco: E.syco.map(r => ({ mode: r[0], v: r[1] + '%', w: r[1] + '%' })),
+      combos: E.combos.map(r => ({ name: r[0], v: r[1].toFixed(3), w: (r[1] / 0.7 * 100) + '%', bg: r[2] ? 'var(--accent)' : r[1] < 0.5 ? 'var(--bad)' : 'var(--ink3)', weight: r[2] ? 700 : 500 })),
+      rwStats: E.rw.map(r => ({ k: r[0], v: r[1] })),
+      evalExamples: [{ rw: B.RW[3], status: 'accepted' }, { rw: B.RW[1], status: 'accepted' }, { rw: B.HANDBACK, status: 'pending' }]
+    };
+    const data = { sources: E.sources.map(r => ({ name: r[0], rows: r[1].toLocaleString('en-IN'), role: r[2], test: r[2] !== 'train', lic: r[3], origin: r[4], roleBg: r[2] !== 'train' ? 'var(--warnbg)' : 'var(--surface2)' })) };
+
+    const sv = B.BRIDGE.votes[2];
+    const sheet = { sheetChips: L.map((nm, i) => chip(i + 1)), sampleProba: B.BRIDGE.proba, sampleTrace: B.TRACE.slice(0, 6).map((e, i) => ({ i: String(i + 1).padStart(2, '0'), agent: e.agent, action: e.action, detail: e.detail, ms: e.ms >= 1000 ? (e.ms / 1000).toFixed(2) + ' s' : e.ms.toFixed(1) + ' ms', barW: Math.max(2, Math.min(100, Math.log10(1 + e.ms) / Math.log10(3000) * 100)) + '%' })),
+      sampleVote: { agent: sv.agent, role: 'Qwen3-4B · weight 0.5', chip: chip(N(sv.level)), confTxt: sv.confidence.toFixed(2), proba: sv.proba }, sampleRw: B.RW[0] };
+
+    return { ...base, ready: true, ...check, ...clsVals, ...drawer, ...reb, ...prof, ...how, ...evals, ...data, ...sheet,
+      navTeacher, navDemo, navSheet, navAll: [...navTeacher, ...navDemo, ...navSheet], pageTitle: titles[s.page],
+      isCheck: s.page === 'check', isClassify: s.page === 'classify', isRebalance: s.page === 'rebalance', isProfile: s.page === 'profile', isHow: s.page === 'how', isEval: s.page === 'eval', isData: s.page === 'data', isSheet: s.page === 'sheet',
+      llmLabel: s.llm ? 'LLM second opinion on' : 'Fast mode (no LLM)', llmDot: s.llm ? 'var(--good)' : 'var(--ink3)', llmPressed: s.llm ? 'true' : 'false', toggleLlm: () => this.setState({ llm: !s.llm }),
+      themeLabel: s.theme === 'light' ? 'Dark theme' : 'Light theme', themeIcon: s.theme === 'light' ? '◐' : '◑', toggleTheme: () => this.setState({ theme: s.theme === 'light' ? 'dark' : 'light' }),
+      goCheck: () => this.go('check'), goClassify: () => this.go('classify'), goHow: () => this.go('how'), goEval: () => this.go('eval'), goProfile: () => this.go('profile') };
+  }
+}
+</script>
+</body>
+</html>

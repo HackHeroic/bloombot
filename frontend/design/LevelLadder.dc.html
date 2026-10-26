@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<sc-if value="{{ isXs }}" hint-placeholder-val="{{ false }}">
+<span role="img" aria-label="{{ aria }}" title="{{ aria }}" style="display:inline-flex;flex-direction:column;gap:2px;width:44px;vertical-align:middle;padding:2px 0">
+<sc-for list="{{ rows }}" as="r" hint-placeholder-count="6"><span style="display:block;height:3px;border-radius:2px;background:var(--track);position:relative;overflow:hidden"><span style="position:absolute;left:0;top:0;bottom:0;width:{{ r.w }};background:{{ r.bg }};border-radius:2px"></span></span></sc-for>
+</span>
+</sc-if>
+<sc-if value="{{ isMd }}" hint-placeholder-val="{{ true }}">
+<div role="img" aria-label="{{ aria }}" style="display:flex;flex-direction:column;gap:4px;width:100%">
+<sc-for list="{{ rows }}" as="r" hint-placeholder-count="6"><div style="display:grid;grid-template-columns:18px minmax(0,1fr) 34px;gap:8px;align-items:center">
+<span title="{{ r.name }}" style="width:18px;height:18px;border-radius:5px;background:{{ r.bg }};color:{{ r.fg }};font:600 10px/18px 'JetBrains Mono',monospace;text-align:center">{{ r.n }}</span>
+<span style="height:6px;border-radius:3px;background:var(--track);position:relative;overflow:hidden;display:block"><span style="position:absolute;left:0;top:0;bottom:0;width:{{ r.w }};background:{{ r.bg }};border-radius:3px"></span></span>
+<span style="font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:{{ r.weight }};color:{{ r.ink }};text-align:right">{{ r.val }}</span>
+</div></sc-for>
+</div>
+</sc-if>
+<sc-if value="{{ isLg }}" hint-placeholder-val="{{ false }}">
+<div role="img" aria-label="{{ aria }}" style="position:relative;display:flex;flex-direction:column;gap:8px;width:100%">
+<div style="position:absolute;left:13px;top:14px;bottom:14px;width:2px;background:var(--line)"></div>
+<sc-for list="{{ rows }}" as="r" hint-placeholder-count="6"><div style="position:relative;display:grid;grid-template-columns:128px minmax(0,1fr) 46px;gap:12px;align-items:center;min-height:28px">
+<span style="display:flex;align-items:center;gap:10px"><span style="flex:0 0 28px;height:28px;border-radius:8px;background:{{ r.bg }};color:{{ r.fg }};font:600 12px/28px 'JetBrains Mono',monospace;text-align:center;box-shadow:0 0 0 3px var(--surface)">{{ r.n }}</span><span style="font-size:14px;font-weight:{{ r.weight }};color:{{ r.ink }}">{{ r.name }}</span></span>
+<span style="height:14px;border-radius:7px;background:var(--track);position:relative;overflow:hidden;display:block"><span style="position:absolute;left:0;top:0;bottom:0;width:{{ r.w }};background:{{ r.bg }};border-radius:7px;transition:width .7s cubic-bezier(.2,.7,.2,1)"></span></span>
+<span style="font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:{{ r.weight }};color:{{ r.ink }};text-align:right">{{ r.val }}</span>
+</div></sc-for>
+</div>
+</sc-if>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  renderVals() {
+    const L = ['Remember','Understand','Apply','Analyze','Evaluate','Create'];
+    let p = this.props.proba || [0,0,0,0,0,0];
+    if (!Array.isArray(p)) p = L.map(n => p[n] || 0);
+    const size = this.props.size || 'md';
+    const max = Math.max(...p); const top = p.indexOf(max);
+    const rows = [5,4,3,2,1,0].map(i => ({
+      n: i + 1, name: L[i],
+      w: Math.max(p[i] * 100, size === 'xs' ? 5 : 1.5) + '%',
+      bg: `var(--l${i + 1})`, fg: i >= 4 ? '#fff' : '#1b1f2a',
+      val: (+p[i]).toFixed(2), weight: i === top ? 700 : 400,
+      ink: i === top ? 'var(--ink)' : 'var(--ink3)'
+    }));
+    return {
+      rows, isXs: size === 'xs', isMd: size === 'md', isLg: size === 'lg',
+      aria: `Level ladder: ${L[top]} ${max.toFixed(2)}; ` + L.map((n, i) => `${i + 1} ${n} ${(+p[i]).toFixed(2)}`).join(', ')
+    };
+  }
+}
+</script>
+</body>
+</html>
