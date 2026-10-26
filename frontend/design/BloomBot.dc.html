@@ -212,13 +212,13 @@ button,input,textarea,select{font-family:inherit}
 <sc-for list="{{ reviewQueue }}" as="q" hint-placeholder-count="1">
 <div style="display:flex;flex-direction:column;gap:14px;border-top:1px solid var(--line);padding-top:14px">
 <div style="display:flex;gap:10px"><span style="font-family:'JetBrains Mono',monospace;font-weight:700">Q{{ q.id }}</span><span style="flex:1">{{ q.text }}</span><span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--ink3);white-space:nowrap;flex-shrink:0">{{ q.marks }} m</span></div>
-<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,170px),1fr));gap:10px">
+<sc-if value="{{ q.open }}"><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,170px),1fr));gap:10px">
 <sc-for list="{{ q.votes }}" as="v"><div style="border:1px solid var(--line);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:10px;background:var(--bg)">
 <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><strong style="font-size:13px">{{ v.agent }}</strong><span style="font-size:11px;color:var(--ink3)">{{ v.role }}</span></div>
 <div style="display:flex;align-items:center;gap:8px"><span style="background:{{ v.chip.bg }};color:{{ v.chip.fg }};font-size:12px;font-weight:600;padding:3px 9px;border-radius:999px;white-space:nowrap;flex-shrink:0">{{ v.chip.n }} {{ v.chip.name }}</span><span style="font-family:'JetBrains Mono',monospace;font-size:13px">{{ v.confTxt }}</span></div>
 <dc-import name="LevelLadder" proba="{{ v.proba }}" size="md" hint-size="100%,130px"></dc-import>
 </div></sc-for>
-</div>
+</div></sc-if>
 <sc-if value="{{ q.open }}"><div style="display:flex;flex-wrap:wrap;gap:8px"><sc-for list="{{ q.choices }}" as="ch"><button onClick="{{ ch.pick }}" style="background:var(--ink);color:var(--bg);border:none;border-radius:8px;padding:9px 14px;font-weight:600;font-size:13px;cursor:pointer">{{ ch.label }}</button></sc-for></div></sc-if>
 <sc-if value="{{ q.resolved }}"><div style="display:flex;align-items:center;gap:10px;color:var(--good);font-weight:600;font-size:14px">✓ {{ q.resolvedText }} <button onClick="{{ q.undo }}" style="background:none;border:none;color:var(--ink2);text-decoration:underline;cursor:pointer;font-size:13px">Undo</button></div></sc-if>
 </div>

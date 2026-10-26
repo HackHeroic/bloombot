@@ -631,29 +631,31 @@ export function view(v) {
                                 {q.marks}{" m"}
                               </span>
                             </div>
-                            <div style={sx(`display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,170px),1fr));gap:10px`)}>
-                              {(q.votes || []).map((v, v_i) => (<React.Fragment key={v_i}>
-                                <div style={sx(`border:1px solid var(--line);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:10px;background:var(--bg)`)}>
-                                  <div style={sx(`display:flex;align-items:center;gap:8px;flex-wrap:wrap`)}>
-                                    <strong style={sx(`font-size:13px`)}>
-                                      {v.agent}
-                                    </strong>
-                                    <span style={sx(`font-size:11px;color:var(--ink3)`)}>
-                                      {v.role}
-                                    </span>
+                            {q.open ? (<>
+                              <div style={sx(`display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,170px),1fr));gap:10px`)}>
+                                {(q.votes || []).map((v, v_i) => (<React.Fragment key={v_i}>
+                                  <div style={sx(`border:1px solid var(--line);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:10px;background:var(--bg)`)}>
+                                    <div style={sx(`display:flex;align-items:center;gap:8px;flex-wrap:wrap`)}>
+                                      <strong style={sx(`font-size:13px`)}>
+                                        {v.agent}
+                                      </strong>
+                                      <span style={sx(`font-size:11px;color:var(--ink3)`)}>
+                                        {v.role}
+                                      </span>
+                                    </div>
+                                    <div style={sx(`display:flex;align-items:center;gap:8px`)}>
+                                      <span style={sx(`background:${v.chip.bg};color:${v.chip.fg};font-size:12px;font-weight:600;padding:3px 9px;border-radius:999px;white-space:nowrap;flex-shrink:0`)}>
+                                        {v.chip.n}{" "}{v.chip.name}
+                                      </span>
+                                      <span style={sx(`font-family:'JetBrains Mono',monospace;font-size:13px`)}>
+                                        {v.confTxt}
+                                      </span>
+                                    </div>
+                                    <LevelLadder proba={v.proba} size={"md"} />
                                   </div>
-                                  <div style={sx(`display:flex;align-items:center;gap:8px`)}>
-                                    <span style={sx(`background:${v.chip.bg};color:${v.chip.fg};font-size:12px;font-weight:600;padding:3px 9px;border-radius:999px;white-space:nowrap;flex-shrink:0`)}>
-                                      {v.chip.n}{" "}{v.chip.name}
-                                    </span>
-                                    <span style={sx(`font-family:'JetBrains Mono',monospace;font-size:13px`)}>
-                                      {v.confTxt}
-                                    </span>
-                                  </div>
-                                  <LevelLadder proba={v.proba} size={"md"} />
-                                </div>
-                              </React.Fragment>))}
-                            </div>
+                                </React.Fragment>))}
+                              </div>
+                            </>) : null}
                             {q.open ? (<>
                               <div style={sx(`display:flex;flex-wrap:wrap;gap:8px`)}>
                                 {(q.choices || []).map((ch, ch_i) => (<React.Fragment key={ch_i}>
