@@ -260,6 +260,45 @@
         }
       }
     },
+    "/v1/papers/assess-job": {
+      "post": {
+        "summary": "Assess Job",
+        "description": "The same assessment as a background job, so a long paper can report progress: poll\nGET /v1/jobs/{id}; ``trace`` has a Socrates \"asked\" event (n) and one \"answered\" per question.",
+        "operationId": "assess_job_v1_papers_assess_job_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AssessRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JobState"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v1/papers/plan": {
       "post": {
         "summary": "Plan",
@@ -400,6 +439,46 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/JobState"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Cancel Job",
+        "description": "Stop a running job: LLM calls not yet sent are skipped; the job ends as \"cancelled\".",
+        "operationId": "cancel_job_v1_jobs__job_id__delete",
+        "parameters": [
+          {
+            "name": "job_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Job Id"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Cancel Job V1 Jobs  Job Id  Delete"
                 }
               }
             }

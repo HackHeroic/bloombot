@@ -177,6 +177,20 @@ def create_app() -> FastAPI:
         c = Conductor(_assessor(s, req.profile_id), s.settings)
         return c.assess_paper(req.paper, _blueprint(s, req.blueprint_id, req.blueprint), req.use_llm)
 
+    @app.post("/v1/papers/assess-job", status_code=202)
+    def assess_job(req: AssessRequest, s: Services = Depends(services)) -> JobState:
+        """The same assessment as a background job, so a long paper can report progress: poll
+        GET /v1/jobs/{id}; ``trace`` has a Socrates "asked" event (n) and one "answered" per question."""
+        if not req.paper.questions:
+            raise HTTPException(422, "the paper has no questions")
+        a, bp = _assessor(s, req.profile_id), _blueprint(s, req.blueprint_id, req.blueprint)
+
+        def work(job: JobState) -> PaperReport:
+            c = Conductor(a, s.settings, trace=LiveTrace(job.trace), cancel=s.cancels.get(job.id))
+            return c.assess_paper(req.paper, bp, req.use_llm)
+
+        return s.submit("assess", work)
+
     @app.post("/v1/papers/plan")
     def plan(req: PlanRequest, s: Services = Depends(services)) -> list[RewriteJob]:
         bp = _blueprint(s, req.blueprint_id, req.blueprint)
@@ -201,7 +215,7 @@ def create_app() -> FastAPI:
         a = _assessor(s, req.profile_id)
 
         def work(job: JobState) -> RebalanceResult:
-            c = Conductor(a, s.settings, trace=LiveTrace(job.trace))
+            c = Conductor(a, s.settings, trace=LiveTrace(job.trace), cancel=s.cancels.get(job.id))
             return c.rebalance(req.paper, bp, req.use_llm)
 
         return s.submit("rebalance", work)
@@ -212,6 +226,13 @@ def create_app() -> FastAPI:
         if j is None:
             raise HTTPException(404, "unknown job")
         return j
+
+    @app.delete("/v1/jobs/{job_id}", status_code=202)
+    def cancel_job(job_id: str, s: Services = Depends(services)) -> dict[str, Any]:
+        """Stop a running job: LLM calls not yet sent are skipped; the job ends as "cancelled"."""
+        if s.get_job(job_id) is None:
+            raise HTTPException(404, "unknown job")
+        return {"id": job_id, "cancelling": s.cancel_job(job_id)}
 
     @app.get("/v1/profiles")
     def profiles(s: Services = Depends(services)) -> list[Profile]:

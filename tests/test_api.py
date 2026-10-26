@@ -91,3 +91,24 @@ def test_rebalance_job_streams_trace(client):
     checked = [e for e in state["trace"] if e["agent"] == "Verifier"]
     assert checked and checked[0]["detail"]["checks"][0]["name"] == "level"
     assert any(e["action"] == "drafting" for e in state["trace"])
+
+
+def test_assess_job_reports_progress(client):
+    import time
+
+    text = (ROOT / "data" / "papers" / "sample_os_paper.txt").read_text()
+    paper = client.post("/v1/papers/parse-text", json={"text": text}).json()
+    job = client.post("/v1/papers/assess-job", json={"paper": paper, "blueprint_id": "balanced-ug"})
+    assert job.status_code == 202 and job.json()["kind"] == "assess"
+    for _ in range(100):
+        state = client.get(f"/v1/jobs/{job.json()['id']}").json()
+        if state["status"] in ("done", "failed"):
+            break
+        time.sleep(0.1)
+    assert state["status"] == "done", state["error"]
+    assert len(state["result"]["items"]) == len(paper["questions"])
+    assert state["trace"][-1]["agent"] == "Conductor"
+
+
+def test_cancel_unknown_job_404(client):
+    assert client.delete("/v1/jobs/nope").status_code == 404

@@ -18,7 +18,7 @@ from pydantic import BaseModel, Field
 
 from bloombot.config import Settings, get_settings
 from bloombot.models.base import BloomClassifier
-from bloombot.pipeline.assess import Assessor
+from bloombot.pipeline.assess import Assessor, Cancelled
 from bloombot.pipeline.blueprint import load_blueprints
 from bloombot.pipeline.schemas import Blueprint, LevelName
 from bloombot.taxonomy import Level
@@ -54,7 +54,7 @@ class LiveTrace(list):
 class JobState(BaseModel):
     id: str
     kind: str
-    status: str = "queued"  # queued | running | done | failed
+    status: str = "queued"  # queued | running | done | failed | cancelled
     created_at: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     finished_at: datetime | None = None
     result: Any = None
@@ -70,6 +70,7 @@ class Services:
         self._profiles: dict[str, Assessor] = {}
         self.jobs: dict[str, JobState] = {}
         self._pool = ThreadPoolExecutor(max_workers=2)
+        self.cancels: dict[str, threading.Event] = {}
 
     # -- models ---------------------------------------------------------------------------------------------
     @cached_property
@@ -145,22 +146,32 @@ class Services:
     def submit(self, kind: str, fn: Callable[[JobState], Any]) -> JobState:
         job = JobState(id=uuid.uuid4().hex[:12], kind=kind)
         self.jobs[job.id] = job
+        self.cancels[job.id] = threading.Event()
 
         def run():
             job.status = "running"
             try:
                 job.result = fn(job)
                 job.status = "done"
+            except Cancelled:
+                job.status, job.error = "cancelled", "cancelled by the client"
             except Exception as exc:  # reported to the client, not swallowed
                 log.exception("job %s failed", job.id)
                 job.status, job.error = "failed", f"{type(exc).__name__}: {exc}"
                 job.trace.append({"error": traceback.format_exc(limit=5)})
             finally:
                 job.finished_at = datetime.now(timezone.utc)
+                self.cancels.pop(job.id, None)
                 self._persist(job)
 
         self._pool.submit(run)
         return job
+
+    def cancel_job(self, jid: str) -> bool:
+        ev = self.cancels.get(jid)
+        if ev is not None:
+            ev.set()
+        return ev is not None
 
     def _persist(self, job: JobState) -> None:
         d = self.settings.artifacts / "jobs"

@@ -10,6 +10,7 @@ be tested, replaced or run on its own (the API exposes them separately as well).
 
 from __future__ import annotations
 
+import threading
 import time
 from dataclasses import dataclass, field
 
@@ -25,6 +26,7 @@ class Conductor:
     assessor: Assessor
     settings: Settings = field(default_factory=get_settings)
     trace: list[TraceEvent] = field(default_factory=list)
+    cancel: threading.Event | None = None  # set by the client to stop a running job
 
     @classmethod
     def load(cls, settings: Settings | None = None, use_llm: bool | None = None) -> "Conductor":
@@ -36,7 +38,8 @@ class Conductor:
 
     def assess_paper(self, paper: Paper, blueprint: Blueprint | None = None, use_llm: bool | None = None) -> PaperReport:
         t0 = time.perf_counter()
-        preds = self.assessor.assess([q.text for q in paper.questions], use_llm=use_llm, trace=self.trace)
+        preds = self.assessor.assess([q.text for q in paper.questions], use_llm=use_llm, trace=self.trace,
+                                     cancel=self.cancel)
         rep = bp_mod.report(paper, preds, blueprint)
         self.trace.append(TraceEvent(agent="Conductor", action="assessed paper", ms=(time.perf_counter() - t0) * 1000,
                                      detail={"questions": len(paper.questions), "compliant": rep.compliant,

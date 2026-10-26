@@ -21,6 +21,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import logging
 import math
 import os
 import re
@@ -38,6 +39,7 @@ from bloombot.taxonomy import DESCRIPTIONS, LABELS, LEVELS, N_LEVELS, Level
 
 DEFAULT_LLM = os.environ.get("BLOOMBOT_LLM", "qwen3:4b-instruct-2507-q4_K_M")
 DEFAULT_HOST = os.environ.get("OLLAMA_HOST", "http://127.0.0.1:11434")
+log = logging.getLogger(__name__)
 
 
 class LLMError(RuntimeError):
@@ -287,16 +289,30 @@ class LLMClassifier(BloomClassifier):
             _cache_put(key, out)
         return out
 
-    def classify_many(self, texts, on_result=None) -> list[dict]:
+    def classify_many(self, texts, on_result=None, should_stop=None) -> list[dict]:
         """Thread-safe: returns the outputs instead of storing them on the instance.
-        ``on_result(i, out)`` is called as each answer arrives (for live progress)."""
+        ``on_result(i, out)`` is called as each answer arrives (for live progress). A question whose
+        request fails gets ``level`` None and an ``error``, like a cut-off answer: the caller abstains
+        for that question instead of losing the whole batch. Once ``should_stop()`` is true, questions
+        not yet sent are skipped (error "cancelled")."""
         texts = list(texts)
         outs: list[dict] = [{} for _ in texts]
+
+        def one(t):
+            if should_stop is not None and should_stop():
+                raise LLMError("cancelled")
+            return self.classify_one(t)
+
         with ThreadPoolExecutor(max_workers=self.workers) as pool:
-            futures = {pool.submit(self.classify_one, t): i for i, t in enumerate(texts)}
+            futures = {pool.submit(one, t): i for i, t in enumerate(texts)}
             for f in as_completed(futures):
                 i = futures[f]
-                outs[i] = f.result()
+                try:
+                    outs[i] = f.result()
+                except LLMError as exc:
+                    log.warning("LLM failed on question %d: %s", i, exc)
+                    outs[i] = {"question": texts[i], "level": None, "proba": [1 / N_LEVELS] * N_LEVELS,
+                               "reasoning": None, "error": str(exc)}
                 if on_result is not None:
                     on_result(i, outs[i])
         return outs

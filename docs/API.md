@@ -18,10 +18,12 @@ Level names are always one of `Remember, Understand, Apply, Analyze, Evaluate, C
 | POST | `/v1/papers/parse` | multipart upload (PDF, DOCX, TXT, CSV) → `Paper` |
 | POST | `/v1/papers/parse-text` | pasted text → `Paper` |
 | POST | `/v1/papers/assess` | `Paper` (+ blueprint) → `PaperReport` |
+| POST | `/v1/papers/assess-job` | the same as a background job → `202 JobState`; use it when the LLM is on, since a long paper can take minutes (progress below) |
 | POST | `/v1/papers/plan` | `PaperReport` + blueprint → list of `RewriteJob` |
 | POST | `/v1/rewrite` | rewrite one question to a target level, with checks (synchronous) |
 | POST | `/v1/papers/rebalance` | full pipeline as a background job → `202 JobState` |
-| GET | `/v1/jobs/{id}` | job status; `trace` grows live while it runs; `result` is a `RebalanceResult` when `status == "done"` |
+| GET | `/v1/jobs/{id}` | job status; `trace` grows live while it runs; `result` is a `RebalanceResult` (or `PaperReport` for `assess`) when `status == "done"` |
+| DELETE | `/v1/jobs/{id}` | cancel a job: LLM calls not yet sent are skipped and it ends as `cancelled`; call it when the user abandons a job |
 | GET/POST | `/v1/profiles` | list / create an institution profile (k-shot adaptation) |
 | DELETE | `/v1/profiles/{id}` | delete a profile |
 | GET | `/v1/experiments` | `results/summary.json` (for a results dashboard) |
@@ -77,7 +79,7 @@ curl -s localhost:8000/v1/profiles -H 'content-type: application/json' -d '{"nam
 
 ## Following a job live
 
-While a rebalance job runs, `GET /v1/jobs/{id}` returns the events so far in `trace`; poll
+While a job runs, `GET /v1/jobs/{id}` returns the events so far in `trace`; poll
 about once a second and render only the new ones. Each event is
 `{at, agent, action, detail, ms}`:
 
@@ -85,7 +87,8 @@ about once a second and render only the new ones. Each event is
 |---|---|---|
 | Lexis | classified | `n`, `model` |
 | Archivist | retrieved neighbours | `k` |
-| Socrates | answered | `question`, `level`, `confidence` (one per question it was asked) |
+| Socrates | asked | `n`, `model`: how many questions go to the LLM (progress = answered / n) |
+| Socrates | answered | `question`, `level`, `confidence` (one per question it was asked); `level` is null and `error` set if that call failed, and the question is decided without the LLM |
 | Socrates | reasoned votes | `n`, `model` |
 | Arbiter | pooled votes | `n`, `sent_to_llm`, `needs_review` |
 | Conductor | assessed paper | `questions`, `compliant`, `needs_review` (before, then again after) |

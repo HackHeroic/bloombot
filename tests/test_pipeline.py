@@ -180,3 +180,37 @@ def test_explicit_q_headings_ignore_bare_numbers_and_guessed_marks():
     assert [q.id for q in p.questions] == ["1a", "1b", "2a"]
     assert all(q.marks is None for q in p.questions)
 
+
+def test_llm_failure_on_one_question_abstains(monkeypatch):
+    from bloombot.models.llm import LLMClassifier, LLMError
+
+    llm = LLMClassifier("none")
+
+    def classify_one(q):
+        if "fail" in q:
+            raise LLMError("Server disconnected without sending a response.")
+        return {"question": q, "level": 2, "proba": [0, 1, 0, 0, 0, 0], "reasoning": None}
+
+    monkeypatch.setattr(llm, "classify_one", classify_one)
+    outs = llm.classify_many(["Explain paging.", "this one will fail"])
+    assert outs[0]["level"] == 2
+    assert outs[1]["level"] is None and "disconnected" in outs[1]["error"]
+
+
+def test_cancelled_assessment_stops_llm_calls(assessor, settings, monkeypatch):
+    import threading
+
+    from bloombot.models.llm import LLMClassifier
+    from bloombot.pipeline.assess import Assessor, Cancelled
+
+    llm = LLMClassifier("none")
+    calls = []
+    monkeypatch.setattr(llm, "classify_one", lambda q: calls.append(q) or {"question": q, "level": 2,
+                                                                          "proba": [0, 1, 0, 0, 0, 0]})
+    a = Assessor(assessor.lexis, assessor.bank, settings.model_copy(update={"llm_trigger_confidence": 1.01}), llm)
+    stop = threading.Event()
+    stop.set()
+    with pytest.raises(Cancelled):
+        a.assess(["Explain paging.", "Define a stack."], use_llm=True, cancel=stop)
+    assert calls == []
+    assert len(a.assess(["Explain paging."], use_llm=True)[0].votes) == 3  # not cancelled: Socrates votes

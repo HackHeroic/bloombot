@@ -21,6 +21,7 @@ from __future__ import annotations
 
 import copy
 import logging
+import threading
 import time
 from dataclasses import dataclass
 from pathlib import Path
@@ -36,6 +37,10 @@ from bloombot.taxonomy import LABELS, N_LEVELS, Level
 from bloombot.text.linguistics import default_analyzer
 
 log = logging.getLogger(__name__)
+
+
+class Cancelled(RuntimeError):
+    """A job was cancelled by its client."""
 
 
 def build_lexis(kind: str, encoder: str) -> BloomClassifier:
@@ -164,9 +169,10 @@ class Assessor:
 
     # -- assessment -----------------------------------------------------------------------------------------
     def assess(self, texts: Sequence[str], use_llm: bool | None = None, explain: bool = False,
-               trace: list[TraceEvent] | None = None) -> list[Prediction]:
+               trace: list[TraceEvent] | None = None, cancel: threading.Event | None = None) -> list[Prediction]:
         """Classify questions. ``trace`` (a caller-owned list) receives the audit events; nothing
-        is stored on the assessor, so concurrent calls do not interfere."""
+        is stored on the assessor, so concurrent calls do not interfere. Setting ``cancel`` stops
+        the LLM calls still to be made and raises ``Cancelled``."""
         s = self.settings
         texts = list(texts)
         if not texts:
@@ -195,13 +201,19 @@ class Assessor:
         if ask.any():
             t0 = time.perf_counter()
             idx = np.flatnonzero(ask)
+            self._log(trace, "Socrates", "asked", t0, n=len(idx), model=self.llm.model)
+
             def answered(j, out):
                 ok = out.get("level") is not None
                 self._log(trace, "Socrates", "answered", t0, question=clean[idx[j]],
                           level=level_name(out["level"]) if ok else None,
-                          confidence=round(float(max(out["proba"])), 4) if ok else None)
+                          confidence=round(float(max(out["proba"])), 4) if ok else None,
+                          **({"error": out["error"]} if out.get("error") else {}))
 
-            outs = self.llm.classify_many([clean[i] for i in idx], on_result=answered)
+            outs = self.llm.classify_many([clean[i] for i in idx], on_result=answered,
+                                          should_stop=cancel.is_set if cancel is not None else None)
+            if cancel is not None and cancel.is_set():
+                raise Cancelled("assessment cancelled")
             for i, out in zip(idx, outs, strict=True):
                 if out.get("level") is not None:  # no usable answer: Socrates abstains
                     llm_out[int(i)] = out
