@@ -62,6 +62,10 @@ class JobState(BaseModel):
     trace: list[dict] = Field(default_factory=list)
 
 
+MAX_MEMORY_JOBS = 200
+MAX_MEMORY_PROFILES = 50
+
+
 class Services:
     def __init__(self, settings: Settings | None = None):
         self.settings = settings or get_settings()
@@ -73,6 +77,7 @@ class Services:
         # job (or a cancelled one finishing its last calls) never blocks a fast one behind it.
         self._pool = ThreadPoolExecutor(max_workers=8)
         self.cancels: dict[str, threading.Event] = {}
+        self._profile_meta: dict[str, Profile] = {}  # memory-only profiles (settings.store off)
 
     # -- models ---------------------------------------------------------------------------------------------
     @cached_property
@@ -99,6 +104,8 @@ class Services:
         return self.settings.artifacts / "profiles"
 
     def list_profiles(self) -> list[Profile]:
+        if not self.settings.store:  # a public server: a profile is usable by its id, never listed
+            return []
         if not self.profile_dir.exists():
             return []
         return [Profile.model_validate_json((d / "profile.json").read_text())
@@ -108,15 +115,26 @@ class Services:
         prof = Profile(id=uuid.uuid4().hex[:12], name=name, examples=examples)
         adapted = self.assessor.with_examples([e.question for e in examples],
                                               [int(Level.from_label(e.level)) for e in examples], name)
-        d = self.profile_dir / prof.id
-        d.mkdir(parents=True, exist_ok=True)
-        (d / "profile.json").write_text(prof.model_dump_json(indent=2))
-        adapted.lexis.save(d / "lexis.joblib")
+        if self.settings.store:
+            d = self.profile_dir / prof.id
+            d.mkdir(parents=True, exist_ok=True)
+            (d / "profile.json").write_text(prof.model_dump_json(indent=2))
+            adapted.lexis.save(d / "lexis.joblib")
         with self._lock:
             self._profiles[prof.id] = adapted
+            if not self.settings.store:
+                self._profile_meta[prof.id] = prof
+                while len(self._profile_meta) > MAX_MEMORY_PROFILES:  # drop the oldest
+                    old = next(iter(self._profile_meta))
+                    self._profile_meta.pop(old)
+                    self._profiles.pop(old, None)
         return prof
 
     def delete_profile(self, pid: str) -> bool:
+        if not self.settings.store:
+            with self._lock:
+                self._profiles.pop(pid, None)
+                return self._profile_meta.pop(pid, None) is not None
         d = self.profile_dir / pid
         if not d.exists():
             return False
@@ -133,7 +151,7 @@ class Services:
             if profile_id in self._profiles:
                 return self._profiles[profile_id]
         d = self.profile_dir / profile_id
-        if not (d / "profile.json").exists():
+        if not self.settings.store or not (d / "profile.json").exists():
             raise KeyError(profile_id)
         prof = Profile.model_validate_json((d / "profile.json").read_text())
         base = self.assessor
@@ -148,6 +166,10 @@ class Services:
     def submit(self, kind: str, fn: Callable[[JobState], Any]) -> JobState:
         job = JobState(id=uuid.uuid4().hex[:12], kind=kind)
         self.jobs[job.id] = job
+        if len(self.jobs) > MAX_MEMORY_JOBS:  # keep memory bounded: forget the oldest finished jobs
+            finished = [j for j, st in self.jobs.items() if st.status in ("done", "failed", "cancelled")]
+            for old in finished[:len(self.jobs) - MAX_MEMORY_JOBS]:
+                self.jobs.pop(old, None)
         self.cancels[job.id] = threading.Event()
 
         def run():
@@ -164,7 +186,8 @@ class Services:
             finally:
                 job.finished_at = datetime.now(timezone.utc)
                 self.cancels.pop(job.id, None)
-                self._persist(job)
+                if self.settings.store:
+                    self._persist(job)
 
         self._pool.submit(run)
         return job
@@ -184,7 +207,7 @@ class Services:
         if jid in self.jobs:
             return self.jobs[jid]
         path = self.settings.artifacts / "jobs" / f"{jid}.json"
-        return JobState.model_validate_json(path.read_text()) if path.exists() else None
+        return JobState.model_validate_json(path.read_text()) if self.settings.store and path.exists() else None
 
     def experiments(self) -> dict:
         path = self.settings.root / "results" / "summary.json"

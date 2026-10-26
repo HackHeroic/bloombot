@@ -158,3 +158,26 @@ def test_samples_list_and_load(client):
     paper = client.get("/v1/samples/os").json()
     assert len(paper["questions"]) == os_["questions"] and paper["title"].startswith("Operating Systems")
     assert client.get("/v1/samples/nope").status_code == 404
+
+
+def test_public_server_keeps_jobs_and_profiles_in_memory(assessor, settings, tmp_path):
+    import time
+
+    app = create_app()
+    with TestClient(app) as c:
+        s = Services(settings.model_copy(update={"root": ROOT, "store": False, "artifacts": tmp_path}))
+        s.__dict__["assessor"] = assessor
+        app.state.services = s
+        text = (ROOT / "data" / "papers" / "sample_os_paper.txt").read_text()
+        paper = c.post("/v1/papers/parse-text", json={"text": text}).json()
+        job = c.post("/v1/papers/assess-job", json={"paper": paper, "blueprint_id": "balanced-ug"}).json()
+        for _ in range(100):
+            if c.get(f"/v1/jobs/{job['id']}").json()["status"] == "done":
+                break
+            time.sleep(0.1)
+        ex = [{"question": q, "level": "Remember"} for q in ("Define a stack.", "List the planets.", "State Ohm's law.",
+                                                              "Name a sorting algorithm.", "What is a compiler?")]
+        prof = c.post("/v1/profiles", json={"name": "mine", "examples": ex}).json()
+        assert c.post("/v1/classify", json={"questions": ["Define a queue."], "profile_id": prof["id"]}).status_code == 200
+        assert c.get("/v1/profiles").json() == []  # never listed to other visitors
+    assert not any(tmp_path.rglob("*.json")) and not any(tmp_path.rglob("*.joblib"))  # nothing on disk

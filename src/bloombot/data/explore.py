@@ -67,12 +67,19 @@ def _load(processed: Path) -> tuple[pd.DataFrame, tuple[SourceInfo, ...]]:
     if not path.exists():
         raise FileNotFoundError(f"{path} is missing: run `bloombot data build` first")
     df = pd.read_parquet(path, columns=["uid", "source", "question", "label"])
-    infos = []
+    # Counts come from the data card when present: a public deployment ships only the public sources'
+    # questions, but still reports every source's size.
+    card = processed / "datacard.json"
+    counts = ({sid: (c["rows"], c["per_level"]) for sid, c in json.loads(card.read_text())["sources"].items()}
+              if card.exists() else {})
     for sid, g in df.groupby("source", sort=False):
+        counts.setdefault(sid, (len(g), {lab: int((g["label"] == lab).sum()) for lab in LABELS}))
+    infos = []
+    for sid, (rows, per_level) in counts.items():
         s = SOURCE_BY_ID[sid]
         infos.append(SourceInfo(id=sid, title=s.title, citation=s.citation, origin=s.origin, kind=s.kind, region=s.region,
                                 licence=s.licence, licence_url=licence_url(s.licence), role=s.role, public=s.public,
-                                rows=len(g), per_level={lab: int((g["label"] == lab).sum()) for lab in LABELS}))
+                                rows=rows, per_level={lab: int(per_level.get(lab, 0)) for lab in LABELS}))
     return df, tuple(infos)
 
 

@@ -16,7 +16,10 @@ class Settings(BaseSettings):
 
     root: Path = ROOT
     artifacts: Path = ROOT / "artifacts"
-    warmup: bool = False  # load the models in the background when the API starts (`bloombot serve` turns it on)
+    warmup: bool = False
+    # Write jobs (which contain the paper) and college profiles to artifacts/. Off on a public server:
+    # papers and profiles then stay in memory only, profiles are not listed, and old ones are dropped.
+    store: bool = True  # load the models in the background when the API starts (`bloombot serve` turns it on)
 
     # Lexis: the fast classifier. "embedlex" needs the sentence encoder; "bloomlex" is pure CPU sklearn.
     lexis_model: Literal["embedlex", "bloomlex"] = "embedlex"
