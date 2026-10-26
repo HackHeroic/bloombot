@@ -12,10 +12,12 @@ from typing import Any
 
 from fastapi import Depends, FastAPI, File, Form, HTTPException, Request, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel, Field
 
 from bloombot import __version__
 from bloombot.api.services import JobState, LabelledExample, LiveTrace, Profile, Services
+from bloombot.config import ROOT
 from bloombot.pipeline import blueprint as bp_mod
 from bloombot.pipeline.conductor import Conductor
 from bloombot.pipeline.intake import parse_file, parse_text
@@ -84,6 +86,8 @@ class ProfileRequest(BaseModel):
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     app.state.services = Services()
+    if app.state.services.settings.warmup:
+        app.state.services.warm_up()
     yield
 
 
@@ -237,6 +241,11 @@ def create_app() -> FastAPI:
             raise HTTPException(404, f"unknown table {name!r}")
         return t
 
+    # The built web UI (cd frontend && npm run build), served at / when present. Mounted last,
+    # so every API route above takes precedence.
+    ui = ROOT / "frontend" / "out"
+    if ui.is_dir():
+        app.mount("/", StaticFiles(directory=ui, html=True), name="ui")
     return app
 
 

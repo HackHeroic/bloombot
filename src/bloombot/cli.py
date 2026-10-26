@@ -128,8 +128,11 @@ def results(out: Path = typer.Option(Path("docs/figures"))) -> None:
 @app.command()
 def serve(host: str = "127.0.0.1", port: int = 8000, reload: bool = False) -> None:
     """Start the HTTP API (docs at /docs)."""
+    import os
+
     import uvicorn
 
+    os.environ.setdefault("BLOOMBOT_WARMUP", "1")
     uvicorn.run("bloombot.api.app:app", host=host, port=port, reload=reload)
 
 

@@ -66,6 +66,7 @@ class Services:
     def __init__(self, settings: Settings | None = None):
         self.settings = settings or get_settings()
         self._lock = threading.Lock()
+        self._load_lock = threading.Lock()
         self._profiles: dict[str, Assessor] = {}
         self.jobs: dict[str, JobState] = {}
         self._pool = ThreadPoolExecutor(max_workers=2)
@@ -73,7 +74,14 @@ class Services:
     # -- models ---------------------------------------------------------------------------------------------
     @cached_property
     def assessor(self) -> Assessor:
-        return Assessor.load(self.settings)
+        with self._load_lock:  # a request arriving during warm-up waits instead of loading twice
+            if "assessor" not in self.__dict__:
+                self.__dict__["assessor"] = Assessor.load(self.settings)
+            return self.__dict__["assessor"]
+
+    def warm_up(self) -> None:
+        """Load the models in the background, so the first request does not wait ~20 s."""
+        threading.Thread(target=lambda: self.assessor, name="warm-up", daemon=True).start()
 
     def blueprints(self) -> dict[str, Blueprint]:
         return load_blueprints(self.settings.root / "configs" / "blueprints")

@@ -16,6 +16,7 @@ class Settings(BaseSettings):
 
     root: Path = ROOT
     artifacts: Path = ROOT / "artifacts"
+    warmup: bool = False  # load the models in the background when the API starts (`bloombot serve` turns it on)
 
     # Lexis: the fast classifier. "embedlex" needs the sentence encoder; "bloomlex" is pure CPU sklearn.
     lexis_model: Literal["embedlex", "bloomlex"] = "embedlex"
