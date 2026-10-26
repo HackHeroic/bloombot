@@ -45,10 +45,13 @@ export const api = {
   parseFile: file => { const f = new FormData(); f.append('file', file); return req('/v1/papers/parse', { method: 'POST', body: f }); },
   parseText: (text, title) => post('/v1/papers/parse-text', { text, title }),
   assess: body => post('/v1/papers/assess', body),
+  assessJob: body => post('/v1/papers/assess-job', body),
   plan: body => post('/v1/papers/plan', body),
   classify: body => post('/v1/classify', body),
   analyze: question => post('/v1/analyze', { question }),
   rebalance: body => post('/v1/papers/rebalance', body),
   job: id => req(`/v1/jobs/${id}`, {}, 15000),
+  cancelJob: id => req(`/v1/jobs/${id}`, { method: 'DELETE' }, 15000),
+  cancelJobOnExit: id => { const b = apiBase(); if (b !== null) fetch(`${b}/v1/jobs/${id}`, { method: 'DELETE', keepalive: true }).catch(() => {}); },
   createProfile: (name, examples) => post('/v1/profiles', { name, examples }),
 };

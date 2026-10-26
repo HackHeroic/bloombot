@@ -34,7 +34,8 @@ export function paperForApi(paper, rows) {
   const byId = Object.fromEntries(rows.map(r => [r.id, r]));
   return { ...paper, questions: paper.questions.map(q => {
     const r = byId[q.id];
-    return r ? { ...q, text: r.text, marks: Number(r.marks) || 0, locked: !!r.locked } : q;
+    // a blank mark stays null: the API then weights by count instead of treating it as 0 marks
+    return r ? { ...q, text: r.text, marks: r.marks == null || r.marks === '' ? null : Number(r.marks), locked: !!r.locked } : q;
   }) };
 }
 
@@ -63,12 +64,13 @@ export function sections(rows) {
 export function paperTitle(paper, rows) {
   const t = (paper.title || 'Question paper').replace(/[_-]+/g, ' ').replace(/\s+/g, ' ').trim();
   const nice = t.charAt(0).toUpperCase() + t.slice(1);
+  if (!rows.some(r => r.marks)) return `${nice} · ${rows.length} questions, no marks`;
   return `${nice} · ${slotMarks(rows)} marks`;
 }
 
 export function orNote(rows) {
   const g = rows.find(r => r.group);
-  if (!g) return 'Every question counts by its marks.';
+  if (!g) return rows.some(r => r.marks) ? 'Every question counts by its marks.' : 'No marks are printed, so every question counts once.';
   const alts = rows.filter(r => r.group === g.group);
   return `OR-alternatives share one slot: ${alts.map(r => 'Q' + r.id).join('/')} are one ${g.marks}-mark slot; if they get different levels, each counts ${r2(g.marks / alts.length)} marks.`;
 }
@@ -122,7 +124,8 @@ export function traceRow(e) {
   const text = {
     'Lexis classified': () => `${d.n} question${d.n === 1 ? '' : 's'} · ${d.model}`,
     'Archivist retrieved neighbours': () => `k = ${d.k}`,
-    'Socrates answered': () => `${d.level || 'no answer'}${d.confidence != null ? ' ' + d.confidence.toFixed(2) : ''} · “${short(d.question, 48)}”`,
+    'Socrates asked': () => `${d.n} unsure question${d.n === 1 ? '' : 's'} · ${d.model}`,
+    'Socrates answered': () => `${d.level || (d.error ? 'no answer (LLM error)' : 'no answer')}${d.confidence != null ? ' ' + d.confidence.toFixed(2) : ''} · “${short(d.question, 48)}”`,
     'Socrates reasoned votes': () => `${d.n} unsure question${d.n === 1 ? '' : 's'} · ${d.model}`,
     'Arbiter pooled votes': () => `${d.n} pooled · ${d.sent_to_llm} sent to LLM · ${d.needs_review} flagged ⚑`,
     'Conductor assessed paper': () => `${d.questions} questions · ${d.compliant ? 'compliant' : 'not compliant'} · ${d.needs_review} ⚑`,

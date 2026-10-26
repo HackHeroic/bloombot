@@ -33,7 +33,9 @@ export default class App extends React.Component {
       if (/INPUT|TEXTAREA|SELECT/.test(tag)) return;
       const n = parseInt(e.key, 10); if (n >= 1 && n <= 6) { e.preventDefault(); this.label(n); }
     };
-    window.addEventListener('resize', this.onResize); window.addEventListener('keydown', this.onKey);
+    // closing or reloading the page mid-assessment must not leave the LLM working for nobody
+    this.onExit = () => { if (this.assessJobId) api.cancelJobOnExit(this.assessJobId); };
+    window.addEventListener('resize', this.onResize); window.addEventListener('keydown', this.onKey); window.addEventListener('pagehide', this.onExit);
     this.apiReady = this.checkApi();
   }
   componentDidUpdate(_, prev) {
@@ -43,7 +45,7 @@ export default class App extends React.Component {
     }
   }
   componentWillUnmount() { clearInterval(this.poll); clearTimeout(this.timer); cancelAnimationFrame(this.raf); clearTimeout(this.pt); this.dead = true;
-    window.removeEventListener('resize', this.onResize); window.removeEventListener('keydown', this.onKey); }
+    window.removeEventListener('resize', this.onResize); window.removeEventListener('keydown', this.onKey); window.removeEventListener('pagehide', this.onExit); }
 
   // ---------- API ----------
   live() { return this.state.online === true; }
@@ -93,21 +95,52 @@ export default class App extends React.Component {
       this.setState({ checkStage: 'report', assessed: true }); this.anim('reportT'); try { window.scrollTo(0, 0); } catch (e) {}
       return true;
     }
-    this.setState({ busy: 'assess', error: '' });
+    const gen = this.assessGen = (this.assessGen || 0) + 1;  // pressing Assess again restarts
+    this.setState({ busy: 'assess', error: '', assessProgress: null });
     try {
       const paper = A.paperForApi(s.apiPaper, s.paper);
       const [report, bps] = await Promise.all([
-        api.assess({ paper, blueprint_id: this.bpId(), use_llm: this.useLlm(), profile_id: s.profileId }),
+        this.assessJob({ paper, blueprint_id: this.bpId(), use_llm: this.useLlm(), profile_id: s.profileId }, gen),
         this.blueprints || (this.blueprints = fetch(apiBase() + '/v1/blueprints').then(r => r.json())),
       ]);
       const bp = bps.find(b => b.id === this.bpId());
       const rows = A.paperRows(paper, report).map(r => ({ ...r, locked: (s.paper.find(x => x.id === r.id) || {}).locked }));
-      await this.set(st => ({ busy: '', report, apiPaper: paper, paper: rows, checkStage: 'report', assessed: true, resolved: {},
+      await this.set(st => ({ busy: '', assessProgress: null, report, apiPaper: paper, paper: rows, checkStage: 'report', assessed: true, resolved: {},
         D: { ...st.D, SECTIONS: A.sections(rows), TITLE: A.paperTitle(paper, rows), OR_NOTE: A.orNote(rows), DIST_BEFORE: A.dist(report.distribution),
           BPAPI: bp, BP: { ...BB.BP, [st.blueprint]: A.blueprint(bp, report) } } }));
       this.anim('reportT'); try { window.scrollTo(0, 0); } catch (e) {}
       return true;
-    } catch (e) { this.fail(e); return false; }
+    } catch (e) {
+      if (gen !== this.assessGen) return false;  // superseded by a newer Assess
+      this.setState({ assessProgress: null }); this.fail(e); return false;
+    }
+  }
+
+  // Assessment runs as a job so a long paper can show how far the LLM has got.
+  async assessJob(body, gen) {
+    const job = await api.assessJob(body);
+    this.assessJobId = job.id;
+    try {
+      return await this.pollAssess(job, gen);
+    } finally {
+      if (this.assessJobId === job.id) this.assessJobId = null;
+    }
+  }
+
+  async pollAssess(job, gen) {
+    for (;;) {
+      await new Promise(r => setTimeout(r, 700));
+      if (this.dead || gen !== this.assessGen) {  // superseded: free the LLM for the new request
+        api.cancelJob(job.id).catch(() => {});
+        throw new Error('cancelled');
+      }
+      let j;
+      try { j = await api.job(job.id); } catch (e) { continue; }
+      const asked = j.trace.find(e => e.agent === 'Socrates' && e.action === 'asked');
+      if (asked && gen === this.assessGen) this.setState({ assessProgress: { n: asked.detail.n, done: j.trace.filter(e => e.agent === 'Socrates' && e.action === 'answered').length } });
+      if (j.status === 'failed' || j.status === 'cancelled') throw new Error(j.error || 'The assessment failed.');
+      if (j.status === 'done') return j.result;
+    }
   }
 
   async startJob() {
@@ -207,7 +240,7 @@ export default class App extends React.Component {
   paperMd() { const B = this.B(), ap = this.applied();
     let md = `# ${this.title()}\n\nRebalanced with BloomBot against ${B.BP[this.state.blueprint].name}.\n\n`;
     B.SECTIONS.forEach(sec => { md += `## ${sec.title} — ${sec.note}\n\n`;
-      (this.state.paper || B.PAPER).filter(q => q.section === sec.id).forEach(q => { md += `- **${q.number}** (${q.marks} marks${q.co ? ', ' + q.co : ''}) ${ap[q.id] || q.text}\n`; }); md += '\n'; });
+      (this.state.paper || B.PAPER).filter(q => q.section === sec.id).forEach(q => { md += `- **${q.number}** (${q.marks != null ? q.marks + ' marks' : 'no marks'}${q.co ? ', ' + q.co : ''}) ${ap[q.id] || q.text}\n`; }); md += '\n'; });
     return md; }
   reportObj() { const B = this.B(), bp = B.BP[this.state.blueprint];
     return { paper: this.title(), blueprint: bp.name, before: { distribution: B.DIST_BEFORE, checks: bp.checks.map(c => ({ bound: c.label, share: c.b })) },
@@ -282,7 +315,7 @@ export default class App extends React.Component {
         const upd = patch => this.setState(st => ({ paper: st.paper.map(x => x.id === q.id ? { ...x, ...patch } : x), report: patch.locked === undefined ? null : st.report }));
         return { ...q, inGroup: inG, showOr: inG && !first, groupLabel: first ? `Answer either Q${q.id} or Q${qs[i + 1] ? qs[i + 1].id : ''} · one ${q.marks}-mark slot` : '', showGroupLabel: first,
           rowBg: inG ? 'var(--surface2)' : 'transparent', groupBorder: inG ? 'var(--accent)' : 'transparent',
-          hasTag: !!q.tag, noTag: !q.tag, tagChip: q.tag ? chip(N(q.tag)) : chip(1), coTxt: q.co || '—', hasContext: !!q.context, onText: e => upd({ text: e.target.value }), onMarks: e => upd({ marks: +e.target.value || 0 }),
+          hasTag: !!q.tag, noTag: !q.tag, tagChip: q.tag ? chip(N(q.tag)) : chip(1), coTxt: q.co || '—', hasContext: !!q.context, onText: e => upd({ text: e.target.value }), onMarks: e => upd({ marks: e.target.value === '' ? null : +e.target.value || 0 }),
           toggleLock: () => upd({ locked: !q.locked }), lockLabel: q.locked ? '🔒 Locked' : 'Lock', lockPressed: q.locked ? 'true' : 'false',
           lockBg: q.locked ? 'var(--ink)' : 'transparent', lockFg: q.locked ? 'var(--bg)' : 'var(--ink2)',
           lockTitle: q.locked ? 'Locked: BloomBot will never rewrite this question' : 'Lock so BloomBot never rewrites it' };
@@ -298,7 +331,7 @@ export default class App extends React.Component {
         agree, disagree, untagged: !q.tag, tagName: q.tag, predName: L[lvl - 1], tagBg: disagree ? 'var(--warnbg)' : 'transparent',
         flag: q.review && !res, resolvedFlag: !!res, resolvedTxt: res ? 'Teacher: ' + res : '', noFlag: !q.review && !res, bySource: res ? 'teacher' : 'predicted' }; });
     const reviewQueue = s.paper.filter(q => q.review).map(q => { const res = s.resolved[q.id];
-      return { ...q, resolved: !!res, open: !res, resolvedText: res ? `Resolved — you chose ${res}.` : '',
+      return { ...q, marks: q.marks == null ? '–' : q.marks, resolved: !!res, open: !res, resolvedText: res ? `Resolved — you chose ${res}.` : '',
         votes: q.votes.map(v => ({ ...v, chip: chip(N(v.level)), confTxt: v.confidence.toFixed(2), role: { Lexis: 'Classifier · weight 1', Archivist: 'Evidence only · weight 0', Socrates: 'Local LLM · weight 0.5' }[v.agent] })),
         choices: [...new Set(q.votes.map(v => v.level))].map(l => ({ label: 'Use ' + l, pick: () => this.setState(st => ({ resolved: { ...st.resolved, [q.id]: l } })) })),
         undo: () => this.setState(st => { const r = { ...st.resolved }; delete r[q.id]; return { resolved: r }; }) }; });
@@ -313,7 +346,7 @@ export default class App extends React.Component {
       parsePaste: () => { if (!s.pasteText.trim()) { this.setState({ error: 'Paste some questions first, or try the sample paper.' }); return; } this.parse('pasted text', 'paste'); },
       useSample: () => this.parse('sample OS paper', 'sample'), fileName: s.fileName,
       sections, tableWide: !narrow && s.winW >= 1240, tableNarrow: narrow || s.winW < 1240, rowCols: narrow ? '40px minmax(0,1fr) 56px' : '52px minmax(0,1fr) 64px 52px 118px 104px',
-      blueprints, assess: () => { if (!s.busy) this.assessPaper(); }, assessLabel: s.busy === 'assess' ? 'Assessing…' : 'Assess',
+      blueprints, assess: () => { if (!s.busy || s.busy === 'assess') this.assessPaper(); }, assessLabel: s.busy === 'assess' ? (s.assessProgress ? `Assessing… ${s.assessProgress.done} / ${s.assessProgress.n}` : 'Assessing…') : 'Assess',
       backToEdit: () => this.setState({ checkStage: 'edit' }), uploadNew: () => this.setState({ checkStage: 'upload' }),
       bpName: bp.name, markers: bp.markers, distBefore: B.DIST_BEFORE, checksBefore: checkRows('b', s.reportT),
       failCount: failing, verdictSub: failing ? `${failing} of ${bp.checks.length} bound${bp.checks.length > 1 ? 's' : ''} fail against ${bp.name}.` : `All ${bp.checks.length} bound${bp.checks.length > 1 ? 's' : ''} met against ${bp.name}.`,
@@ -321,7 +354,7 @@ export default class App extends React.Component {
       paperTitle, paperNote: s.apiPaper ? `Read from ${s.fileName}.` : 'Recorded sample paper (the API is not running).', orNote: B.OR_NOTE || 'OR-alternatives share one slot: Q2/Q3 are one 10-mark slot; if they get different levels, each counts 5 marks.',
       reviewQueue, openReviews, reviewTitle: openReviews ? `${openReviews} question${openReviews > 1 ? 's' : ''} to resolve first` : 'Review queue clear',
       tableRows, tableCols: '44px minmax(220px,1fr) 48px 150px 52px 160px 92px',
-      lockedNote: lockedIds.length ? `${lockedIds.length} locked: ${lockedIds.map(i => 'Q' + i).join(', ')} — never rewritten.` : 'No questions locked.',
+      lockedNote: s.busy === 'assess' && s.assessProgress ? `The LLM is checking ${s.assessProgress.n} questions the classifier is unsure about (${s.assessProgress.done} done, a few seconds each). For an instant result, turn "LLM second opinion" off and press Assess again.` : lockedIds.length ? `${lockedIds.length} locked: ${lockedIds.map(i => 'Q' + i).join(', ')} — never rewritten.` : 'No questions locked.',
       profileName: s.activeProfile === 'mine' ? `My college · CSE (k = ${Object.keys(s.labels).length || s.labelCount})` : 'No profile (generic model)',
       rebalance: () => this.startJob()
     };
@@ -386,7 +419,7 @@ export default class App extends React.Component {
     const archIdx = TR.findIndex(e => e.agent === 'Architect');
     const showPlan = live ? !!B.PLAN : (archIdx >= 0 && n > archIdx);
     const planSrc = B.PLAN || B.RW;
-    const planRows = planSrc.map(r => { const q = qById(r.id); return { q: r.q, from: chip(r.from), to: chip(r.to), reason: (r.reason || '').replace('<=', '≤').replace('>=', '≥'), marks: r.marks + ' marks', locked: !!(q && q.locked), open: !(q && q.locked) }; });
+    const planRows = planSrc.map(r => { const q = qById(r.id); return { q: r.q, from: chip(r.from), to: chip(r.to), reason: (r.reason || '').replace('<=', '≤').replace('>=', '≥'), marks: r.marks != null ? r.marks + ' marks' : 'no marks', locked: !!(q && q.locked), open: !(q && q.locked) }; });
     const reasons = bp.checks.filter(c => !c.bOk).map(c => `${c.label} of marks — currently ${c.b}%`);
     const rwCards = B.RW.filter(r => !(qById(r.id) || {}).locked && rwVisibleAt(r)).map(r => ({ id: r.id, rw: { ...r, rewrite: s.rwText[r.id] || r.rewrite }, status: s.rwStatus[r.id] || 'pending',
       onAction: (st, text) => this.setState(x => ({ rwStatus: { ...x.rwStatus, [r.id]: st }, rwText: text != null ? { ...x.rwText, [r.id]: text } : x.rwText })) }));
