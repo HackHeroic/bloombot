@@ -57,6 +57,24 @@ export default class App extends React.Component {
     } catch (e) { this.setState({ online: false }); }
   }
   useLlm() { return this.state.llm ? null : false; }
+
+  // The Architect plans Bloom rewrites only. Say so when the plan is empty: the paper may still be
+  // too long or badly marked (rewriting changes levels, not length), or nothing may be rewritable.
+  planText(planSrc, reasons, s) {
+    if (planSrc.length) return { planTitle: `${planSrc.length} rewrite${planSrc.length > 1 ? 's' : ''} needed`, planWhy: reasons.length ? 'Why: ' + reasons.join('; ') + '.' : '' };
+    const rep = s.report;
+    if (reasons.length) {
+      const locked = s.paper.filter(q => q.locked).length;
+      return { planTitle: 'No rewrite can fix the Bloom mix automatically',
+        planWhy: `${reasons.join('; ')}, but BloomBot found no question it may rewrite${locked ? ` (${locked} locked)` : ''}. Change or unlock questions on Check a paper.` };
+    }
+    if (rep && rep.ready === false) {
+      const t = rep.timing, issues = [t && t.verdict === 'too_long' ? t.detail : '', ...rep.marking.filter(c => c.ok === false).map(c => `${c.name}: ${c.detail}`)].filter(Boolean);
+      return { planTitle: 'No Bloom rewrites needed, but the paper is not ready',
+        planWhy: `The Bloom mix meets the blueprint. ${issues.join(' ')} Rewriting changes a question's level, not the paper's length: shorten or re-mark it (the longest questions are listed under Time and marks on Check a paper).` };
+    }
+    return { planTitle: 'No rewrites needed — the paper already meets the blueprint', planWhy: '' };
+  }
   fail(e) { this.setState({ error: e.message || String(e), busy: '' }); }
   bpId() { return A.BPID[this.state.blueprint]; }
 
@@ -330,7 +348,7 @@ export default class App extends React.Component {
       return { ...sec, rows: qs.map((q, i) => {
         const inG = !!q.group, first = inG && (i === 0 || qs[i - 1].group !== q.group);
         const upd = patch => this.setState(st => ({ paper: st.paper.map(x => x.id === q.id ? { ...x, ...patch } : x), report: patch.locked === undefined ? null : st.report }));
-        return { ...q, marks: q.marks == null ? '' : q.marks, inGroup: inG, showOr: inG && !first, groupLabel: first ? `Answer either Q${q.id} or Q${qs[i + 1] ? qs[i + 1].id : ''} · one ${q.marks}-mark slot` : '', showGroupLabel: first,
+        return { ...q, marks: q.marks == null ? '' : q.marks, inGroup: inG, showOr: inG && !first, groupLabel: first ? `Answer either Q${q.id} or Q${qs[i + 1] ? qs[i + 1].id : ''} · ${q.marks ? `one ${q.marks}-mark slot` : 'one slot'}` : '', showGroupLabel: first,
           rowBg: inG ? 'var(--surface2)' : 'transparent', groupBorder: inG ? 'var(--accent)' : 'transparent',
           hasTag: !!q.tag, noTag: !q.tag, tagChip: q.tag ? chip(N(q.tag)) : chip(1), coTxt: q.co || '—', hasContext: !!q.context, onText: e => upd({ text: e.target.value }), onMarks: e => upd({ marks: e.target.value === '' ? null : +e.target.value || 0 }),
           toggleLock: () => upd({ locked: !q.locked }), lockLabel: q.locked ? '🔒 Locked' : 'Lock', lockPressed: q.locked ? 'true' : 'false',
@@ -458,8 +476,7 @@ export default class App extends React.Component {
       jobLabel: s.jobStatus === 'running' ? (live ? `Running · ${n} events` : `Running · ${n} of ${TR.length} events`) : `Done · ${TR.length} events`, jobId: B.JOB_ID,
       afterReviewTxt: afterReview.length ? `After rewriting, ${afterReview.map(i => 'Q' + i).join(' and ')} ${afterReview.length > 1 ? 'are' : 'is'} flagged ⚑ for review — check ${afterReview.length > 1 ? 'them' : 'it'} before you submit.` : 'After rewriting, no question is flagged for review.',
       stages, traceRows, totalMs: (cum / 1000).toFixed(1) + ' s', progressW: live ? Math.round(s.progress * 100) + '%' : Math.round(n / TR.length * 100) + '%',
-      showPlan, planRows, planTitle: planSrc.length ? `${planSrc.length} rewrite${planSrc.length > 1 ? 's' : ''} needed` : 'No rewrites needed — the paper already meets the blueprint',
-      planWhy: reasons.length ? 'Why: ' + reasons.join('; ') + '.' : '',
+      showPlan, planRows, ...this.planText(planSrc, reasons, s),
       rwCards, hasCards: rwCards.length > 0, handBack: { ...hand }, handStatus: s.rwStatus[hand.id] || 'pending',
       onHand: st => this.setState(x => ({ rwStatus: { ...x.rwStatus, [hand.id]: st } })),
       acceptAll: () => this.setState(x => { const r = { ...x.rwStatus }; B.RW.forEach(w => { if (!(qById(w.id) || {}).locked && (r[w.id] || 'pending') === 'pending' && rwVisibleAt(w)) r[w.id] = 'accepted'; }); return { rwStatus: r }; }),

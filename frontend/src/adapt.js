@@ -55,8 +55,10 @@ export function sections(rows) {
     const qs = rows.filter(r => (r.section || 'A') === id);
     const groups = [...new Set(qs.filter(r => r.group).map(r => r.group))];
     const marks = slotMarks(qs);
-    const same = qs.length > 1 && !groups.length && qs.every(r => r.marks === qs[0].marks);
     const or = groups.map(g => qs.filter(r => r.group === g).map(r => 'Q' + r.id).join(' or ')).join('; ');
+    const n = `${qs.length} question${qs.length === 1 ? '' : 's'}`;
+    if (!qs.some(r => r.marks)) return { id, title: `Part ${id}`, note: `Answer all${or ? '; ' + or : ''} · ${n}, no marks` };
+    const same = qs.length > 1 && !groups.length && qs.every(r => r.marks === qs[0].marks);
     return { id, title: `Part ${id}`, note: same ? `Answer all · ${qs.length} × ${qs[0].marks} marks` : `Answer all${or ? '; ' + or : ''} · ${marks} marks` };
   });
 }
