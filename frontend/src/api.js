@@ -4,7 +4,7 @@
 //   1. `?api=http://host:port`, or a local server the teacher connected (both remembered);
 //   2. NEXT_PUBLIC_BLOOMBOT_API: a URL (the public server), "same-origin" (the page is served by the
 //      API, e.g. on Hugging Face), or "replay" (no API: recorded runs only);
-//   3. the same origin when the page is served by `bloombot serve` on :8000, else http://127.0.0.1:8000.
+//   3. the page's own origin (it is served by `bloombot serve`), or http://127.0.0.1:8000 under `next dev` (:3000).
 // NEXT_PUBLIC_BLOOMBOT_HOSTED=1 marks a public page: "Connect to local BloomBot" then means this
 // computer, and the page never reaches for it on its own, so visitors see no local-network prompt.
 
@@ -25,7 +25,7 @@ function defaultBase() {
   if (REPLAY_BUILD) return null;
   if (ENV_API === 'same-origin') return '';
   if (ENV_API) return ENV_API.replace(/\/$/, '');
-  return window.location.port === '8000' ? '' : LOCAL_API;
+  return window.location.port === '3000' ? LOCAL_API : '';  // `next dev` talks to a local API; otherwise the page's own server
 }
 
 // A remembered local server that is down: this visit falls back to the default (not saved).

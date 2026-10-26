@@ -175,7 +175,7 @@ export default class App extends React.Component {
       connectOpen: !!s.connectOpen, closeConnect: () => this.setState({ connectOpen: false }),
       connectKicker: onPublic ? 'Live · public server' : live ? 'Live API' : 'Replay · recorded runs',
       connectTitle: onLocal ? 'Connected to BloomBot on your computer' : onPublic ? 'Using the public BloomBot' : live ? 'Connected to BloomBot' : 'Use your own papers: run BloomBot on your computer',
-      connectSub: onPublic ? 'Hugging Face Space, fast mode (no LLM). Papers you upload are processed there in memory and not stored. For the LLM second opinion and LLM rewrites, or to keep papers on your computer, run BloomBot locally and connect:'
+      connectSub: onPublic ? `The public BloomBot server${s.llmAvailable ? `, with the LLM (${s.llmModel})` : ', in fast mode (no LLM)'}. Papers you upload are processed in memory and not stored. To keep papers on your own computer, run BloomBot there and connect:`
         : live ? `${saved || apiBase() || window.location.origin} · ${llmTxt}` : 'This page is showing recorded runs. Start BloomBot on this computer and connect: your papers never leave your machine.',
       showCommands: !live || onPublic, commands, hasConnectError: !!err, connectErrorTitle: err ? err[0] : '', connectErrorText: err ? err[1] : '',
       showConnect: !live || onPublic, connect: () => { if (!s.connecting) this.connect(); },
