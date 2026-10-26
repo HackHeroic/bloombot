@@ -187,3 +187,16 @@ def test_paper_size_limits(client):
     big = {"questions": [{"id": str(i), "text": "Define a stack."} for i in range(301)]}
     assert client.post("/v1/papers/assess", json={"paper": big}).status_code == 422
     assert client.post("/v1/papers/parse-text", json={"text": "x" * 200_001}).status_code == 422
+
+
+def test_upload_guards(client):
+    import io
+    import zipfile
+
+    buf = io.BytesIO()
+    with zipfile.ZipFile(buf, "w", zipfile.ZIP_DEFLATED) as z:  # a tiny file that unzips to 60 MB
+        z.writestr("word/document.xml", "<w:p>" + "a" * (60 * 1024 * 1024) + "</w:p>")
+    r = client.post("/v1/papers/parse", files={"file": ("bomb.docx", buf.getvalue())})
+    assert r.status_code == 422 and "too large" in r.json()["detail"]
+    r = client.post("/v1/papers/parse", files={"file": ("broken.docx", b"not a zip")})
+    assert r.status_code == 422

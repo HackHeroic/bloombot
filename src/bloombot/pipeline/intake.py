@@ -275,16 +275,25 @@ def effective_total(questions: list[Question]) -> float:
     return total + sum(max(opts.values()) for opts in groups.values())
 
 
+MAX_PDF_PAGES = 60
+MAX_DOCX_XML = 50 * 1024 * 1024  # bytes of document.xml after unzipping (a zip bomb expands far beyond)
+
+
 def _pdf_text(data: bytes) -> str:
     import pdfplumber
 
     with pdfplumber.open(io.BytesIO(data)) as pdf:
+        if len(pdf.pages) > MAX_PDF_PAGES:
+            raise ValueError(f"the PDF has {len(pdf.pages)} pages; at most {MAX_PDF_PAGES} are read")
         # x_tolerance below the default 3 keeps words apart in tightly set (e.g. LaTeX) PDFs
         return "\n".join((page.extract_text(x_tolerance=1.5) or "") for page in pdf.pages)
 
 
 def _docx_text(data: bytes) -> str:
-    xml = zipfile.ZipFile(io.BytesIO(data)).read("word/document.xml").decode("utf8")
+    z = zipfile.ZipFile(io.BytesIO(data))
+    if z.getinfo("word/document.xml").file_size > MAX_DOCX_XML:
+        raise ValueError("the DOCX text is too large to read")
+    xml = z.read("word/document.xml").decode("utf8")
     paras = []
     for p in re.findall(r"<w:p[ >].*?</w:p>", xml, flags=re.S):
         # table cells become tab-separated pieces of one line

@@ -7,6 +7,7 @@ POST returns a job id and the client polls ``GET /v1/jobs/{id}``.
 
 from __future__ import annotations
 
+import zipfile
 from contextlib import asynccontextmanager
 from typing import Any
 
@@ -189,7 +190,10 @@ def create_app() -> FastAPI:
         data = await file.read()
         if len(data) > 20 * 1024 * 1024:
             raise HTTPException(413, "file larger than 20 MB")
-        return parse_file(data, file.filename or "paper.txt", bt_scheme or None)
+        try:
+            return parse_file(data, file.filename or "paper.txt", bt_scheme or None)
+        except (ValueError, KeyError, zipfile.BadZipFile) as exc:  # unreadable or oversized file
+            raise HTTPException(422, f"could not read {file.filename}: {exc}") from exc
 
     @app.post("/v1/papers/parse-text")
     def parse_body(req: ParseTextRequest) -> Paper:
