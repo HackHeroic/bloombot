@@ -1,0 +1,172 @@
+[
+ {
+  "text": "Explain how engineers evaluate the safety of an old bridge.",
+  "directives": [
+   {
+    "lemma": "explain",
+    "text": "Explain",
+    "kind": "imperative",
+    "obj": null,
+    "phrase": null,
+    "negated": false,
+    "prior": [
+     0.1,
+     0.7,
+     0.0,
+     0.15,
+     0.05,
+     0.0
+    ]
+   }
+  ],
+  "frame": null,
+  "is_question": false,
+  "wh_word": "how",
+  "n_tokens": 10,
+  "n_sentences": 1,
+  "embedded_bloom_verbs": [
+   "evaluate"
+  ],
+  "masked": "explain how <n> evaluate the <n> of an <adj> <n> .",
+  "prior": {
+   "Remember": 0.1,
+   "Understand": 0.7,
+   "Apply": 0.0,
+   "Analyze": 0.15,
+   "Evaluate": 0.05,
+   "Create": 0.0
+  },
+  "evidence": "directive"
+ },
+ {
+  "text": "Evaluate whether a microkernel is a better choice than a monolithic kernel for a pacemaker.",
+  "directives": [
+   {
+    "lemma": "evaluate",
+    "text": "Evaluate",
+    "kind": "imperative",
+    "obj": null,
+    "phrase": null,
+    "negated": false,
+    "prior": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0,
+     0.0
+    ]
+   }
+  ],
+  "frame": null,
+  "is_question": false,
+  "wh_word": null,
+  "n_tokens": 15,
+  "n_sentences": 1,
+  "embedded_bloom_verbs": [],
+  "masked": "evaluate whether a <n> is a better <n> than a <adj> <n> for a <n> .",
+  "prior": {
+   "Remember": 0.0,
+   "Understand": 0.0,
+   "Apply": 0.0,
+   "Analyze": 0.0,
+   "Evaluate": 1.0,
+   "Create": 0.0
+  },
+  "evidence": "directive"
+ },
+ {
+  "text": "Evaluate the integral of 2x from 0 to 3.",
+  "directives": [
+   {
+    "lemma": "evaluate",
+    "text": "Evaluate",
+    "kind": "imperative",
+    "obj": "integral",
+    "phrase": "evaluate integral",
+    "negated": false,
+    "prior": [
+     0.0,
+     0.0,
+     1.0,
+     0.0,
+     0.0,
+     0.0
+    ]
+   }
+  ],
+  "frame": null,
+  "is_question": false,
+  "wh_word": null,
+  "n_tokens": 9,
+  "n_sentences": 1,
+  "embedded_bloom_verbs": [],
+  "masked": "evaluate the <n> of <num> from <num> to <num> .",
+  "prior": {
+   "Remember": 0.0,
+   "Understand": 0.0,
+   "Apply": 1.0,
+   "Analyze": 0.0,
+   "Evaluate": 0.0,
+   "Create": 0.0
+  },
+  "evidence": "directive"
+ },
+ {
+  "text": "What would happen if the page size were doubled?",
+  "directives": [],
+  "frame": "what_if",
+  "is_question": true,
+  "wh_word": "what",
+  "n_tokens": 9,
+  "n_sentences": 1,
+  "embedded_bloom_verbs": [],
+  "masked": "what would happen if the <n> were doubled ?",
+  "prior": {
+   "Remember": 0.0,
+   "Understand": 0.35,
+   "Apply": 0.0,
+   "Analyze": 0.45,
+   "Evaluate": 0.0,
+   "Create": 0.2
+  },
+  "evidence": "frame"
+ },
+ {
+  "text": "Design a database schema for a hospital appointment system.",
+  "directives": [
+   {
+    "lemma": "design",
+    "text": "Design",
+    "kind": "imperative",
+    "obj": "schema",
+    "phrase": null,
+    "negated": false,
+    "prior": [
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     0.0,
+     1.0
+    ]
+   }
+  ],
+  "frame": null,
+  "is_question": false,
+  "wh_word": null,
+  "n_tokens": 9,
+  "n_sentences": 1,
+  "embedded_bloom_verbs": [],
+  "masked": "design a <n> for a <n> .",
+  "prior": {
+   "Remember": 0.0,
+   "Understand": 0.0,
+   "Apply": 0.0,
+   "Analyze": 0.0,
+   "Evaluate": 0.0,
+   "Create": 1.0
+  },
+  "evidence": "directive"
+ }
+]

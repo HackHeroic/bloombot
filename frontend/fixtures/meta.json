@@ -1,0 +1,91 @@
+{
+ "version": "0.1.0",
+ "lexis": "embedlex",
+ "llm": {
+  "model": "qwen3:4b-instruct-2507-q4_K_M",
+  "available": true,
+  "policy": "uncertain"
+ },
+ "levels": [
+  {
+   "id": 1,
+   "name": "Remember",
+   "description": "Retrieve relevant knowledge from long-term memory (recognise, recall).",
+   "lower_order": true
+  },
+  {
+   "id": 2,
+   "name": "Understand",
+   "description": "Construct meaning: interpret, exemplify, classify, summarise, infer, compare, explain.",
+   "lower_order": true
+  },
+  {
+   "id": 3,
+   "name": "Apply",
+   "description": "Carry out or use a procedure in a given situation (execute, implement).",
+   "lower_order": true
+  },
+  {
+   "id": 4,
+   "name": "Analyze",
+   "description": "Break material into parts and determine how they relate (differentiate, organise, attribute).",
+   "lower_order": false
+  },
+  {
+   "id": 5,
+   "name": "Evaluate",
+   "description": "Make judgements based on criteria and standards (check, critique).",
+   "lower_order": false
+  },
+  {
+   "id": 6,
+   "name": "Create",
+   "description": "Put elements together into a new coherent whole or original product (generate, plan, produce).",
+   "lower_order": false
+  }
+ ],
+ "data": {
+  "total": 9855,
+  "sources": {
+   "yahya2012": {
+    "rows": 597,
+    "role": "train",
+    "licence": "CC BY 4.0 (PLOS supplement)"
+   },
+   "mohammed2020": {
+    "rows": 136,
+    "role": "train",
+    "licence": "CC BY 4.0 (PLOS supplement)"
+   },
+   "sangodiah2017": {
+    "rows": 413,
+    "role": "train",
+    "licence": "MIT (release repository)"
+   },
+   "gani2023": {
+    "rows": 1183,
+    "role": "train",
+    "licence": "MIT (release repository)"
+   },
+   "scaria2024": {
+    "rows": 1728,
+    "role": "train",
+    "licence": "MIT"
+   },
+   "indian_engineering": {
+    "rows": 3520,
+    "role": "train",
+    "licence": "Apache 2.0 (Kaggle metadata)"
+   },
+   "indian_boards": {
+    "rows": 2278,
+    "role": "test",
+    "licence": "CC BY-NC 3.0 (non-commercial; used for evaluation only)"
+   }
+  }
+ },
+ "thresholds": {
+  "review_confidence": 0.5,
+  "llm_trigger_confidence": 0.6
+ }
+}

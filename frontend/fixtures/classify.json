@@ -1,0 +1,500 @@
+{
+ "predictions": [
+  {
+   "question": "Explain how engineers evaluate the safety of an old bridge.",
+   "level": "Evaluate",
+   "level_id": 5,
+   "confidence": 0.3656969637055478,
+   "proba": {
+    "Remember": 0.0057,
+    "Understand": 0.3424,
+    "Apply": 0.0,
+    "Analyze": 0.2857,
+    "Evaluate": 0.3657,
+    "Create": 0.0005
+   },
+   "needs_review": true,
+   "lower_order": false,
+   "directives": [
+    {
+     "verb": "explain",
+     "kind": "imperative",
+     "phrase": null,
+     "negated": false
+    }
+   ],
+   "frame": null,
+   "evidence": "directive",
+   "votes": [
+    {
+     "agent": "Lexis",
+     "level": "Understand",
+     "confidence": 0.5136139213374387,
+     "proba": [
+      0.0085,
+      0.5136,
+      0.0,
+      0.4285,
+      0.0485,
+      0.0008
+     ],
+     "reasoning": null
+    },
+    {
+     "agent": "Archivist",
+     "level": "Understand",
+     "confidence": 0.4201597092640839,
+     "proba": [
+      0.1997,
+      0.4202,
+      0.135,
+      0.2124,
+      0.0163,
+      0.0163
+     ],
+     "reasoning": null
+    },
+    {
+     "agent": "Socrates",
+     "level": "Evaluate",
+     "confidence": 0.999999998936286,
+     "proba": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      1.0,
+      0.0
+     ],
+     "reasoning": "The question asks engineers to evaluate the safety of an old bridge. This involves assessing multiple factors (e.g., structural integrity, material degradation, load capacity, environmental exposure) and making a judgement based on engineering standards. This requires interpreting data, applying principles, and making reasoned decisions—core to the cognitive process of 'Evaluate'.\n\nAlthough 'explain' is used, the task is not merely to describe a concept or procedure. Instead, it involves judging or assessing safety, which demands criteria-based reasoning and critical evaluation. Therefore, the highest cognitive level required is Evaluate (level 5)."
+    }
+   ],
+   "neighbours": [
+    {
+     "question": "Explain in detail the working of wheatstone bridge with equations.",
+     "level": "Analyze",
+     "similarity": 0.746,
+     "source": "indian_engineering"
+    },
+    {
+     "question": "Elaborate on detectors used in AC bridges.",
+     "level": "Apply",
+     "similarity": 0.721,
+     "source": "indian_engineering"
+    },
+    {
+     "question": "Describe the classification of fault and their engineering significance.",
+     "level": "Remember",
+     "similarity": 0.718,
+     "source": "indian_engineering"
+    },
+    {
+     "question": "Explain in brief the durability of concrete.",
+     "level": "Understand",
+     "similarity": 0.717,
+     "source": "indian_engineering"
+    },
+    {
+     "question": "Explain the factor of safety with respect to shear strength.",
+     "level": "Understand",
+     "similarity": 0.716,
+     "source": "indian_engineering"
+    }
+   ],
+   "explanation": []
+  },
+  {
+   "question": "Evaluate whether a microkernel is a better choice than a monolithic kernel for a pacemaker.",
+   "level": "Evaluate",
+   "level_id": 5,
+   "confidence": 0.9762039884100226,
+   "proba": {
+    "Remember": 0.0007,
+    "Understand": 0.0008,
+    "Apply": 0.0073,
+    "Analyze": 0.0136,
+    "Evaluate": 0.9762,
+    "Create": 0.0014
+   },
+   "needs_review": false,
+   "lower_order": false,
+   "directives": [
+    {
+     "verb": "evaluate",
+     "kind": "imperative",
+     "phrase": null,
+     "negated": false
+    }
+   ],
+   "frame": null,
+   "evidence": "directive",
+   "votes": [
+    {
+     "agent": "Lexis",
+     "level": "Evaluate",
+     "confidence": 0.964305984848236,
+     "proba": [
+      0.0011,
+      0.0012,
+      0.011,
+      0.0204,
+      0.9643,
+      0.0021
+     ],
+     "reasoning": null
+    },
+    {
+     "agent": "Archivist",
+     "level": "Understand",
+     "confidence": 0.4861044245090866,
+     "proba": [
+      0.0269,
+      0.4861,
+      0.0887,
+      0.3445,
+      0.0269,
+      0.0269
+     ],
+     "reasoning": null
+    },
+    {
+     "agent": "Socrates",
+     "level": "Evaluate",
+     "confidence": 0.999999995533596,
+     "proba": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      1.0,
+      0.0
+     ],
+     "reasoning": "The question asks the student to make a judgement (evaluate) based on specific criteria (suitability for a pacemaker) about which kernel type is better. This involves assessing trade-offs in reliability, performance, and safety—key considerations in medical devices. While some aspects may involve understanding, the core task is to form a reasoned judgement based on standards (e.g., real-time response, fault tolerance, system stability). This aligns with the highest level of the revised Bloom's taxonomy: Evaluate. Therefore, the cognitive level is 5."
+    }
+   ],
+   "neighbours": [
+    {
+     "question": "Draw and explain Microkernel kernel Operating System.",
+     "level": "Understand",
+     "similarity": 0.775,
+     "source": "indian_engineering"
+    },
+    {
+     "question": "Give difference between Hardwired Control Vs Microprogrammed Control.",
+     "level": "Analyze",
+     "similarity": 0.727,
+     "source": "indian_engineering"
+    },
+    {
+     "question": "Discuss the advantages of FinFETS over planar MOSFETs.",
+     "level": "Understand",
+     "similarity": 0.704,
+     "source": "gani2023"
+    },
+    {
+     "question": "Differentiate between a microprocessor and a microcontroller.",
+     "level": "Analyze",
+     "similarity": 0.698,
+     "source": "indian_engineering"
+    },
+    {
+     "question": "Differentiate between the PIC microcontroller and the ARM processor.",
+     "level": "Analyze",
+     "similarity": 0.697,
+     "source": "indian_engineering"
+    }
+   ],
+   "explanation": []
+  },
+  {
+   "question": "Evaluate the integral of 2x from 0 to 3.",
+   "level": "Apply",
+   "level_id": 3,
+   "confidence": 0.8476287231408247,
+   "proba": {
+    "Remember": 0.0264,
+    "Understand": 0.0,
+    "Apply": 0.8476,
+    "Analyze": 0.0873,
+    "Evaluate": 0.0376,
+    "Create": 0.001
+   },
+   "needs_review": false,
+   "lower_order": true,
+   "directives": [
+    {
+     "verb": "evaluate",
+     "kind": "imperative",
+     "phrase": "evaluate integral",
+     "negated": false
+    }
+   ],
+   "frame": null,
+   "evidence": "directive",
+   "votes": [
+    {
+     "agent": "Lexis",
+     "level": "Apply",
+     "confidence": 0.8476287231408247,
+     "proba": [
+      0.0264,
+      0.0,
+      0.8476,
+      0.0873,
+      0.0376,
+      0.001
+     ],
+     "reasoning": null
+    },
+    {
+     "agent": "Archivist",
+     "level": "Apply",
+     "confidence": 0.9221073086908252,
+     "proba": [
+      0.0156,
+      0.0156,
+      0.9221,
+      0.0156,
+      0.0156,
+      0.0156
+     ],
+     "reasoning": null
+    }
+   ],
+   "neighbours": [
+    {
+     "question": "Evaluate the integral using the trapezoidal rule.",
+     "level": "Apply",
+     "similarity": 0.765,
+     "source": "indian_engineering"
+    },
+    {
+     "question": "Evaluate 1 2 01dx x using Trapezoidal rule taking h = 1 4.",
+     "level": "Apply",
+     "similarity": 0.75,
+     "source": "indian_engineering"
+    },
+    {
+     "question": "Solve the following integral equation",
+     "level": "Apply",
+     "similarity": 0.744,
+     "source": "indian_engineering"
+    },
+    {
+     "question": "Solve the following integral equations.",
+     "level": "Apply",
+     "similarity": 0.738,
+     "source": "indian_engineering"
+    },
+    {
+     "question": "Evaluate F cdr along the straight line joining points (0, 0, 0) and (2, 1, 3) where 2= F = 3 2 xix z y j z k",
+     "level": "Apply",
+     "similarity": 0.733,
+     "source": "indian_engineering"
+    }
+   ],
+   "explanation": []
+  },
+  {
+   "question": "What would happen if the page size were doubled?",
+   "level": "Analyze",
+   "level_id": 4,
+   "confidence": 0.44273273075048686,
+   "proba": {
+    "Remember": 0.0169,
+    "Understand": 0.0,
+    "Apply": 0.319,
+    "Analyze": 0.4427,
+    "Evaluate": 0.0332,
+    "Create": 0.1881
+   },
+   "needs_review": true,
+   "lower_order": false,
+   "directives": [],
+   "frame": "what_if",
+   "evidence": "frame",
+   "votes": [
+    {
+     "agent": "Lexis",
+     "level": "Apply",
+     "confidence": 0.4785562256150562,
+     "proba": [
+      0.0254,
+      0.0,
+      0.4786,
+      0.1641,
+      0.0498,
+      0.2821
+     ],
+     "reasoning": null
+    },
+    {
+     "agent": "Archivist",
+     "level": "Remember",
+     "confidence": 0.40917497951236176,
+     "proba": [
+      0.4092,
+      0.0126,
+      0.1154,
+      0.0126,
+      0.217,
+      0.2334
+     ],
+     "reasoning": null
+    },
+    {
+     "agent": "Socrates",
+     "level": "Analyze",
+     "confidence": 0.9999999865986648,
+     "proba": [
+      0.0,
+      0.0,
+      0.0,
+      1.0,
+      0.0,
+      0.0
+     ],
+     "reasoning": "The question asks about the consequence of a specific change (doubling page size) in a technical system (operating systems page management). It requires the student to predict an outcome based on a hypothetical scenario, which involves understanding the relationship between page size and system behavior. This involves interpreting how a change affects system performance or operation, which falls under inference and prediction. While it may involve some understanding, the core task is to anticipate a result based on a given condition, which aligns with the cognitive process of 'Analyze' (breaking down the system and determining how components relate) or 'Evaluate' (judging the likely outcome). However, since the student is not required to justify or compare alternatives, nor to make a judgment based on criteria, but simply to predict a result, the primary cognitive demand is to infer a consequence. This is best classified as 'Analyze' — breaking down the system and determining how a change affects it. Therefore, the level is 4."
+    }
+   ],
+   "neighbours": [
+    {
+     "question": "Explain LRU page replacement algorithm in detail.",
+     "level": "Remember",
+     "similarity": 0.703,
+     "source": "indian_engineering"
+    },
+    {
+     "question": "What might happen if you combined...?",
+     "level": "Create",
+     "similarity": 0.702,
+     "source": "yahya2012"
+    },
+    {
+     "question": "Scaling methods can improve the performance of the web site. Propose to Jane which scaling method suit her current business needs. Justify your answer.",
+     "level": "Evaluate",
+     "similarity": 0.699,
+     "source": "sangodiah2017"
+    },
+    {
+     "question": "What is page replacement in operating systems?",
+     "level": "Remember",
+     "similarity": 0.697,
+     "source": "indian_engineering"
+    },
+    {
+     "question": "Multimedia is shifting from being localized (contained on a CD-ROM) to being distributed (available on the World Wide Web). Give FIVE (5) implications on this.",
+     "level": "Remember",
+     "similarity": 0.689,
+     "source": "sangodiah2017"
+    }
+   ],
+   "explanation": []
+  },
+  {
+   "question": "Design a database schema for a hospital appointment system.",
+   "level": "Create",
+   "level_id": 6,
+   "confidence": 0.9062782139901874,
+   "proba": {
+    "Remember": 0.0074,
+    "Understand": 0.0,
+    "Apply": 0.0863,
+    "Analyze": 0.0,
+    "Evaluate": 0.0,
+    "Create": 0.9063
+   },
+   "needs_review": false,
+   "lower_order": false,
+   "directives": [
+    {
+     "verb": "design",
+     "kind": "imperative",
+     "phrase": null,
+     "negated": false
+    }
+   ],
+   "frame": null,
+   "evidence": "directive",
+   "votes": [
+    {
+     "agent": "Lexis",
+     "level": "Create",
+     "confidence": 0.859417320986739,
+     "proba": [
+      0.0111,
+      0.0,
+      0.1295,
+      0.0,
+      0.0,
+      0.8594
+     ],
+     "reasoning": null
+    },
+    {
+     "agent": "Archivist",
+     "level": "Apply",
+     "confidence": 0.330885267618097,
+     "proba": [
+      0.2179,
+      0.1245,
+      0.3309,
+      0.0933,
+      0.0196,
+      0.2138
+     ],
+     "reasoning": null
+    },
+    {
+     "agent": "Socrates",
+     "level": "Create",
+     "confidence": 0.9999999999970842,
+     "proba": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      1.0
+     ],
+     "reasoning": "The question asks the student to 'design' a database schema, which involves creating a new, original structure (tables, relationships, attributes) tailored to a specific system. This requires synthesizing knowledge and putting elements together to form a coherent, functional solution. This aligns with the highest level of the revised Bloom's taxonomy: Create. Even though it involves planning and structure, the act of designing a schema from scratch is not just applying a known method—it is generating a novel, original solution. Therefore, the cognitive level is 6."
+    }
+   ],
+   "neighbours": [
+    {
+     "question": "Consider following Database.",
+     "level": "Apply",
+     "similarity": 0.778,
+     "source": "indian_engineering"
+    },
+    {
+     "question": "Recommend appropriate data warehouse architecture for the company and illustrate it with a diagram.",
+     "level": "Create",
+     "similarity": 0.749,
+     "source": "sangodiah2017"
+    },
+    {
+     "question": "Consider following relational table.",
+     "level": "Remember",
+     "similarity": 0.747,
+     "source": "indian_engineering"
+    },
+    {
+     "question": "Draw the diagrams for a centralized database and a distributed database.",
+     "level": "Understand",
+     "similarity": 0.738,
+     "source": "sangodiah2017"
+    },
+    {
+     "question": "State which database architectures you will prefer for following application.",
+     "level": "Apply",
+     "similarity": 0.721,
+     "source": "indian_engineering"
+    }
+   ],
+   "explanation": []
+  }
+ ],
+ "model": "embedlex",
+ "llm_used": true
+}

@@ -1,0 +1,55 @@
+[
+ {
+  "id": "aicte-2018-example",
+  "name": "AICTE 2018 example cap on knowledge questions",
+  "description": "At most 40% of marks on knowledge-oriented (Remember) questions. AICTE's Examination Reform Policy (2018, pp. 22-23) gives this as an example: \"upper limit need to be arrived for lower order skills (for example, no more than 40% weightage for knowledge-oriented questions)\" and notes that the weightage \"can also vary from course to course\". It is not a fixed rule.\n",
+  "source": "https://aicte.gov.in/sites/default/files/ExaminationReforms.pdf",
+  "bounds": [
+   {
+    "levels": [
+     "Remember"
+    ],
+    "min_share": null,
+    "max_share": 0.4,
+    "label": "Knowledge-oriented (Remember)"
+   }
+  ],
+  "weight_by": "marks"
+ },
+ {
+  "id": "balanced-ug",
+  "name": "Balanced undergraduate paper (illustrative)",
+  "description": "An editable template, not an official rule: lower-order (Remember + Understand) at most 40%, application and analysis at least 40%, and evaluation and creation at least 10% of marks. Similar splits appear in several university OBE guidelines; set your own institution's numbers.\n",
+  "source": "illustrative",
+  "bounds": [
+   {
+    "levels": [
+     "Remember",
+     "Understand"
+    ],
+    "min_share": null,
+    "max_share": 0.4,
+    "label": "Lower order (Remember + Understand)"
+   },
+   {
+    "levels": [
+     "Apply",
+     "Analyze"
+    ],
+    "min_share": 0.4,
+    "max_share": null,
+    "label": "Apply + Analyze"
+   },
+   {
+    "levels": [
+     "Evaluate",
+     "Create"
+    ],
+    "min_share": 0.1,
+    "max_share": null,
+    "label": "Higher order (Evaluate + Create)"
+   }
+  ],
+  "weight_by": "marks"
+ }
+]

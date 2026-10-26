@@ -1,0 +1,3551 @@
+{
+ "id": "5597d8243594",
+ "kind": "rebalance",
+ "status": "done",
+ "created_at": "2026-10-26T09:14:32.565194Z",
+ "finished_at": "2026-10-26T09:14:44.224055Z",
+ "result": {
+  "before": {
+   "paper": {
+    "title": "sample_os_paper",
+    "questions": [
+     {
+      "id": "1a",
+      "number": "Q1 (a)",
+      "text": "Define a process.",
+      "context": null,
+      "marks": 2.0,
+      "section": "A",
+      "group": null,
+      "option": null,
+      "course_outcome": "CO1",
+      "tagged_level": "Remember",
+      "locked": false
+     },
+     {
+      "id": "1b",
+      "number": "Q1 (b)",
+      "text": "List the states of a process.",
+      "context": null,
+      "marks": 2.0,
+      "section": "A",
+      "group": null,
+      "option": null,
+      "course_outcome": "CO1",
+      "tagged_level": "Remember",
+      "locked": false
+     },
+     {
+      "id": "1c",
+      "number": "Q1 (c)",
+      "text": "What is a context switch?",
+      "context": null,
+      "marks": 2.0,
+      "section": "A",
+      "group": null,
+      "option": null,
+      "course_outcome": "CO1",
+      "tagged_level": "Remember",
+      "locked": false
+     },
+     {
+      "id": "1d",
+      "number": "Q1 (d)",
+      "text": "State the necessary conditions for deadlock.",
+      "context": null,
+      "marks": 2.0,
+      "section": "A",
+      "group": null,
+      "option": null,
+      "course_outcome": "CO2",
+      "tagged_level": "Remember",
+      "locked": false
+     },
+     {
+      "id": "1e",
+      "number": "Q1 (e)",
+      "text": "What is thrashing?",
+      "context": null,
+      "marks": 2.0,
+      "section": "A",
+      "group": null,
+      "option": null,
+      "course_outcome": "CO3",
+      "tagged_level": "Remember",
+      "locked": false
+     },
+     {
+      "id": "2",
+      "number": "Q2",
+      "text": "Explain the difference between preemptive and non-preemptive scheduling with suitable examples.",
+      "context": null,
+      "marks": 10.0,
+      "section": "B",
+      "group": "g2",
+      "option": "2",
+      "course_outcome": "CO2",
+      "tagged_level": "Understand",
+      "locked": false
+     },
+     {
+      "id": "3",
+      "number": "Q3",
+      "text": "Describe the producer-consumer problem and its solution using semaphores.",
+      "context": null,
+      "marks": 10.0,
+      "section": "B",
+      "group": "g2",
+      "option": "3",
+      "course_outcome": "CO2",
+      "tagged_level": "Understand",
+      "locked": false
+     },
+     {
+      "id": "4a",
+      "number": "Q4 (a)",
+      "text": "Draw the Gantt chart for FCFS scheduling.",
+      "context": "Consider the following processes with burst times P1=24, P2=3, P3=3 ms.",
+      "marks": 5.0,
+      "section": "B",
+      "group": null,
+      "option": null,
+      "course_outcome": null,
+      "tagged_level": null,
+      "locked": false
+     },
+     {
+      "id": "4b",
+      "number": "Q4 (b)",
+      "text": "Calculate the average waiting time for FCFS and SJF.",
+      "context": "Consider the following processes with burst times P1=24, P2=3, P3=3 ms.",
+      "marks": 5.0,
+      "section": "B",
+      "group": null,
+      "option": null,
+      "course_outcome": null,
+      "tagged_level": null,
+      "locked": false
+     },
+     {
+      "id": "5",
+      "number": "Q5",
+      "text": "Explain paging with a neat diagram.",
+      "context": null,
+      "marks": 10.0,
+      "section": "B",
+      "group": null,
+      "option": null,
+      "course_outcome": "CO3",
+      "tagged_level": "Understand",
+      "locked": false
+     },
+     {
+      "id": "6",
+      "number": "Q6",
+      "text": "Write short notes on virtual memory and demand paging.",
+      "context": null,
+      "marks": 10.0,
+      "section": "B",
+      "group": null,
+      "option": null,
+      "course_outcome": "CO3",
+      "tagged_level": "Remember",
+      "locked": false
+     }
+    ],
+    "total_marks": 50.0,
+    "warnings": []
+   },
+   "items": [
+    {
+     "question": {
+      "id": "1a",
+      "number": "Q1 (a)",
+      "text": "Define a process.",
+      "context": null,
+      "marks": 2.0,
+      "section": "A",
+      "group": null,
+      "option": null,
+      "course_outcome": "CO1",
+      "tagged_level": "Remember",
+      "locked": false
+     },
+     "prediction": {
+      "question": "Define a process.",
+      "level": "Remember",
+      "level_id": 1,
+      "confidence": 0.9685302599795792,
+      "proba": {
+       "Remember": 0.9685,
+       "Understand": 0.0264,
+       "Apply": 0.0009,
+       "Analyze": 0.0007,
+       "Evaluate": 0.0022,
+       "Create": 0.0012
+      },
+      "needs_review": false,
+      "lower_order": true,
+      "directives": [
+       {
+        "verb": "define",
+        "kind": "imperative",
+        "phrase": null,
+        "negated": false
+       }
+      ],
+      "frame": null,
+      "evidence": "directive",
+      "votes": [
+       {
+        "agent": "Lexis",
+        "level": "Remember",
+        "confidence": 0.9685302599795792,
+        "proba": [
+         0.9685,
+         0.0264,
+         0.0009,
+         0.0007,
+         0.0022,
+         0.0012
+        ],
+        "reasoning": null
+       },
+       {
+        "agent": "Archivist",
+        "level": "Remember",
+        "confidence": 0.8926764801673527,
+        "proba": [
+         0.8927,
+         0.0215,
+         0.0215,
+         0.0215,
+         0.0215,
+         0.0215
+        ],
+        "reasoning": null
+       }
+      ],
+      "neighbours": [
+       {
+        "question": "Define problem solving processes.",
+        "level": "Remember",
+        "similarity": 0.814,
+        "source": "gani2023"
+       },
+       {
+        "question": "Explain implementation of process and threads in Linux.",
+        "level": "Remember",
+        "similarity": 0.772,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "Define brainstorming process.",
+        "level": "Remember",
+        "similarity": 0.771,
+        "source": "gani2023"
+       },
+       {
+        "question": "Define query processing.",
+        "level": "Remember",
+        "similarity": 0.768,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "How process and threads are implemented in Linux?",
+        "level": "Remember",
+        "similarity": 0.755,
+        "source": "indian_engineering"
+       }
+      ],
+      "explanation": []
+     }
+    },
+    {
+     "question": {
+      "id": "1b",
+      "number": "Q1 (b)",
+      "text": "List the states of a process.",
+      "context": null,
+      "marks": 2.0,
+      "section": "A",
+      "group": null,
+      "option": null,
+      "course_outcome": "CO1",
+      "tagged_level": "Remember",
+      "locked": false
+     },
+     "prediction": {
+      "question": "List the states of a process.",
+      "level": "Remember",
+      "level_id": 1,
+      "confidence": 0.9910595796095323,
+      "proba": {
+       "Remember": 0.9911,
+       "Understand": 0.0,
+       "Apply": 0.0028,
+       "Analyze": 0.0056,
+       "Evaluate": 0.0002,
+       "Create": 0.0004
+      },
+      "needs_review": false,
+      "lower_order": true,
+      "directives": [
+       {
+        "verb": "list",
+        "kind": "imperative",
+        "phrase": null,
+        "negated": false
+       }
+      ],
+      "frame": null,
+      "evidence": "directive",
+      "votes": [
+       {
+        "agent": "Lexis",
+        "level": "Remember",
+        "confidence": 0.9910595796095323,
+        "proba": [
+         0.9911,
+         0.0,
+         0.0028,
+         0.0056,
+         0.0002,
+         0.0004
+        ],
+        "reasoning": null
+       },
+       {
+        "agent": "Archivist",
+        "level": "Remember",
+        "confidence": 0.9217056472023284,
+        "proba": [
+         0.9217,
+         0.0157,
+         0.0157,
+         0.0157,
+         0.0157,
+         0.0157
+        ],
+        "reasoning": null
+       }
+      ],
+      "neighbours": [
+       {
+        "question": "Explain 5 state Process model.",
+        "level": "Remember",
+        "similarity": 0.744,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "What is states of counter?",
+        "level": "Remember",
+        "similarity": 0.744,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "List and explain the different metrics in the process and project domain.",
+        "level": "Remember",
+        "similarity": 0.716,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "What are different Process management system calls in Linux.",
+        "level": "Remember",
+        "similarity": 0.71,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "State any one application of",
+        "level": "Remember",
+        "similarity": 0.709,
+        "source": "indian_engineering"
+       }
+      ],
+      "explanation": []
+     }
+    },
+    {
+     "question": {
+      "id": "1c",
+      "number": "Q1 (c)",
+      "text": "What is a context switch?",
+      "context": null,
+      "marks": 2.0,
+      "section": "A",
+      "group": null,
+      "option": null,
+      "course_outcome": "CO1",
+      "tagged_level": "Remember",
+      "locked": false
+     },
+     "prediction": {
+      "question": "What is a context switch?",
+      "level": "Remember",
+      "level_id": 1,
+      "confidence": 0.9821702859426312,
+      "proba": {
+       "Remember": 0.9822,
+       "Understand": 0.0099,
+       "Apply": 0.0034,
+       "Analyze": 0.0023,
+       "Evaluate": 0.0016,
+       "Create": 0.0006
+      },
+      "needs_review": false,
+      "lower_order": true,
+      "directives": [],
+      "frame": "what_is",
+      "evidence": "frame",
+      "votes": [
+       {
+        "agent": "Lexis",
+        "level": "Remember",
+        "confidence": 0.9732554294771589,
+        "proba": [
+         0.9733,
+         0.0149,
+         0.0051,
+         0.0035,
+         0.0024,
+         0.0009
+        ],
+        "reasoning": null
+       },
+       {
+        "agent": "Archivist",
+        "level": "Analyze",
+        "confidence": 0.6671396268919855,
+        "proba": [
+         0.1696,
+         0.0914,
+         0.024,
+         0.6671,
+         0.024,
+         0.024
+        ],
+        "reasoning": null
+       },
+       {
+        "agent": "Socrates",
+        "level": "Remember",
+        "confidence": 0.9999999988735753,
+        "proba": [
+         1.0,
+         0.0,
+         0.0,
+         0.0,
+         0.0,
+         0.0
+        ],
+        "reasoning": "The question 'What is a context switch?' asks the student to recall the definition of a specific concept. It requires only retrieval of a known fact from memory, without analysis, explanation, or application. Although the word 'explain' is used, the instruction is primarily about defining a term, which falls under the 'Remember' level in the revised Bloom's taxonomy. Therefore, the cognitive level is determined by the core action required: retrieving a definition."
+       }
+      ],
+      "neighbours": [
+       {
+        "question": "Define Task Switching and explain the steps involved in task switching operation?",
+        "level": "Analyze",
+        "similarity": 0.75,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "How 80386 performs task switching operation?",
+        "level": "Remember",
+        "similarity": 0.716,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "Explain the TSS descriptor and its role in multitasking.",
+        "level": "Analyze",
+        "similarity": 0.69,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "Explain how control transfer instructions are executed using the call gate in the system?",
+        "level": "Analyze",
+        "similarity": 0.681,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "Describe how the BoW approach can be adapted to handle code-switching and multiple scripts in Indian languages. What challenges might arise in creating BoW representations for such text?",
+        "level": "Analyze",
+        "similarity": 0.679,
+        "source": "scaria2024"
+       }
+      ],
+      "explanation": []
+     }
+    },
+    {
+     "question": {
+      "id": "1d",
+      "number": "Q1 (d)",
+      "text": "State the necessary conditions for deadlock.",
+      "context": null,
+      "marks": 2.0,
+      "section": "A",
+      "group": null,
+      "option": null,
+      "course_outcome": "CO2",
+      "tagged_level": "Remember",
+      "locked": false
+     },
+     "prediction": {
+      "question": "State the necessary conditions for deadlock.",
+      "level": "Remember",
+      "level_id": 1,
+      "confidence": 0.8573108968853331,
+      "proba": {
+       "Remember": 0.8573,
+       "Understand": 0.071,
+       "Apply": 0.046,
+       "Analyze": 0.0168,
+       "Evaluate": 0.007,
+       "Create": 0.0019
+      },
+      "needs_review": false,
+      "lower_order": true,
+      "directives": [
+       {
+        "verb": "state",
+        "kind": "imperative",
+        "phrase": null,
+        "negated": false
+       }
+      ],
+      "frame": null,
+      "evidence": "directive",
+      "votes": [
+       {
+        "agent": "Lexis",
+        "level": "Remember",
+        "confidence": 0.8573108968853331,
+        "proba": [
+         0.8573,
+         0.071,
+         0.046,
+         0.0168,
+         0.007,
+         0.0019
+        ],
+        "reasoning": null
+       },
+       {
+        "agent": "Archivist",
+        "level": "Remember",
+        "confidence": 0.7926271602964472,
+        "proba": [
+         0.7926,
+         0.0391,
+         0.0391,
+         0.0508,
+         0.0391,
+         0.0391
+        ],
+        "reasoning": null
+       }
+      ],
+      "neighbours": [
+       {
+        "question": "State and explain the conditions for deadlock to occur.",
+        "level": "Remember",
+        "similarity": 0.926,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "What are the methods used to handle Deadlocks.",
+        "level": "Remember",
+        "similarity": 0.842,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "When do deadlock happens?",
+        "level": "Remember",
+        "similarity": 0.829,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "Explain deadlock prevention and Recovery.",
+        "level": "Remember",
+        "similarity": 0.817,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "What is a deadlock?",
+        "level": "Remember",
+        "similarity": 0.813,
+        "source": "indian_engineering"
+       }
+      ],
+      "explanation": []
+     }
+    },
+    {
+     "question": {
+      "id": "1e",
+      "number": "Q1 (e)",
+      "text": "What is thrashing?",
+      "context": null,
+      "marks": 2.0,
+      "section": "A",
+      "group": null,
+      "option": null,
+      "course_outcome": "CO3",
+      "tagged_level": "Remember",
+      "locked": false
+     },
+     "prediction": {
+      "question": "What is thrashing?",
+      "level": "Remember",
+      "level_id": 1,
+      "confidence": 0.9735965245722015,
+      "proba": {
+       "Remember": 0.9736,
+       "Understand": 0.0213,
+       "Apply": 0.0007,
+       "Analyze": 0.0,
+       "Evaluate": 0.0035,
+       "Create": 0.001
+      },
+      "needs_review": false,
+      "lower_order": true,
+      "directives": [],
+      "frame": "what_is",
+      "evidence": "frame",
+      "votes": [
+       {
+        "agent": "Lexis",
+        "level": "Remember",
+        "confidence": 0.9735965245722015,
+        "proba": [
+         0.9736,
+         0.0213,
+         0.0007,
+         0.0,
+         0.0035,
+         0.001
+        ],
+        "reasoning": null
+       },
+       {
+        "agent": "Archivist",
+        "level": "Remember",
+        "confidence": 0.7621131488406615,
+        "proba": [
+         0.7621,
+         0.1037,
+         0.0335,
+         0.0335,
+         0.0335,
+         0.0335
+        ],
+        "reasoning": null
+       }
+      ],
+      "neighbours": [
+       {
+        "question": "What is fouling?",
+        "level": "Remember",
+        "similarity": 0.758,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "What is destructor?",
+        "level": "Remember",
+        "similarity": 0.681,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "Explain the whole method of crushing",
+        "level": "Understand",
+        "similarity": 0.671,
+        "source": "yahya2012"
+       },
+       {
+        "question": "What is tempering process?",
+        "level": "Remember",
+        "similarity": 0.665,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "What is Hashing?",
+        "level": "Remember",
+        "similarity": 0.664,
+        "source": "indian_engineering"
+       }
+      ],
+      "explanation": []
+     }
+    },
+    {
+     "question": {
+      "id": "2",
+      "number": "Q2",
+      "text": "Explain the difference between preemptive and non-preemptive scheduling with suitable examples.",
+      "context": null,
+      "marks": 10.0,
+      "section": "B",
+      "group": "g2",
+      "option": "2",
+      "course_outcome": "CO2",
+      "tagged_level": "Understand",
+      "locked": false
+     },
+     "prediction": {
+      "question": "Explain the difference between preemptive and non-preemptive scheduling with suitable examples.",
+      "level": "Understand",
+      "level_id": 2,
+      "confidence": 0.5374883512891857,
+      "proba": {
+       "Remember": 0.0338,
+       "Understand": 0.5375,
+       "Apply": 0.0,
+       "Analyze": 0.4271,
+       "Evaluate": 0.0012,
+       "Create": 0.0004
+      },
+      "needs_review": true,
+      "lower_order": true,
+      "directives": [
+       {
+        "verb": "explain",
+        "kind": "imperative",
+        "phrase": null,
+        "negated": false
+       }
+      ],
+      "frame": "difference",
+      "evidence": "directive",
+      "votes": [
+       {
+        "agent": "Lexis",
+        "level": "Understand",
+        "confidence": 0.806232526854469,
+        "proba": [
+         0.0508,
+         0.8062,
+         0.0,
+         0.1406,
+         0.0018,
+         0.0006
+        ],
+        "reasoning": null
+       },
+       {
+        "agent": "Archivist",
+        "level": "Remember",
+        "confidence": 0.5146802780148358,
+        "proba": [
+         0.5147,
+         0.1213,
+         0.0235,
+         0.2936,
+         0.0235,
+         0.0235
+        ],
+        "reasoning": null
+       },
+       {
+        "agent": "Socrates",
+        "level": "Analyze",
+        "confidence": 0.9999998955504827,
+        "proba": [
+         0.0,
+         0.0,
+         0.0,
+         1.0,
+         0.0,
+         0.0
+        ],
+        "reasoning": "The question asks the student to explain the difference between two types of scheduling (preemptive and non-preemptive) and to provide suitable examples. This requires the student to understand the concepts, define them, and compare them using examples. While recalling definitions is involved, the core task is to differentiate between the two concepts and illustrate them with examples, which involves comparing and contrasting. This aligns with the cognitive process of 'Analyze'—breaking down the concepts and determining how they relate. Although 'Explain' is used, the key action is not just to describe, but to differentiate and compare, which is a higher-level thinking skill. Therefore, the highest cognitive level required is Analyze."
+       }
+      ],
+      "neighbours": [
+       {
+        "question": "Explain Pre-emptive shortest Job First scheduling algorithm in detail.",
+        "level": "Remember",
+        "similarity": 0.813,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "Illustrate difference between conflict serializable schedule and view serializable schedual by an appropriate example.",
+        "level": "Remember",
+        "similarity": 0.779,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "Explain the term \"level scheduling'.",
+        "level": "Understand",
+        "similarity": 0.76,
+        "source": "gani2023"
+       },
+       {
+        "question": "Explain with example the significance of priority queue over simple queue.",
+        "level": "Analyze",
+        "similarity": 0.75,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "Explain the thread life cycle model in Java.",
+        "level": "Analyze",
+        "similarity": 0.741,
+        "source": "indian_engineering"
+       }
+      ],
+      "explanation": []
+     }
+    },
+    {
+     "question": {
+      "id": "3",
+      "number": "Q3",
+      "text": "Describe the producer-consumer problem and its solution using semaphores.",
+      "context": null,
+      "marks": 10.0,
+      "section": "B",
+      "group": "g2",
+      "option": "3",
+      "course_outcome": "CO2",
+      "tagged_level": "Understand",
+      "locked": false
+     },
+     "prediction": {
+      "question": "Describe the producer-consumer problem and its solution using semaphores.",
+      "level": "Understand",
+      "level_id": 2,
+      "confidence": 0.8018581417655639,
+      "proba": {
+       "Remember": 0.1273,
+       "Understand": 0.8019,
+       "Apply": 0.0322,
+       "Analyze": 0.0273,
+       "Evaluate": 0.0089,
+       "Create": 0.0025
+      },
+      "needs_review": false,
+      "lower_order": true,
+      "directives": [
+       {
+        "verb": "describe",
+        "kind": "imperative",
+        "phrase": null,
+        "negated": false
+       }
+      ],
+      "frame": null,
+      "evidence": "directive",
+      "votes": [
+       {
+        "agent": "Lexis",
+        "level": "Understand",
+        "confidence": 0.7027881149845796,
+        "proba": [
+         0.191,
+         0.7028,
+         0.0483,
+         0.0409,
+         0.0133,
+         0.0037
+        ],
+        "reasoning": null
+       },
+       {
+        "agent": "Archivist",
+        "level": "Remember",
+        "confidence": 0.6818782526861296,
+        "proba": [
+         0.6819,
+         0.0604,
+         0.1197,
+         0.0636,
+         0.0372,
+         0.0372
+        ],
+        "reasoning": null
+       },
+       {
+        "agent": "Socrates",
+        "level": "Understand",
+        "confidence": 0.9999981953275325,
+        "proba": [
+         0.0,
+         1.0,
+         0.0,
+         0.0,
+         0.0,
+         0.0
+        ],
+        "reasoning": "The question asks the student to describe a problem (producer-consumer) and explain its solution using semaphores. Describing a concept and its solution involves constructing meaning by interpreting and explaining how components work together. This requires more than mere recall of facts—it involves organizing and explaining the relationship between the problem and the solution. While it includes explanation, the core task is to interpret and present the concept in a structured way, which aligns with understanding. Therefore, the cognitive level is Understand."
+       }
+      ],
+      "neighbours": [
+       {
+        "question": "Write short note on : Producer-consumer Problem.",
+        "level": "Remember",
+        "similarity": 0.845,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "Explain Producer and consumer problem in Classical Synchronization.",
+        "level": "Remember",
+        "similarity": 0.791,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "Describe consumer behaviour.",
+        "level": "Remember",
+        "similarity": 0.729,
+        "source": "gani2023"
+       },
+       {
+        "question": "Would you solve these two problems using similar approaches",
+        "level": "Apply",
+        "similarity": 0.71,
+        "source": "yahya2012"
+       },
+       {
+        "question": "Solve the following problem using genetic algorithm.",
+        "level": "Apply",
+        "similarity": 0.707,
+        "source": "sangodiah2017"
+       }
+      ],
+      "explanation": []
+     }
+    },
+    {
+     "question": {
+      "id": "4a",
+      "number": "Q4 (a)",
+      "text": "Draw the Gantt chart for FCFS scheduling.",
+      "context": "Consider the following processes with burst times P1=24, P2=3, P3=3 ms.",
+      "marks": 5.0,
+      "section": "B",
+      "group": null,
+      "option": null,
+      "course_outcome": null,
+      "tagged_level": null,
+      "locked": false
+     },
+     "prediction": {
+      "question": "Draw the Gantt chart for FCFS scheduling.",
+      "level": "Remember",
+      "level_id": 1,
+      "confidence": 0.6267993773002506,
+      "proba": {
+       "Remember": 0.6268,
+       "Understand": 0.1742,
+       "Apply": 0.1748,
+       "Analyze": 0.0191,
+       "Evaluate": 0.0006,
+       "Create": 0.0046
+      },
+      "needs_review": false,
+      "lower_order": true,
+      "directives": [
+       {
+        "verb": "draw",
+        "kind": "imperative",
+        "phrase": null,
+        "negated": false
+       }
+      ],
+      "frame": null,
+      "evidence": "directive",
+      "votes": [
+       {
+        "agent": "Lexis",
+        "level": "Remember",
+        "confidence": 0.6267993773002506,
+        "proba": [
+         0.6268,
+         0.1742,
+         0.1748,
+         0.0191,
+         0.0006,
+         0.0046
+        ],
+        "reasoning": null
+       },
+       {
+        "agent": "Archivist",
+        "level": "Remember",
+        "confidence": 0.5746391248587583,
+        "proba": [
+         0.5746,
+         0.1967,
+         0.1858,
+         0.0143,
+         0.0143,
+         0.0143
+        ],
+        "reasoning": null
+       }
+      ],
+      "neighbours": [
+       {
+        "question": "Draw the ASM chart for the following state machine.",
+        "level": "Apply",
+        "similarity": 0.732,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "Draw the flow chart of the PNK system",
+        "level": "Remember",
+        "similarity": 0.722,
+        "source": "yahya2012"
+       },
+       {
+        "question": "Draw neat diagram of 3 phase FWR with R load.",
+        "level": "Remember",
+        "similarity": 0.72,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "Draw the block diagram of the central processing unit",
+        "level": "Remember",
+        "similarity": 0.705,
+        "source": "yahya2012"
+       },
+       {
+        "question": "Draw the neat diagram of single bus organization of the CPU.",
+        "level": "Remember",
+        "similarity": 0.702,
+        "source": "indian_engineering"
+       }
+      ],
+      "explanation": []
+     }
+    },
+    {
+     "question": {
+      "id": "4b",
+      "number": "Q4 (b)",
+      "text": "Calculate the average waiting time for FCFS and SJF.",
+      "context": "Consider the following processes with burst times P1=24, P2=3, P3=3 ms.",
+      "marks": 5.0,
+      "section": "B",
+      "group": null,
+      "option": null,
+      "course_outcome": null,
+      "tagged_level": null,
+      "locked": false
+     },
+     "prediction": {
+      "question": "Calculate the average waiting time for FCFS and SJF.",
+      "level": "Apply",
+      "level_id": 3,
+      "confidence": 0.9198813339156453,
+      "proba": {
+       "Remember": 0.0562,
+       "Understand": 0.0,
+       "Apply": 0.9199,
+       "Analyze": 0.0198,
+       "Evaluate": 0.0024,
+       "Create": 0.0017
+      },
+      "needs_review": false,
+      "lower_order": true,
+      "directives": [
+       {
+        "verb": "calculate",
+        "kind": "imperative",
+        "phrase": null,
+        "negated": false
+       }
+      ],
+      "frame": null,
+      "evidence": "directive",
+      "votes": [
+       {
+        "agent": "Lexis",
+        "level": "Apply",
+        "confidence": 0.9198813339156452,
+        "proba": [
+         0.0562,
+         0.0,
+         0.9199,
+         0.0198,
+         0.0024,
+         0.0017
+        ],
+        "reasoning": null
+       },
+       {
+        "agent": "Archivist",
+        "level": "Apply",
+        "confidence": 0.6820295711392262,
+        "proba": [
+         0.0874,
+         0.0446,
+         0.682,
+         0.065,
+         0.0764,
+         0.0446
+        ],
+        "reasoning": null
+       }
+      ],
+      "neighbours": [
+       {
+        "question": "Consider the following processes where arrisal and barst time are as given below. Calculate the average waiting time and average turn aroundtime if the processes are scheduled using FCFS.",
+        "level": "Apply",
+        "similarity": 0.829,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "Consider the following processes arrival time and burst time as shown below in table. Calculate average waiting time and average turn aroundtime if Quantum time is 2. Use Round Robin Algorithm. Draw GANTTchart.",
+        "level": "Apply",
+        "similarity": 0.719,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "Estimate roughly how long the collision process takes",
+        "level": "Evaluate",
+        "similarity": 0.687,
+        "source": "yahya2012"
+       },
+       {
+        "question": "Write an algorithm for DFS State the time complexity of the algorithm.",
+        "level": "Remember",
+        "similarity": 0.676,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "Consider the following processes arrival time and burst time are as shown.",
+        "level": "Apply",
+        "similarity": 0.675,
+        "source": "indian_engineering"
+       }
+      ],
+      "explanation": []
+     }
+    },
+    {
+     "question": {
+      "id": "5",
+      "number": "Q5",
+      "text": "Explain paging with a neat diagram.",
+      "context": null,
+      "marks": 10.0,
+      "section": "B",
+      "group": null,
+      "option": null,
+      "course_outcome": "CO3",
+      "tagged_level": "Understand",
+      "locked": false
+     },
+     "prediction": {
+      "question": "Explain paging with a neat diagram.",
+      "level": "Remember",
+      "level_id": 1,
+      "confidence": 0.6177218046154095,
+      "proba": {
+       "Remember": 0.6177,
+       "Understand": 0.2662,
+       "Apply": 0.0397,
+       "Analyze": 0.0745,
+       "Evaluate": 0.0,
+       "Create": 0.0019
+      },
+      "needs_review": false,
+      "lower_order": true,
+      "directives": [
+       {
+        "verb": "explain",
+        "kind": "imperative",
+        "phrase": null,
+        "negated": false
+       }
+      ],
+      "frame": null,
+      "evidence": "directive",
+      "votes": [
+       {
+        "agent": "Lexis",
+        "level": "Remember",
+        "confidence": 0.6177218046154095,
+        "proba": [
+         0.6177,
+         0.2662,
+         0.0397,
+         0.0745,
+         0.0,
+         0.0019
+        ],
+        "reasoning": null
+       },
+       {
+        "agent": "Archivist",
+        "level": "Remember",
+        "confidence": 0.6262784572780157,
+        "proba": [
+         0.6263,
+         0.0971,
+         0.0292,
+         0.1889,
+         0.0292,
+         0.0292
+        ],
+        "reasoning": null
+       }
+      ],
+      "neighbours": [
+       {
+        "question": "Explain the basic method for implementing paging.",
+        "level": "Remember",
+        "similarity": 0.894,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "Explain in detail with Diagram.",
+        "level": "Analyze",
+        "similarity": 0.836,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "Explain following with diagram.",
+        "level": "Remember",
+        "similarity": 0.832,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "Explain construction and working of RVDT with neat diagram.",
+        "level": "Understand",
+        "similarity": 0.812,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "Explain extrusion operation with its schematic diagram.",
+        "level": "Remember",
+        "similarity": 0.799,
+        "source": "indian_engineering"
+       }
+      ],
+      "explanation": []
+     }
+    },
+    {
+     "question": {
+      "id": "6",
+      "number": "Q6",
+      "text": "Write short notes on virtual memory and demand paging.",
+      "context": null,
+      "marks": 10.0,
+      "section": "B",
+      "group": null,
+      "option": null,
+      "course_outcome": "CO3",
+      "tagged_level": "Remember",
+      "locked": false
+     },
+     "prediction": {
+      "question": "Write short notes on virtual memory and demand paging.",
+      "level": "Remember",
+      "level_id": 1,
+      "confidence": 0.724251232733392,
+      "proba": {
+       "Remember": 0.7243,
+       "Understand": 0.1863,
+       "Apply": 0.0494,
+       "Analyze": 0.0269,
+       "Evaluate": 0.0039,
+       "Create": 0.0092
+      },
+      "needs_review": false,
+      "lower_order": true,
+      "directives": [
+       {
+        "verb": "write",
+        "kind": "imperative",
+        "phrase": "write note",
+        "negated": false
+       }
+      ],
+      "frame": null,
+      "evidence": "directive",
+      "votes": [
+       {
+        "agent": "Lexis",
+        "level": "Remember",
+        "confidence": 0.7242512327333919,
+        "proba": [
+         0.7243,
+         0.1863,
+         0.0494,
+         0.0269,
+         0.0039,
+         0.0092
+        ],
+        "reasoning": null
+       },
+       {
+        "agent": "Archivist",
+        "level": "Remember",
+        "confidence": 0.5436164815729089,
+        "proba": [
+         0.5436,
+         0.3122,
+         0.0877,
+         0.0189,
+         0.0189,
+         0.0189
+        ],
+        "reasoning": null
+       }
+      ],
+      "neighbours": [
+       {
+        "question": "How virtual Memory is managed using paging.",
+        "level": "Understand",
+        "similarity": 0.862,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "Write a note on memory hierarchy.",
+        "level": "Remember",
+        "similarity": 0.841,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "Write a short note on sequential memories.",
+        "level": "Remember",
+        "similarity": 0.839,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "Explore memory management in the Virtual 8086 Mode.",
+        "level": "Remember",
+        "similarity": 0.817,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "Write a note on SRAM.",
+        "level": "Remember",
+        "similarity": 0.806,
+        "source": "indian_engineering"
+       }
+      ],
+      "explanation": []
+     }
+    }
+   ],
+   "distribution": {
+    "Remember": 0.7,
+    "Understand": 0.2,
+    "Apply": 0.1,
+    "Analyze": 0.0,
+    "Evaluate": 0.0,
+    "Create": 0.0
+   },
+   "weight_by": "marks",
+   "checks": [
+    {
+     "bound": {
+      "levels": [
+       "Remember",
+       "Understand"
+      ],
+      "min_share": null,
+      "max_share": 0.4,
+      "label": "Lower order (Remember + Understand)"
+     },
+     "description": "Lower order (Remember + Understand) <= 40% of marks",
+     "share": 0.9,
+     "ok": false,
+     "gap": -0.5
+    },
+    {
+     "bound": {
+      "levels": [
+       "Apply",
+       "Analyze"
+      ],
+      "min_share": 0.4,
+      "max_share": null,
+      "label": "Apply + Analyze"
+     },
+     "description": "Apply + Analyze >= 40% of marks",
+     "share": 0.1,
+     "ok": false,
+     "gap": 0.3
+    },
+    {
+     "bound": {
+      "levels": [
+       "Evaluate",
+       "Create"
+      ],
+      "min_share": 0.1,
+      "max_share": null,
+      "label": "Higher order (Evaluate + Create)"
+     },
+     "description": "Higher order (Evaluate + Create) >= 10% of marks",
+     "share": 0.0,
+     "ok": false,
+     "gap": 0.1
+    }
+   ],
+   "compliant": false,
+   "needs_review": [
+    "2"
+   ]
+  },
+  "plan": [
+   {
+    "question_id": "6",
+    "original": "Write short notes on virtual memory and demand paging.",
+    "from_level": "Remember",
+    "to_level": "Apply",
+    "marks": 10.0,
+    "reason": "Lower order (Remember + Understand) <= 40% of marks: currently 90%"
+   },
+   {
+    "question_id": "5",
+    "original": "Explain paging with a neat diagram.",
+    "from_level": "Remember",
+    "to_level": "Apply",
+    "marks": 10.0,
+    "reason": "Lower order (Remember + Understand) <= 40% of marks: currently 70%"
+   },
+   {
+    "question_id": "3",
+    "original": "Describe the producer-consumer problem and its solution using semaphores.",
+    "from_level": "Understand",
+    "to_level": "Apply",
+    "marks": 10.0,
+    "reason": "Lower order (Remember + Understand) <= 40% of marks: currently 50%"
+   },
+   {
+    "question_id": "4b",
+    "original": "Calculate the average waiting time for FCFS and SJF.",
+    "from_level": "Apply",
+    "to_level": "Evaluate",
+    "marks": 5.0,
+    "reason": "Higher order (Evaluate + Create) >= 10% of marks: currently 0%"
+   }
+  ],
+  "rewrites": [
+   {
+    "job": {
+     "question_id": "6",
+     "original": "Write short notes on virtual memory and demand paging.",
+     "from_level": "Remember",
+     "to_level": "Apply",
+     "marks": 10.0,
+     "reason": "Lower order (Remember + Understand) <= 40% of marks: currently 90%"
+    },
+    "accepted": true,
+    "final_question": "Apply demand paging to a system with 512 MB physical memory and 2 GB virtual memory, where a process initially loads 128 MB of code and data. Show how the system handles the loading of additional 32 MB of code segments using demand paging, including the steps and memory management actions involved.",
+    "attempts": [
+     {
+      "number": 1,
+      "question": "Apply demand paging to a system with 512 MB physical memory and 2 GB virtual memory, where a process initially loads 128 MB of code and data. Show how the system handles the loading of additional 32 MB of code segments using demand paging, including the steps and memory management actions involved.",
+      "composer": "llm",
+      "rationale": "This question requires the candidate to execute the procedure of demand paging in a concrete scenario, demonstrating understanding through step-by-step implementation in a given system configuration.",
+      "checks": [
+       {
+        "name": "level",
+        "passed": true,
+        "detail": "classified as Apply (P(Apply)=0.97)",
+        "score": 0.966
+       },
+       {
+        "name": "form",
+        "passed": true,
+        "detail": "52 words",
+        "score": null
+       },
+       {
+        "name": "topic",
+        "passed": true,
+        "detail": "content-word overlap 1.00, similarity 0.78",
+        "score": 1.0
+       },
+       {
+        "name": "not_duplicate",
+        "passed": true,
+        "detail": "similarity to original 0.78, to other questions 0.67",
+        "score": 0.78
+       }
+      ],
+      "passed": true,
+      "predicted_level": "Apply"
+     }
+    ],
+    "needs_teacher": false
+   },
+   {
+    "job": {
+     "question_id": "5",
+     "original": "Explain paging with a neat diagram.",
+     "from_level": "Remember",
+     "to_level": "Apply",
+     "marks": 10.0,
+     "reason": "Lower order (Remember + Understand) <= 40% of marks: currently 70%"
+    },
+    "accepted": true,
+    "final_question": "Apply paging to a memory management scenario with 4 pages and 8 frame slots; show how processes are loaded and pages are mapped to frames, including page table entries and handling page faults.",
+    "attempts": [
+     {
+      "number": 1,
+      "question": "Apply paging to a memory management scenario with 4 pages and 8 frame slots; show how processes are loaded and pages are mapped to frames, including page table entries and handling page faults.",
+      "composer": "llm",
+      "rationale": "This question requires the student to execute the paging mechanism in a concrete scenario, using defined memory components. It demands procedural application rather than explanation, aligning with the 'Apply' level of Bloom's taxonomy.",
+      "checks": [
+       {
+        "name": "level",
+        "passed": true,
+        "detail": "classified as Apply (P(Apply)=0.98)",
+        "score": 0.981
+       },
+       {
+        "name": "form",
+        "passed": true,
+        "detail": "33 words",
+        "score": null
+       },
+       {
+        "name": "topic",
+        "passed": true,
+        "detail": "content-word overlap 0.00, similarity 0.69",
+        "score": 0.0
+       },
+       {
+        "name": "not_duplicate",
+        "passed": true,
+        "detail": "similarity to original 0.69, to other questions 0.75",
+        "score": 0.751
+       }
+      ],
+      "passed": true,
+      "predicted_level": "Apply"
+     }
+    ],
+    "needs_teacher": false
+   },
+   {
+    "job": {
+     "question_id": "3",
+     "original": "Describe the producer-consumer problem and its solution using semaphores.",
+     "from_level": "Understand",
+     "to_level": "Apply",
+     "marks": 10.0,
+     "reason": "Lower order (Remember + Understand) <= 40% of marks: currently 50%"
+    },
+    "accepted": true,
+    "final_question": "Implement a solution to the producer-consumer problem using semaphores in a shared memory environment where two threads produce and consume data from a buffer of size 5, ensuring no overflow or underflow occurs.",
+    "attempts": [
+     {
+      "number": 1,
+      "question": "Implement a solution to the producer-consumer problem using semaphores in a shared memory environment where two threads produce and consume data from a buffer of size 5, ensuring no overflow or underflow occurs.",
+      "composer": "llm",
+      "rationale": "This question requires the student to apply semaphore-based synchronization to a concrete scenario, executing the procedure in a defined environment with specific constraints.",
+      "checks": [
+       {
+        "name": "level",
+        "passed": true,
+        "detail": "classified as Apply (P(Apply)=0.91)",
+        "score": 0.906
+       },
+       {
+        "name": "form",
+        "passed": true,
+        "detail": "33 words",
+        "score": null
+       },
+       {
+        "name": "topic",
+        "passed": true,
+        "detail": "content-word overlap 1.00, similarity 0.86",
+        "score": 1.0
+       },
+       {
+        "name": "not_duplicate",
+        "passed": true,
+        "detail": "similarity to original 0.86, to other questions 0.65",
+        "score": 0.864
+       }
+      ],
+      "passed": true,
+      "predicted_level": "Apply"
+     }
+    ],
+    "needs_teacher": false
+   },
+   {
+    "job": {
+     "question_id": "4b",
+     "original": "Calculate the average waiting time for FCFS and SJF.",
+     "from_level": "Apply",
+     "to_level": "Evaluate",
+     "marks": 5.0,
+     "reason": "Higher order (Evaluate + Create) >= 10% of marks: currently 0%"
+    },
+    "accepted": true,
+    "final_question": "Critique the fairness of FCFS and SJF scheduling in the given scenario, assessing which algorithm better meets the criteria of minimizing average waiting time and justifying your judgment with specific process behavior analysis.",
+    "attempts": [
+     {
+      "number": 1,
+      "question": "Critique the fairness of FCFS and SJF scheduling in the given scenario, assessing which algorithm better meets the criteria of minimizing average waiting time and justifying your judgment with specific process behavior analysis.",
+      "composer": "llm",
+      "rationale": "The question demands evaluation by requiring a judgment based on established criteria (minimizing average waiting time), with a concrete scenario and specific process data. It prompts a reasoned critique rather than mere calculation, aligning with the highest level of Bloom's taxonomy.",
+      "checks": [
+       {
+        "name": "level",
+        "passed": true,
+        "detail": "classified as Evaluate (P(Evaluate)=0.99)",
+        "score": 0.994
+       },
+       {
+        "name": "form",
+        "passed": true,
+        "detail": "33 words",
+        "score": null
+       },
+       {
+        "name": "topic",
+        "passed": true,
+        "detail": "content-word overlap 1.00, similarity 0.75",
+        "score": 1.0
+       },
+       {
+        "name": "not_duplicate",
+        "passed": true,
+        "detail": "similarity to original 0.75, to other questions 0.68",
+        "score": 0.753
+       },
+       {
+        "name": "student",
+        "passed": true,
+        "detail": "",
+        "score": null
+       }
+      ],
+      "passed": true,
+      "predicted_level": "Evaluate"
+     }
+    ],
+    "needs_teacher": false
+   }
+  ],
+  "after": {
+   "paper": {
+    "title": "sample_os_paper",
+    "questions": [
+     {
+      "id": "1a",
+      "number": "Q1 (a)",
+      "text": "Define a process.",
+      "context": null,
+      "marks": 2.0,
+      "section": "A",
+      "group": null,
+      "option": null,
+      "course_outcome": "CO1",
+      "tagged_level": "Remember",
+      "locked": false
+     },
+     {
+      "id": "1b",
+      "number": "Q1 (b)",
+      "text": "List the states of a process.",
+      "context": null,
+      "marks": 2.0,
+      "section": "A",
+      "group": null,
+      "option": null,
+      "course_outcome": "CO1",
+      "tagged_level": "Remember",
+      "locked": false
+     },
+     {
+      "id": "1c",
+      "number": "Q1 (c)",
+      "text": "What is a context switch?",
+      "context": null,
+      "marks": 2.0,
+      "section": "A",
+      "group": null,
+      "option": null,
+      "course_outcome": "CO1",
+      "tagged_level": "Remember",
+      "locked": false
+     },
+     {
+      "id": "1d",
+      "number": "Q1 (d)",
+      "text": "State the necessary conditions for deadlock.",
+      "context": null,
+      "marks": 2.0,
+      "section": "A",
+      "group": null,
+      "option": null,
+      "course_outcome": "CO2",
+      "tagged_level": "Remember",
+      "locked": false
+     },
+     {
+      "id": "1e",
+      "number": "Q1 (e)",
+      "text": "What is thrashing?",
+      "context": null,
+      "marks": 2.0,
+      "section": "A",
+      "group": null,
+      "option": null,
+      "course_outcome": "CO3",
+      "tagged_level": "Remember",
+      "locked": false
+     },
+     {
+      "id": "2",
+      "number": "Q2",
+      "text": "Explain the difference between preemptive and non-preemptive scheduling with suitable examples.",
+      "context": null,
+      "marks": 10.0,
+      "section": "B",
+      "group": "g2",
+      "option": "2",
+      "course_outcome": "CO2",
+      "tagged_level": "Understand",
+      "locked": false
+     },
+     {
+      "id": "3",
+      "number": "Q3",
+      "text": "Implement a solution to the producer-consumer problem using semaphores in a shared memory environment where two threads produce and consume data from a buffer of size 5, ensuring no overflow or underflow occurs.",
+      "context": null,
+      "marks": 10.0,
+      "section": "B",
+      "group": "g2",
+      "option": "3",
+      "course_outcome": "CO2",
+      "tagged_level": "Understand",
+      "locked": false
+     },
+     {
+      "id": "4a",
+      "number": "Q4 (a)",
+      "text": "Draw the Gantt chart for FCFS scheduling.",
+      "context": "Consider the following processes with burst times P1=24, P2=3, P3=3 ms.",
+      "marks": 5.0,
+      "section": "B",
+      "group": null,
+      "option": null,
+      "course_outcome": null,
+      "tagged_level": null,
+      "locked": false
+     },
+     {
+      "id": "4b",
+      "number": "Q4 (b)",
+      "text": "Critique the fairness of FCFS and SJF scheduling in the given scenario, assessing which algorithm better meets the criteria of minimizing average waiting time and justifying your judgment with specific process behavior analysis.",
+      "context": "Consider the following processes with burst times P1=24, P2=3, P3=3 ms.",
+      "marks": 5.0,
+      "section": "B",
+      "group": null,
+      "option": null,
+      "course_outcome": null,
+      "tagged_level": null,
+      "locked": false
+     },
+     {
+      "id": "5",
+      "number": "Q5",
+      "text": "Apply paging to a memory management scenario with 4 pages and 8 frame slots; show how processes are loaded and pages are mapped to frames, including page table entries and handling page faults.",
+      "context": null,
+      "marks": 10.0,
+      "section": "B",
+      "group": null,
+      "option": null,
+      "course_outcome": "CO3",
+      "tagged_level": "Understand",
+      "locked": false
+     },
+     {
+      "id": "6",
+      "number": "Q6",
+      "text": "Apply demand paging to a system with 512 MB physical memory and 2 GB virtual memory, where a process initially loads 128 MB of code and data. Show how the system handles the loading of additional 32 MB of code segments using demand paging, including the steps and memory management actions involved.",
+      "context": null,
+      "marks": 10.0,
+      "section": "B",
+      "group": null,
+      "option": null,
+      "course_outcome": "CO3",
+      "tagged_level": "Remember",
+      "locked": false
+     }
+    ],
+    "total_marks": 50.0,
+    "warnings": []
+   },
+   "items": [
+    {
+     "question": {
+      "id": "1a",
+      "number": "Q1 (a)",
+      "text": "Define a process.",
+      "context": null,
+      "marks": 2.0,
+      "section": "A",
+      "group": null,
+      "option": null,
+      "course_outcome": "CO1",
+      "tagged_level": "Remember",
+      "locked": false
+     },
+     "prediction": {
+      "question": "Define a process.",
+      "level": "Remember",
+      "level_id": 1,
+      "confidence": 0.9685302599795792,
+      "proba": {
+       "Remember": 0.9685,
+       "Understand": 0.0264,
+       "Apply": 0.0009,
+       "Analyze": 0.0007,
+       "Evaluate": 0.0022,
+       "Create": 0.0012
+      },
+      "needs_review": false,
+      "lower_order": true,
+      "directives": [
+       {
+        "verb": "define",
+        "kind": "imperative",
+        "phrase": null,
+        "negated": false
+       }
+      ],
+      "frame": null,
+      "evidence": "directive",
+      "votes": [
+       {
+        "agent": "Lexis",
+        "level": "Remember",
+        "confidence": 0.9685302599795792,
+        "proba": [
+         0.9685,
+         0.0264,
+         0.0009,
+         0.0007,
+         0.0022,
+         0.0012
+        ],
+        "reasoning": null
+       },
+       {
+        "agent": "Archivist",
+        "level": "Remember",
+        "confidence": 0.8926764801673527,
+        "proba": [
+         0.8927,
+         0.0215,
+         0.0215,
+         0.0215,
+         0.0215,
+         0.0215
+        ],
+        "reasoning": null
+       }
+      ],
+      "neighbours": [
+       {
+        "question": "Define problem solving processes.",
+        "level": "Remember",
+        "similarity": 0.814,
+        "source": "gani2023"
+       },
+       {
+        "question": "Explain implementation of process and threads in Linux.",
+        "level": "Remember",
+        "similarity": 0.772,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "Define brainstorming process.",
+        "level": "Remember",
+        "similarity": 0.771,
+        "source": "gani2023"
+       },
+       {
+        "question": "Define query processing.",
+        "level": "Remember",
+        "similarity": 0.768,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "How process and threads are implemented in Linux?",
+        "level": "Remember",
+        "similarity": 0.755,
+        "source": "indian_engineering"
+       }
+      ],
+      "explanation": []
+     }
+    },
+    {
+     "question": {
+      "id": "1b",
+      "number": "Q1 (b)",
+      "text": "List the states of a process.",
+      "context": null,
+      "marks": 2.0,
+      "section": "A",
+      "group": null,
+      "option": null,
+      "course_outcome": "CO1",
+      "tagged_level": "Remember",
+      "locked": false
+     },
+     "prediction": {
+      "question": "List the states of a process.",
+      "level": "Remember",
+      "level_id": 1,
+      "confidence": 0.9910595796095323,
+      "proba": {
+       "Remember": 0.9911,
+       "Understand": 0.0,
+       "Apply": 0.0028,
+       "Analyze": 0.0056,
+       "Evaluate": 0.0002,
+       "Create": 0.0004
+      },
+      "needs_review": false,
+      "lower_order": true,
+      "directives": [
+       {
+        "verb": "list",
+        "kind": "imperative",
+        "phrase": null,
+        "negated": false
+       }
+      ],
+      "frame": null,
+      "evidence": "directive",
+      "votes": [
+       {
+        "agent": "Lexis",
+        "level": "Remember",
+        "confidence": 0.9910595796095323,
+        "proba": [
+         0.9911,
+         0.0,
+         0.0028,
+         0.0056,
+         0.0002,
+         0.0004
+        ],
+        "reasoning": null
+       },
+       {
+        "agent": "Archivist",
+        "level": "Remember",
+        "confidence": 0.9217056472023284,
+        "proba": [
+         0.9217,
+         0.0157,
+         0.0157,
+         0.0157,
+         0.0157,
+         0.0157
+        ],
+        "reasoning": null
+       }
+      ],
+      "neighbours": [
+       {
+        "question": "Explain 5 state Process model.",
+        "level": "Remember",
+        "similarity": 0.744,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "What is states of counter?",
+        "level": "Remember",
+        "similarity": 0.744,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "List and explain the different metrics in the process and project domain.",
+        "level": "Remember",
+        "similarity": 0.716,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "What are different Process management system calls in Linux.",
+        "level": "Remember",
+        "similarity": 0.71,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "State any one application of",
+        "level": "Remember",
+        "similarity": 0.709,
+        "source": "indian_engineering"
+       }
+      ],
+      "explanation": []
+     }
+    },
+    {
+     "question": {
+      "id": "1c",
+      "number": "Q1 (c)",
+      "text": "What is a context switch?",
+      "context": null,
+      "marks": 2.0,
+      "section": "A",
+      "group": null,
+      "option": null,
+      "course_outcome": "CO1",
+      "tagged_level": "Remember",
+      "locked": false
+     },
+     "prediction": {
+      "question": "What is a context switch?",
+      "level": "Remember",
+      "level_id": 1,
+      "confidence": 0.9821702859426312,
+      "proba": {
+       "Remember": 0.9822,
+       "Understand": 0.0099,
+       "Apply": 0.0034,
+       "Analyze": 0.0023,
+       "Evaluate": 0.0016,
+       "Create": 0.0006
+      },
+      "needs_review": false,
+      "lower_order": true,
+      "directives": [],
+      "frame": "what_is",
+      "evidence": "frame",
+      "votes": [
+       {
+        "agent": "Lexis",
+        "level": "Remember",
+        "confidence": 0.9732554294771589,
+        "proba": [
+         0.9733,
+         0.0149,
+         0.0051,
+         0.0035,
+         0.0024,
+         0.0009
+        ],
+        "reasoning": null
+       },
+       {
+        "agent": "Archivist",
+        "level": "Analyze",
+        "confidence": 0.6671396268919855,
+        "proba": [
+         0.1696,
+         0.0914,
+         0.024,
+         0.6671,
+         0.024,
+         0.024
+        ],
+        "reasoning": null
+       },
+       {
+        "agent": "Socrates",
+        "level": "Remember",
+        "confidence": 0.9999999988735753,
+        "proba": [
+         1.0,
+         0.0,
+         0.0,
+         0.0,
+         0.0,
+         0.0
+        ],
+        "reasoning": "The question 'What is a context switch?' asks the student to recall the definition of a specific concept. It requires only retrieval of a known fact from memory, without analysis, explanation, or application. Although the word 'explain' is used, the instruction is primarily about defining a term, which falls under the 'Remember' level in the revised Bloom's taxonomy. Therefore, the cognitive level is determined by the core action required: retrieving a definition."
+       }
+      ],
+      "neighbours": [
+       {
+        "question": "Define Task Switching and explain the steps involved in task switching operation?",
+        "level": "Analyze",
+        "similarity": 0.75,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "How 80386 performs task switching operation?",
+        "level": "Remember",
+        "similarity": 0.716,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "Explain the TSS descriptor and its role in multitasking.",
+        "level": "Analyze",
+        "similarity": 0.69,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "Explain how control transfer instructions are executed using the call gate in the system?",
+        "level": "Analyze",
+        "similarity": 0.681,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "Describe how the BoW approach can be adapted to handle code-switching and multiple scripts in Indian languages. What challenges might arise in creating BoW representations for such text?",
+        "level": "Analyze",
+        "similarity": 0.679,
+        "source": "scaria2024"
+       }
+      ],
+      "explanation": []
+     }
+    },
+    {
+     "question": {
+      "id": "1d",
+      "number": "Q1 (d)",
+      "text": "State the necessary conditions for deadlock.",
+      "context": null,
+      "marks": 2.0,
+      "section": "A",
+      "group": null,
+      "option": null,
+      "course_outcome": "CO2",
+      "tagged_level": "Remember",
+      "locked": false
+     },
+     "prediction": {
+      "question": "State the necessary conditions for deadlock.",
+      "level": "Remember",
+      "level_id": 1,
+      "confidence": 0.8573108968853331,
+      "proba": {
+       "Remember": 0.8573,
+       "Understand": 0.071,
+       "Apply": 0.046,
+       "Analyze": 0.0168,
+       "Evaluate": 0.007,
+       "Create": 0.0019
+      },
+      "needs_review": false,
+      "lower_order": true,
+      "directives": [
+       {
+        "verb": "state",
+        "kind": "imperative",
+        "phrase": null,
+        "negated": false
+       }
+      ],
+      "frame": null,
+      "evidence": "directive",
+      "votes": [
+       {
+        "agent": "Lexis",
+        "level": "Remember",
+        "confidence": 0.8573108968853331,
+        "proba": [
+         0.8573,
+         0.071,
+         0.046,
+         0.0168,
+         0.007,
+         0.0019
+        ],
+        "reasoning": null
+       },
+       {
+        "agent": "Archivist",
+        "level": "Remember",
+        "confidence": 0.7926271602964472,
+        "proba": [
+         0.7926,
+         0.0391,
+         0.0391,
+         0.0508,
+         0.0391,
+         0.0391
+        ],
+        "reasoning": null
+       }
+      ],
+      "neighbours": [
+       {
+        "question": "State and explain the conditions for deadlock to occur.",
+        "level": "Remember",
+        "similarity": 0.926,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "What are the methods used to handle Deadlocks.",
+        "level": "Remember",
+        "similarity": 0.842,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "When do deadlock happens?",
+        "level": "Remember",
+        "similarity": 0.829,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "Explain deadlock prevention and Recovery.",
+        "level": "Remember",
+        "similarity": 0.817,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "What is a deadlock?",
+        "level": "Remember",
+        "similarity": 0.813,
+        "source": "indian_engineering"
+       }
+      ],
+      "explanation": []
+     }
+    },
+    {
+     "question": {
+      "id": "1e",
+      "number": "Q1 (e)",
+      "text": "What is thrashing?",
+      "context": null,
+      "marks": 2.0,
+      "section": "A",
+      "group": null,
+      "option": null,
+      "course_outcome": "CO3",
+      "tagged_level": "Remember",
+      "locked": false
+     },
+     "prediction": {
+      "question": "What is thrashing?",
+      "level": "Remember",
+      "level_id": 1,
+      "confidence": 0.9735965245722015,
+      "proba": {
+       "Remember": 0.9736,
+       "Understand": 0.0213,
+       "Apply": 0.0007,
+       "Analyze": 0.0,
+       "Evaluate": 0.0035,
+       "Create": 0.001
+      },
+      "needs_review": false,
+      "lower_order": true,
+      "directives": [],
+      "frame": "what_is",
+      "evidence": "frame",
+      "votes": [
+       {
+        "agent": "Lexis",
+        "level": "Remember",
+        "confidence": 0.9735965245722015,
+        "proba": [
+         0.9736,
+         0.0213,
+         0.0007,
+         0.0,
+         0.0035,
+         0.001
+        ],
+        "reasoning": null
+       },
+       {
+        "agent": "Archivist",
+        "level": "Remember",
+        "confidence": 0.7621131488406615,
+        "proba": [
+         0.7621,
+         0.1037,
+         0.0335,
+         0.0335,
+         0.0335,
+         0.0335
+        ],
+        "reasoning": null
+       }
+      ],
+      "neighbours": [
+       {
+        "question": "What is fouling?",
+        "level": "Remember",
+        "similarity": 0.758,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "What is destructor?",
+        "level": "Remember",
+        "similarity": 0.681,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "Explain the whole method of crushing",
+        "level": "Understand",
+        "similarity": 0.671,
+        "source": "yahya2012"
+       },
+       {
+        "question": "What is tempering process?",
+        "level": "Remember",
+        "similarity": 0.665,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "What is Hashing?",
+        "level": "Remember",
+        "similarity": 0.664,
+        "source": "indian_engineering"
+       }
+      ],
+      "explanation": []
+     }
+    },
+    {
+     "question": {
+      "id": "2",
+      "number": "Q2",
+      "text": "Explain the difference between preemptive and non-preemptive scheduling with suitable examples.",
+      "context": null,
+      "marks": 10.0,
+      "section": "B",
+      "group": "g2",
+      "option": "2",
+      "course_outcome": "CO2",
+      "tagged_level": "Understand",
+      "locked": false
+     },
+     "prediction": {
+      "question": "Explain the difference between preemptive and non-preemptive scheduling with suitable examples.",
+      "level": "Understand",
+      "level_id": 2,
+      "confidence": 0.5374883512891857,
+      "proba": {
+       "Remember": 0.0338,
+       "Understand": 0.5375,
+       "Apply": 0.0,
+       "Analyze": 0.4271,
+       "Evaluate": 0.0012,
+       "Create": 0.0004
+      },
+      "needs_review": true,
+      "lower_order": true,
+      "directives": [
+       {
+        "verb": "explain",
+        "kind": "imperative",
+        "phrase": null,
+        "negated": false
+       }
+      ],
+      "frame": "difference",
+      "evidence": "directive",
+      "votes": [
+       {
+        "agent": "Lexis",
+        "level": "Understand",
+        "confidence": 0.806232526854469,
+        "proba": [
+         0.0508,
+         0.8062,
+         0.0,
+         0.1406,
+         0.0018,
+         0.0006
+        ],
+        "reasoning": null
+       },
+       {
+        "agent": "Archivist",
+        "level": "Remember",
+        "confidence": 0.5146802780148358,
+        "proba": [
+         0.5147,
+         0.1213,
+         0.0235,
+         0.2936,
+         0.0235,
+         0.0235
+        ],
+        "reasoning": null
+       },
+       {
+        "agent": "Socrates",
+        "level": "Analyze",
+        "confidence": 0.9999998955504827,
+        "proba": [
+         0.0,
+         0.0,
+         0.0,
+         1.0,
+         0.0,
+         0.0
+        ],
+        "reasoning": "The question asks the student to explain the difference between two types of scheduling (preemptive and non-preemptive) and to provide suitable examples. This requires the student to understand the concepts, define them, and compare them using examples. While recalling definitions is involved, the core task is to differentiate between the two concepts and illustrate them with examples, which involves comparing and contrasting. This aligns with the cognitive process of 'Analyze'—breaking down the concepts and determining how they relate. Although 'Explain' is used, the key action is not just to describe, but to differentiate and compare, which is a higher-level thinking skill. Therefore, the highest cognitive level required is Analyze."
+       }
+      ],
+      "neighbours": [
+       {
+        "question": "Explain Pre-emptive shortest Job First scheduling algorithm in detail.",
+        "level": "Remember",
+        "similarity": 0.813,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "Illustrate difference between conflict serializable schedule and view serializable schedual by an appropriate example.",
+        "level": "Remember",
+        "similarity": 0.779,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "Explain the term \"level scheduling'.",
+        "level": "Understand",
+        "similarity": 0.76,
+        "source": "gani2023"
+       },
+       {
+        "question": "Explain with example the significance of priority queue over simple queue.",
+        "level": "Analyze",
+        "similarity": 0.75,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "Explain the thread life cycle model in Java.",
+        "level": "Analyze",
+        "similarity": 0.741,
+        "source": "indian_engineering"
+       }
+      ],
+      "explanation": []
+     }
+    },
+    {
+     "question": {
+      "id": "3",
+      "number": "Q3",
+      "text": "Implement a solution to the producer-consumer problem using semaphores in a shared memory environment where two threads produce and consume data from a buffer of size 5, ensuring no overflow or underflow occurs.",
+      "context": null,
+      "marks": 10.0,
+      "section": "B",
+      "group": "g2",
+      "option": "3",
+      "course_outcome": "CO2",
+      "tagged_level": "Understand",
+      "locked": false
+     },
+     "prediction": {
+      "question": "Implement a solution to the producer-consumer problem using semaphores in a shared memory environment where two threads produce and consume data from a buffer of size 5, ensuring no overflow or underflow occurs.",
+      "level": "Apply",
+      "level_id": 3,
+      "confidence": 0.6041072475245951,
+      "proba": {
+       "Remember": 0.0017,
+       "Understand": 0.0095,
+       "Apply": 0.6041,
+       "Analyze": 0.0344,
+       "Evaluate": 0.0,
+       "Create": 0.3503
+      },
+      "needs_review": true,
+      "lower_order": true,
+      "directives": [
+       {
+        "verb": "implement",
+        "kind": "imperative",
+        "phrase": null,
+        "negated": false
+       }
+      ],
+      "frame": null,
+      "evidence": "directive",
+      "votes": [
+       {
+        "agent": "Lexis",
+        "level": "Apply",
+        "confidence": 0.9061608712794685,
+        "proba": [
+         0.0026,
+         0.0142,
+         0.9062,
+         0.0516,
+         0.0,
+         0.0255
+        ],
+        "reasoning": null
+       },
+       {
+        "agent": "Archivist",
+        "level": "Remember",
+        "confidence": 0.47468059558660586,
+        "proba": [
+         0.4747,
+         0.0975,
+         0.2763,
+         0.1091,
+         0.0213,
+         0.0213
+        ],
+        "reasoning": null
+       },
+       {
+        "agent": "Socrates",
+        "level": "Create",
+        "confidence": 0.9999999994800564,
+        "proba": [
+         0.0,
+         0.0,
+         0.0,
+         0.0,
+         0.0,
+         1.0
+        ],
+        "reasoning": "The question asks the student to 'implement' a solution, which means to create a new, original program or system that combines elements (semaphores, shared memory, thread coordination) to solve a specific problem. This involves designing and constructing a working solution from scratch, including code or a detailed plan that integrates multiple components to achieve a functional outcome. This goes beyond recalling or explaining concepts (Remember/Understand/Apply/Analyze) and requires the synthesis of knowledge into a coherent, original product. Therefore, it corresponds to the highest level in the revised Bloom's taxonomy: Create. However, note that 'implement' can sometimes be interpreted as applying known techniques. But in this context, 'implement a solution' implies producing a new, working system, not just using a known method. Thus, it is best classified as Create."
+       }
+      ],
+      "neighbours": [
+       {
+        "question": "Apply how semaphores and shared memory methods can be deployed to execute a particular task.",
+        "level": "Apply",
+        "similarity": 0.785,
+        "source": "sangodiah2017"
+       },
+       {
+        "question": "Explain Producer and consumer problem in Classical Synchronization.",
+        "level": "Remember",
+        "similarity": 0.761,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "Write short note on : Producer-consumer Problem.",
+        "level": "Remember",
+        "similarity": 0.738,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "Explain the thread life cycle model in Java.",
+        "level": "Analyze",
+        "similarity": 0.732,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "Brief the concept of byte streams?",
+        "level": "Remember",
+        "similarity": 0.729,
+        "source": "indian_engineering"
+       }
+      ],
+      "explanation": []
+     }
+    },
+    {
+     "question": {
+      "id": "4a",
+      "number": "Q4 (a)",
+      "text": "Draw the Gantt chart for FCFS scheduling.",
+      "context": "Consider the following processes with burst times P1=24, P2=3, P3=3 ms.",
+      "marks": 5.0,
+      "section": "B",
+      "group": null,
+      "option": null,
+      "course_outcome": null,
+      "tagged_level": null,
+      "locked": false
+     },
+     "prediction": {
+      "question": "Draw the Gantt chart for FCFS scheduling.",
+      "level": "Remember",
+      "level_id": 1,
+      "confidence": 0.6267993773002506,
+      "proba": {
+       "Remember": 0.6268,
+       "Understand": 0.1742,
+       "Apply": 0.1748,
+       "Analyze": 0.0191,
+       "Evaluate": 0.0006,
+       "Create": 0.0046
+      },
+      "needs_review": false,
+      "lower_order": true,
+      "directives": [
+       {
+        "verb": "draw",
+        "kind": "imperative",
+        "phrase": null,
+        "negated": false
+       }
+      ],
+      "frame": null,
+      "evidence": "directive",
+      "votes": [
+       {
+        "agent": "Lexis",
+        "level": "Remember",
+        "confidence": 0.6267993773002506,
+        "proba": [
+         0.6268,
+         0.1742,
+         0.1748,
+         0.0191,
+         0.0006,
+         0.0046
+        ],
+        "reasoning": null
+       },
+       {
+        "agent": "Archivist",
+        "level": "Remember",
+        "confidence": 0.5746391248587583,
+        "proba": [
+         0.5746,
+         0.1967,
+         0.1858,
+         0.0143,
+         0.0143,
+         0.0143
+        ],
+        "reasoning": null
+       }
+      ],
+      "neighbours": [
+       {
+        "question": "Draw the ASM chart for the following state machine.",
+        "level": "Apply",
+        "similarity": 0.732,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "Draw the flow chart of the PNK system",
+        "level": "Remember",
+        "similarity": 0.722,
+        "source": "yahya2012"
+       },
+       {
+        "question": "Draw neat diagram of 3 phase FWR with R load.",
+        "level": "Remember",
+        "similarity": 0.72,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "Draw the block diagram of the central processing unit",
+        "level": "Remember",
+        "similarity": 0.705,
+        "source": "yahya2012"
+       },
+       {
+        "question": "Draw the neat diagram of single bus organization of the CPU.",
+        "level": "Remember",
+        "similarity": 0.702,
+        "source": "indian_engineering"
+       }
+      ],
+      "explanation": []
+     }
+    },
+    {
+     "question": {
+      "id": "4b",
+      "number": "Q4 (b)",
+      "text": "Critique the fairness of FCFS and SJF scheduling in the given scenario, assessing which algorithm better meets the criteria of minimizing average waiting time and justifying your judgment with specific process behavior analysis.",
+      "context": "Consider the following processes with burst times P1=24, P2=3, P3=3 ms.",
+      "marks": 5.0,
+      "section": "B",
+      "group": null,
+      "option": null,
+      "course_outcome": null,
+      "tagged_level": null,
+      "locked": false
+     },
+     "prediction": {
+      "question": "Critique the fairness of FCFS and SJF scheduling in the given scenario, assessing which algorithm better meets the criteria of minimizing average waiting time and justifying your judgment with specific process behavior analysis.",
+      "level": "Evaluate",
+      "level_id": 5,
+      "confidence": 0.9960353749323096,
+      "proba": {
+       "Remember": 0.0002,
+       "Understand": 0.0003,
+       "Apply": 0.0006,
+       "Analyze": 0.0017,
+       "Evaluate": 0.996,
+       "Create": 0.0013
+      },
+      "needs_review": false,
+      "lower_order": false,
+      "directives": [
+       {
+        "verb": "critique",
+        "kind": "imperative",
+        "phrase": null,
+        "negated": false
+       }
+      ],
+      "frame": null,
+      "evidence": "directive",
+      "votes": [
+       {
+        "agent": "Lexis",
+        "level": "Evaluate",
+        "confidence": 0.994053062485151,
+        "proba": [
+         0.0003,
+         0.0004,
+         0.0009,
+         0.0025,
+         0.9941,
+         0.0019
+        ],
+        "reasoning": null
+       },
+       {
+        "agent": "Archivist",
+        "level": "Apply",
+        "confidence": 0.23435209951932487,
+        "proba": [
+         0.1786,
+         0.0934,
+         0.2344,
+         0.1305,
+         0.2009,
+         0.1623
+        ],
+        "reasoning": null
+       },
+       {
+        "agent": "Socrates",
+        "level": "Evaluate",
+        "confidence": 0.9999999998266266,
+        "proba": [
+         0.0,
+         0.0,
+         0.0,
+         0.0,
+         1.0,
+         0.0
+        ],
+        "reasoning": "The question asks the student to critique (evaluate) the fairness of two scheduling algorithms (FCFS and SJF) based on specific criteria (minimizing average waiting time). It requires judging which algorithm performs better, using analysis of process behavior. This involves making a judgment based on established criteria, comparing alternatives, and justifying the conclusion with reasoning—this aligns with the highest level of the revised Bloom's taxonomy: Evaluate. Although 'critique' and 'assess' are evaluative, the task demands a reasoned judgment about performance and fairness, which goes beyond simple recall or explanation. Therefore, the cognitive process is not merely 'understanding' or 'applying' a concept, but making a judgment based on standards. Hence, the level is 5."
+       }
+      ],
+      "neighbours": [
+       {
+        "question": "Explain Pre-emptive shortest Job First scheduling algorithm in detail.",
+        "level": "Remember",
+        "similarity": 0.703,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "Develop a framework for assessing the ethical implications of using gradient boosting algorithms in the field of hiring in India, and present recommendations for mitigating bias and promoting fairness in the model's outcomes",
+        "level": "Create",
+        "similarity": 0.697,
+        "source": "scaria2024"
+       },
+       {
+        "question": "Consider the following processes where arrisal and barst time are as given below. Calculate the average waiting time and average turn aroundtime if the processes are scheduled using FCFS.",
+        "level": "Apply",
+        "similarity": 0.69,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "Evaluate the trade-offs between computational efficiency and convergence speed of SGD in different scenarios.",
+        "level": "Analyze",
+        "similarity": 0.685,
+        "source": "scaria2024"
+       },
+       {
+        "question": "How would you evaluate the performance of your new algorithm and compare it with other optimization algorithms?",
+        "level": "Evaluate",
+        "similarity": 0.681,
+        "source": "scaria2024"
+       }
+      ],
+      "explanation": []
+     }
+    },
+    {
+     "question": {
+      "id": "5",
+      "number": "Q5",
+      "text": "Apply paging to a memory management scenario with 4 pages and 8 frame slots; show how processes are loaded and pages are mapped to frames, including page table entries and handling page faults.",
+      "context": null,
+      "marks": 10.0,
+      "section": "B",
+      "group": null,
+      "option": null,
+      "course_outcome": "CO3",
+      "tagged_level": "Understand",
+      "locked": false
+     },
+     "prediction": {
+      "question": "Apply paging to a memory management scenario with 4 pages and 8 frame slots; show how processes are loaded and pages are mapped to frames, including page table entries and handling page faults.",
+      "level": "Apply",
+      "level_id": 3,
+      "confidence": 0.9874518186858241,
+      "proba": {
+       "Remember": 0.0048,
+       "Understand": 0.0,
+       "Apply": 0.9875,
+       "Analyze": 0.0049,
+       "Evaluate": 0.0,
+       "Create": 0.0028
+      },
+      "needs_review": false,
+      "lower_order": true,
+      "directives": [
+       {
+        "verb": "apply",
+        "kind": "imperative",
+        "phrase": null,
+        "negated": false
+       },
+       {
+        "verb": "show",
+        "kind": "imperative",
+        "phrase": null,
+        "negated": false
+       }
+      ],
+      "frame": null,
+      "evidence": "directive",
+      "votes": [
+       {
+        "agent": "Lexis",
+        "level": "Apply",
+        "confidence": 0.9811777280425832,
+        "proba": [
+         0.0072,
+         0.0,
+         0.9812,
+         0.0074,
+         0.0,
+         0.0042
+        ],
+        "reasoning": null
+       },
+       {
+        "agent": "Archivist",
+        "level": "Understand",
+        "confidence": 0.3903336453837084,
+        "proba": [
+         0.3747,
+         0.3903,
+         0.0882,
+         0.0867,
+         0.03,
+         0.03
+        ],
+        "reasoning": null
+       },
+       {
+        "agent": "Socrates",
+        "level": "Apply",
+        "confidence": 0.9999999999723063,
+        "proba": [
+         0.0,
+         0.0,
+         1.0,
+         0.0,
+         0.0,
+         0.0
+        ],
+        "reasoning": "The question asks the student to carry out a specific procedure (applying paging) in a given scenario with defined parameters (4 pages, 8 frame slots). It requires the student to implement a step-by-step process—loading processes, mapping pages to frames, and handling page faults—using concrete components like page table entries. This involves executing a known algorithm (paging) in a specific context, which falls under the application of knowledge in a real-world scenario. While some elements involve understanding or analysis, the primary cognitive demand is to perform and demonstrate the implementation of a system, not to explain, analyze, or create something new. Therefore, the highest required cognitive level is Apply (level 3)."
+       }
+      ],
+      "neighbours": [
+       {
+        "question": "How virtual Memory is managed using paging.",
+        "level": "Understand",
+        "similarity": 0.779,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "Explain the basic method for implementing paging.",
+        "level": "Remember",
+        "similarity": 0.718,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "Explore memory management in the Virtual 8086 Mode.",
+        "level": "Remember",
+        "similarity": 0.702,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "Explain the virtual memory system with suitable diagram.",
+        "level": "Remember",
+        "similarity": 0.697,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "Consider the following page reference string A,B,C,D,A,B,E,A,B,C,D,E. Calculate page fault with FIFO page replacement algorithm when framesize is 4.",
+        "level": "Apply",
+        "similarity": 0.688,
+        "source": "indian_engineering"
+       }
+      ],
+      "explanation": []
+     }
+    },
+    {
+     "question": {
+      "id": "6",
+      "number": "Q6",
+      "text": "Apply demand paging to a system with 512 MB physical memory and 2 GB virtual memory, where a process initially loads 128 MB of code and data. Show how the system handles the loading of additional 32 MB of code segments using demand paging, including the steps and memory management actions involved.",
+      "context": null,
+      "marks": 10.0,
+      "section": "B",
+      "group": null,
+      "option": null,
+      "course_outcome": "CO3",
+      "tagged_level": "Remember",
+      "locked": false
+     },
+     "prediction": {
+      "question": "Apply demand paging to a system with 512 MB physical memory and 2 GB virtual memory, where a process initially loads 128 MB of code and data. Show how the system handles the loading of additional 32 MB of code segments using demand paging, including the steps and memory management actions involved.",
+      "level": "Apply",
+      "level_id": 3,
+      "confidence": 0.9769494708076095,
+      "proba": {
+       "Remember": 0.0142,
+       "Understand": 0.0,
+       "Apply": 0.9769,
+       "Analyze": 0.0059,
+       "Evaluate": 0.0,
+       "Create": 0.003
+      },
+      "needs_review": false,
+      "lower_order": true,
+      "directives": [
+       {
+        "verb": "apply",
+        "kind": "imperative",
+        "phrase": null,
+        "negated": false
+       },
+       {
+        "verb": "show",
+        "kind": "imperative",
+        "phrase": null,
+        "negated": false
+       }
+      ],
+      "frame": null,
+      "evidence": "directive",
+      "votes": [
+       {
+        "agent": "Lexis",
+        "level": "Apply",
+        "confidence": 0.9654708973806653,
+        "proba": [
+         0.0212,
+         0.0,
+         0.9655,
+         0.0088,
+         0.0,
+         0.0045
+        ],
+        "reasoning": null
+       },
+       {
+        "agent": "Archivist",
+        "level": "Understand",
+        "confidence": 0.47021186499566464,
+        "proba": [
+         0.3851,
+         0.4702,
+         0.0362,
+         0.0362,
+         0.0362,
+         0.0362
+        ],
+        "reasoning": null
+       },
+       {
+        "agent": "Socrates",
+        "level": "Apply",
+        "confidence": 0.999906617661498,
+        "proba": [
+         0.0,
+         0.0,
+         0.9999,
+         0.0001,
+         0.0,
+         0.0
+        ],
+        "reasoning": "The question asks the student to carry out a specific procedure (demand paging) in a given system configuration. It requires the student to apply the concept of demand paging to a real-world scenario with defined memory sizes and process loading. The student must execute step-by-step memory management actions (e.g., loading segments on demand, managing page tables, handling page faults) in a concrete context. This involves using a known procedure (demand paging) in a specific situation, which aligns with the cognitive process of 'Apply'.\n\nAlthough the question involves some analysis of memory usage, the core task is not to break down the system or evaluate different methods, nor to create a new system. It is focused on implementing a known technique in a given setup. Therefore, the highest cognitive level required is 'Apply'.\n\nNote: The presence of 'how' and 'show' does not elevate it to Analyze or Evaluate. The instruction is to apply a known method to a scenario, not to compare, judge, or invent a new solution."
+       }
+      ],
+      "neighbours": [
+       {
+        "question": "How virtual Memory is managed using paging.",
+        "level": "Understand",
+        "similarity": 0.822,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "Explain the need of demand paging with advantages.",
+        "level": "Remember",
+        "similarity": 0.754,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "Explain the virtual memory.",
+        "level": "Remember",
+        "similarity": 0.712,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "Explore memory management in the Virtual 8086 Mode.",
+        "level": "Remember",
+        "similarity": 0.708,
+        "source": "indian_engineering"
+       },
+       {
+        "question": "Explain the basic method for implementing paging.",
+        "level": "Remember",
+        "similarity": 0.707,
+        "source": "indian_engineering"
+       }
+      ],
+      "explanation": []
+     }
+    }
+   ],
+   "distribution": {
+    "Remember": 0.3,
+    "Understand": 0.1,
+    "Apply": 0.5,
+    "Analyze": 0.0,
+    "Evaluate": 0.1,
+    "Create": 0.0
+   },
+   "weight_by": "marks",
+   "checks": [
+    {
+     "bound": {
+      "levels": [
+       "Remember",
+       "Understand"
+      ],
+      "min_share": null,
+      "max_share": 0.4,
+      "label": "Lower order (Remember + Understand)"
+     },
+     "description": "Lower order (Remember + Understand) <= 40% of marks",
+     "share": 0.4,
+     "ok": true,
+     "gap": 0.0
+    },
+    {
+     "bound": {
+      "levels": [
+       "Apply",
+       "Analyze"
+      ],
+      "min_share": 0.4,
+      "max_share": null,
+      "label": "Apply + Analyze"
+     },
+     "description": "Apply + Analyze >= 40% of marks",
+     "share": 0.5,
+     "ok": true,
+     "gap": 0.0
+    },
+    {
+     "bound": {
+      "levels": [
+       "Evaluate",
+       "Create"
+      ],
+      "min_share": 0.1,
+      "max_share": null,
+      "label": "Higher order (Evaluate + Create)"
+     },
+     "description": "Higher order (Evaluate + Create) >= 10% of marks",
+     "share": 0.1,
+     "ok": true,
+     "gap": 0.0
+    }
+   ],
+   "compliant": true,
+   "needs_review": [
+    "2",
+    "3"
+   ]
+  },
+  "final_paper": {
+   "title": "sample_os_paper",
+   "questions": [
+    {
+     "id": "1a",
+     "number": "Q1 (a)",
+     "text": "Define a process.",
+     "context": null,
+     "marks": 2.0,
+     "section": "A",
+     "group": null,
+     "option": null,
+     "course_outcome": "CO1",
+     "tagged_level": "Remember",
+     "locked": false
+    },
+    {
+     "id": "1b",
+     "number": "Q1 (b)",
+     "text": "List the states of a process.",
+     "context": null,
+     "marks": 2.0,
+     "section": "A",
+     "group": null,
+     "option": null,
+     "course_outcome": "CO1",
+     "tagged_level": "Remember",
+     "locked": false
+    },
+    {
+     "id": "1c",
+     "number": "Q1 (c)",
+     "text": "What is a context switch?",
+     "context": null,
+     "marks": 2.0,
+     "section": "A",
+     "group": null,
+     "option": null,
+     "course_outcome": "CO1",
+     "tagged_level": "Remember",
+     "locked": false
+    },
+    {
+     "id": "1d",
+     "number": "Q1 (d)",
+     "text": "State the necessary conditions for deadlock.",
+     "context": null,
+     "marks": 2.0,
+     "section": "A",
+     "group": null,
+     "option": null,
+     "course_outcome": "CO2",
+     "tagged_level": "Remember",
+     "locked": false
+    },
+    {
+     "id": "1e",
+     "number": "Q1 (e)",
+     "text": "What is thrashing?",
+     "context": null,
+     "marks": 2.0,
+     "section": "A",
+     "group": null,
+     "option": null,
+     "course_outcome": "CO3",
+     "tagged_level": "Remember",
+     "locked": false
+    },
+    {
+     "id": "2",
+     "number": "Q2",
+     "text": "Explain the difference between preemptive and non-preemptive scheduling with suitable examples.",
+     "context": null,
+     "marks": 10.0,
+     "section": "B",
+     "group": "g2",
+     "option": "2",
+     "course_outcome": "CO2",
+     "tagged_level": "Understand",
+     "locked": false
+    },
+    {
+     "id": "3",
+     "number": "Q3",
+     "text": "Implement a solution to the producer-consumer problem using semaphores in a shared memory environment where two threads produce and consume data from a buffer of size 5, ensuring no overflow or underflow occurs.",
+     "context": null,
+     "marks": 10.0,
+     "section": "B",
+     "group": "g2",
+     "option": "3",
+     "course_outcome": "CO2",
+     "tagged_level": "Understand",
+     "locked": false
+    },
+    {
+     "id": "4a",
+     "number": "Q4 (a)",
+     "text": "Draw the Gantt chart for FCFS scheduling.",
+     "context": "Consider the following processes with burst times P1=24, P2=3, P3=3 ms.",
+     "marks": 5.0,
+     "section": "B",
+     "group": null,
+     "option": null,
+     "course_outcome": null,
+     "tagged_level": null,
+     "locked": false
+    },
+    {
+     "id": "4b",
+     "number": "Q4 (b)",
+     "text": "Critique the fairness of FCFS and SJF scheduling in the given scenario, assessing which algorithm better meets the criteria of minimizing average waiting time and justifying your judgment with specific process behavior analysis.",
+     "context": "Consider the following processes with burst times P1=24, P2=3, P3=3 ms.",
+     "marks": 5.0,
+     "section": "B",
+     "group": null,
+     "option": null,
+     "course_outcome": null,
+     "tagged_level": null,
+     "locked": false
+    },
+    {
+     "id": "5",
+     "number": "Q5",
+     "text": "Apply paging to a memory management scenario with 4 pages and 8 frame slots; show how processes are loaded and pages are mapped to frames, including page table entries and handling page faults.",
+     "context": null,
+     "marks": 10.0,
+     "section": "B",
+     "group": null,
+     "option": null,
+     "course_outcome": "CO3",
+     "tagged_level": "Understand",
+     "locked": false
+    },
+    {
+     "id": "6",
+     "number": "Q6",
+     "text": "Apply demand paging to a system with 512 MB physical memory and 2 GB virtual memory, where a process initially loads 128 MB of code and data. Show how the system handles the loading of additional 32 MB of code segments using demand paging, including the steps and memory management actions involved.",
+     "context": null,
+     "marks": 10.0,
+     "section": "B",
+     "group": null,
+     "option": null,
+     "course_outcome": "CO3",
+     "tagged_level": "Remember",
+     "locked": false
+    }
+   ],
+   "total_marks": 50.0,
+   "warnings": []
+  }
+ },
+ "error": null,
+ "trace": [
+  {
+   "at": "2026-10-26T09:14:32.567312Z",
+   "agent": "Lexis",
+   "action": "classified",
+   "detail": {
+    "n": 11,
+    "model": "embedlex"
+   },
+   "ms": 2.0024169934913516
+  },
+  {
+   "at": "2026-10-26T09:14:32.590901Z",
+   "agent": "Archivist",
+   "action": "retrieved neighbours",
+   "detail": {
+    "k": 8
+   },
+   "ms": 23.57945905532688
+  },
+  {
+   "at": "2026-10-26T09:14:32.625973Z",
+   "agent": "Socrates",
+   "action": "reasoned votes",
+   "detail": {
+    "n": 3,
+    "model": "qwen3:4b-instruct-2507-q4_K_M"
+   },
+   "ms": 35.05008399952203
+  },
+  {
+   "at": "2026-10-26T09:14:32.626407Z",
+   "agent": "Arbiter",
+   "action": "pooled votes",
+   "detail": {
+    "n": 11,
+    "sent_to_llm": 3,
+    "needs_review": 1
+   },
+   "ms": 0.4279169952496886
+  },
+  {
+   "at": "2026-10-26T09:14:32.626454Z",
+   "agent": "Conductor",
+   "action": "assessed paper",
+   "detail": {
+    "questions": 11,
+    "compliant": false,
+    "needs_review": 1
+   },
+   "ms": 61.14733300637454
+  },
+  {
+   "at": "2026-10-26T09:14:32.626973Z",
+   "agent": "Architect",
+   "action": "planned rewrites",
+   "detail": {
+    "jobs": 4,
+    "blueprint": "balanced-ug"
+   },
+   "ms": 0.5154160317033529
+  },
+  {
+   "at": "2026-10-26T09:14:35.059362Z",
+   "agent": "Composer",
+   "action": "drafted",
+   "detail": {
+    "question_id": "6",
+    "attempt": 1,
+    "text": "Apply demand paging to a system with 512 MB physical memory and 2 GB virtual memory, where a process initially loads 128 MB of code and data. Show how the system handles the loading of additional 32 MB of code segments using demand paging, including the steps and memory management actions involved."
+   },
+   "ms": 2432.3251669993624
+  },
+  {
+   "at": "2026-10-26T09:14:35.101965Z",
+   "agent": "Lexis",
+   "action": "classified",
+   "detail": {
+    "n": 1,
+    "model": "embedlex"
+   },
+   "ms": 5.17204194329679
+  },
+  {
+   "at": "2026-10-26T09:14:35.123698Z",
+   "agent": "Archivist",
+   "action": "retrieved neighbours",
+   "detail": {
+    "k": 8
+   },
+   "ms": 21.719458047300577
+  },
+  {
+   "at": "2026-10-26T09:14:35.123854Z",
+   "agent": "Arbiter",
+   "action": "pooled votes",
+   "detail": {
+    "n": 1,
+    "sent_to_llm": 0,
+    "needs_review": 0
+   },
+   "ms": 0.14224997721612453
+  },
+  {
+   "at": "2026-10-26T09:14:35.123875Z",
+   "agent": "Verifier",
+   "action": "checked",
+   "detail": {
+    "question_id": "6",
+    "attempt": 1,
+    "passed": true,
+    "failed": []
+   },
+   "ms": 64.48887498117983
+  },
+  {
+   "at": "2026-10-26T09:14:37.179153Z",
+   "agent": "Composer",
+   "action": "drafted",
+   "detail": {
+    "question_id": "5",
+    "attempt": 1,
+    "text": "Apply paging to a memory management scenario with 4 pages and 8 frame slots; show how processes are loaded and pages are mapped to frames, including page table entries and handling page faults."
+   },
+   "ms": 2055.1642919890583
+  },
+  {
+   "at": "2026-10-26T09:14:37.215963Z",
+   "agent": "Lexis",
+   "action": "classified",
+   "detail": {
+    "n": 1,
+    "model": "embedlex"
+   },
+   "ms": 5.308000021614134
+  },
+  {
+   "at": "2026-10-26T09:14:37.228234Z",
+   "agent": "Archivist",
+   "action": "retrieved neighbours",
+   "detail": {
+    "k": 8
+   },
+   "ms": 12.252375017851591
+  },
+  {
+   "at": "2026-10-26T09:14:37.228406Z",
+   "agent": "Arbiter",
+   "action": "pooled votes",
+   "detail": {
+    "n": 1,
+    "sent_to_llm": 0,
+    "needs_review": 0
+   },
+   "ms": 0.15700003132224083
+  },
+  {
+   "at": "2026-10-26T09:14:37.228432Z",
+   "agent": "Verifier",
+   "action": "checked",
+   "detail": {
+    "question_id": "5",
+    "attempt": 1,
+    "passed": true,
+    "failed": []
+   },
+   "ms": 49.235749989748
+  },
+  {
+   "at": "2026-10-26T09:14:38.959063Z",
+   "agent": "Composer",
+   "action": "drafted",
+   "detail": {
+    "question_id": "3",
+    "attempt": 1,
+    "text": "Implement a solution to the producer-consumer problem using semaphores in a shared memory environment where two threads produce and consume data from a buffer of size 5, ensuring no overflow or underflow occurs."
+   },
+   "ms": 1730.5620829574764
+  },
+  {
+   "at": "2026-10-26T09:14:38.996288Z",
+   "agent": "Lexis",
+   "action": "classified",
+   "detail": {
+    "n": 1,
+    "model": "embedlex"
+   },
+   "ms": 6.88741693738848
+  },
+  {
+   "at": "2026-10-26T09:14:39.008583Z",
+   "agent": "Archivist",
+   "action": "retrieved neighbours",
+   "detail": {
+    "k": 8
+   },
+   "ms": 12.268792022950947
+  },
+  {
+   "at": "2026-10-26T09:14:39.008787Z",
+   "agent": "Arbiter",
+   "action": "pooled votes",
+   "detail": {
+    "n": 1,
+    "sent_to_llm": 0,
+    "needs_review": 0
+   },
+   "ms": 0.17933407798409462
+  },
+  {
+   "at": "2026-10-26T09:14:39.008813Z",
+   "agent": "Verifier",
+   "action": "checked",
+   "detail": {
+    "question_id": "3",
+    "attempt": 1,
+    "passed": true,
+    "failed": []
+   },
+   "ms": 49.72895898390561
+  },
+  {
+   "at": "2026-10-26T09:14:41.158390Z",
+   "agent": "Composer",
+   "action": "drafted",
+   "detail": {
+    "question_id": "4b",
+    "attempt": 1,
+    "text": "Critique the fairness of FCFS and SJF scheduling in the given scenario, assessing which algorithm better meets the criteria of minimizing average waiting time and justifying your judgment with specific process behavior analysis."
+   },
+   "ms": 2149.504291010089
+  },
+  {
+   "at": "2026-10-26T09:14:41.197211Z",
+   "agent": "Lexis",
+   "action": "classified",
+   "detail": {
+    "n": 1,
+    "model": "embedlex"
+   },
+   "ms": 5.3348749643191695
+  },
+  {
+   "at": "2026-10-26T09:14:41.207535Z",
+   "agent": "Archivist",
+   "action": "retrieved neighbours",
+   "detail": {
+    "k": 8
+   },
+   "ms": 10.296166990883648
+  },
+  {
+   "at": "2026-10-26T09:14:41.207694Z",
+   "agent": "Arbiter",
+   "action": "pooled votes",
+   "detail": {
+    "n": 1,
+    "sent_to_llm": 0,
+    "needs_review": 0
+   },
+   "ms": 0.13658299576491117
+  },
+  {
+   "at": "2026-10-26T09:14:44.096326Z",
+   "agent": "Verifier",
+   "action": "checked",
+   "detail": {
+    "question_id": "4b",
+    "attempt": 1,
+    "passed": true,
+    "failed": []
+   },
+   "ms": 2937.7671249676496
+  },
+  {
+   "at": "2026-10-26T09:14:44.106839Z",
+   "agent": "Lexis",
+   "action": "classified",
+   "detail": {
+    "n": 11,
+    "model": "embedlex"
+   },
+   "ms": 9.654624969698489
+  },
+  {
+   "at": "2026-10-26T09:14:44.124005Z",
+   "agent": "Archivist",
+   "action": "retrieved neighbours",
+   "detail": {
+    "k": 8
+   },
+   "ms": 17.133916961029172
+  },
+  {
+   "at": "2026-10-26T09:14:44.221901Z",
+   "agent": "Socrates",
+   "action": "reasoned votes",
+   "detail": {
+    "n": 6,
+    "model": "qwen3:4b-instruct-2507-q4_K_M"
+   },
+   "ms": 97.83308301120996
+  },
+  {
+   "at": "2026-10-26T09:14:44.223380Z",
+   "agent": "Arbiter",
+   "action": "pooled votes",
+   "detail": {
+    "n": 11,
+    "sent_to_llm": 6,
+    "needs_review": 2
+   },
+   "ms": 1.452250056900084
+  },
+  {
+   "at": "2026-10-26T09:14:44.223646Z",
+   "agent": "Conductor",
+   "action": "assessed paper",
+   "detail": {
+    "questions": 11,
+    "compliant": true,
+    "needs_review": 2
+   },
+   "ms": 126.47283298429102
+  }
+ ]
+}

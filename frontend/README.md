@@ -8,6 +8,9 @@ The backend is complete and stable; this folder is reserved for the web UI.
 * Contract: [`../docs/API.md`](../docs/API.md) and [`../docs/openapi.json`](../docs/openapi.json)
   (generate a typed client from it, e.g. `npx openapi-typescript ../docs/openapi.json -o src/api.ts`).
 * Run the API locally: `bloombot serve` → `http://127.0.0.1:8000` (CORS is open for development).
+* Offline mock data: [`fixtures/`](fixtures) holds real responses from every endpoint the UI
+  needs (five example questions, the sample OS paper parsed/assessed/rebalanced with its trace,
+  blueprints, experiments). Regenerate with `python scripts/make_fixtures.py`.
 
 Suggested screens, each backed by existing endpoints:
 

@@ -160,8 +160,12 @@ bloombot serve --port 8000          # API + Swagger UI at http://127.0.0.1:8000/
                      "Evaluate whether a microkernel is a better choice than a monolithic kernel for a pacemaker."
    ```
 
-   Point out three things. Bag-of-words models say Evaluate for both. BloomLex reads the
-   directive. The first answer is unsure, so the LLM would be consulted.
+   Point out three things. Bag-of-words models say Evaluate for both. Lexis reads the
+   directive and says Understand, but only at 0.51 (Analyze 0.43), so the LLM is consulted.
+   The LLM falls for the trap (Evaluate, 1.00). Because the Arbiter gives it half weight, the
+   pooled answer is Evaluate at only 0.37, just ahead of Understand at 0.34. That is too
+   uncertain, so the question is flagged ⚑ for the teacher rather than silently mislabelled.
+   This is the honest case for a teacher-in-the-loop.
 2. **The parse** (1 min). Open `POST /v1/analyze` in Swagger. Show the directive, the
    embedded verb, the masked text and the prior.
 3. **A real paper** (3 min). Run:

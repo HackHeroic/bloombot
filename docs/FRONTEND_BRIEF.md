@@ -76,7 +76,7 @@ A status chip in the header shows whether the local LLM is available
 4. **Assess**, which leads to the report:
    - a **distribution bar by marks** across the 6 levels, with the blueprint's bounds drawn
      on it as brackets or threshold markers, plus a pass/fail check list ("Lower order ≤ 40%
-     of marks — 80% ✗, 40 points over")
+     of marks — 90% ✗, 50 points over")
    - one big verdict: *Compliant* / *Not compliant*
    - a question table with these columns: id, text, marks, predicted level (coloured chip +
      mini ladder), confidence, printed tag vs predicted (highlight disagreements), ⚑ review
@@ -293,7 +293,9 @@ Total: 9,855.
 
 ### Mock data (the real API shapes)
 
-`POST /v1/classify` returns a `Prediction` per question. Lexis and the neighbours below are real output; the Archivist and Socrates values are illustrative:
+**Real responses for every screen are in `frontend/fixtures/*.json`** (regenerate with `python scripts/make_fixtures.py`): five example questions with full votes, LLM reasoning and 5 neighbours, the parsed and assessed sample paper with full probabilities, the rebalance job with every check value and the 31-event trace, and the experiment tables. Use those rather than the excerpt below.
+
+`POST /v1/classify` returns a `Prediction` per question. Lexis and the neighbours below are real output; the Archivist and Socrates values are illustrative (in the real run the LLM falls for this trap and votes Evaluate, so the pooled answer is Evaluate 0.37 and flagged ⚑; see `fixtures/classify.json`):
 
 ```json
 {
@@ -351,8 +353,8 @@ Distribution by marks: Remember 70%, Understand 20%, Apply 10%. Against **Balanc
 
 | Bound | Share | Result |
 |---|---:|---|
-| Lower order ≤ 40% | 80% | ✗ |
-| Apply + Analyze ≥ 40% | 20% | ✗ |
+| Lower order ≤ 40% | 90% | ✗ |
+| Apply + Analyze ≥ 40% | 10% | ✗ |
 | Evaluate + Create ≥ 10% | 0% | ✗ |
 
 The rebalance job planned 4 rewrites, all accepted on the first attempt:
