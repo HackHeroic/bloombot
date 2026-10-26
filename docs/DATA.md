@@ -3,7 +3,11 @@
 `bloombot data build` downloads every file from its original publisher, converts labels to
 the six revised Bloom levels, cleans and de-duplicates, and writes
 `data/processed/questions.parquet` plus `data/processed/datacard.json` (every count below
-comes from that file). Nothing is redistributed in this repository.
+comes from that file). The data itself is not in this repository, except a small sample for the web
+UI's dataset explorer (`frontend/src/recorded/dataset.json`: up to 20 questions per source and
+level, from the six sources whose licences allow it, each shown with its licence and citation).
+The Indian school-board set (CC BY-NC, and the held-out test set) appears there as counts only;
+`GET /v1/dataset` follows the same rule (`Source.public` in `src/bloombot/data/sources.py`).
 
 ## Sources
 
