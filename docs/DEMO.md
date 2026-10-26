@@ -150,8 +150,19 @@ Figures: `docs/figures/fig_drop.png`, `fig_concept_shift.png`, `fig_adapt.png`,
 ```bash
 source .venv/bin/activate
 ollama serve &                      # if the LLM part is shown
-bloombot serve --port 8000          # API + Swagger UI at http://127.0.0.1:8000/docs
+(cd frontend && npm install && npm run build)   # once
+bloombot serve --port 8000          # web UI at http://127.0.0.1:8000, Swagger at /docs
 ```
+
+Open http://127.0.0.1:8000 about a minute early: the first request loads the models (~20 s), and
+the header chip turns green ("Live API"). If the API cannot run on the demo machine, the same UI
+replays recorded runs (amber "Replay · recorded" chip), so nothing on stage depends on it.
+
+**In the web UI** the script below maps to: *Classify a question* (steps 1–2, "View parse"),
+*Check a paper → Try the sample OS paper → Assess* (step 3), *Rebalance this paper* (step 4: the
+pipeline streams every agent step live and each rewrite card lands as it passes its checks),
+*College profile* (step 5), *Evaluation* and *How it works* (step 6). The CLI commands below do the
+same from a terminal.
 
 1. **The trap** (1 min). Classify the verb trap next to an honest Evaluate question:
 

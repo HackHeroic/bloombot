@@ -68,12 +68,16 @@ python -m spacy download en_core_web_sm
 
 bloombot data build          # downloads the 7 public sources (~3 MB) and builds data/processed/
 bloombot train               # trains the classifier (~30 s on a laptop)
-pytest                       # 55 tests, ~6 s, offline
+pytest                       # 57 tests, ~7 s, offline
 
 bloombot classify "Explain how you would design a database schema." "Evaluate the integral of 2x from 0 to 3."
 bloombot paper data/papers/sample_table_paper.txt --blueprint balanced-ug --rebalance --out results/demo
 bloombot serve               # HTTP API on http://127.0.0.1:8000 (docs at /docs)
 ```
+
+Web UI (Next.js, in `frontend/`): `cd frontend && npm install && npm run build`, then
+`bloombot serve` also serves it at http://127.0.0.1:8000. It streams rebalance jobs live and falls
+back to recorded runs when the API is not running ([frontend/README.md](frontend/README.md)).
 
 Optional LLM (classification of hard cases, rewriting, verification):
 
@@ -112,7 +116,7 @@ src/bloombot/
 configs/blueprints/   AICTE-2018 example cap, balanced template
 data/probes/          contrast set (58 items); data/papers/ sample papers
 docs/                 DESIGN, DATA (data card), RESULTS, API, openapi.json, labelling guide, figures
-frontend/             reserved for the web UI (contract in docs/API.md)
+frontend/             Next.js web UI built from the Claude Design project (live API + recorded replay)
 ```
 
 ## Documentation
