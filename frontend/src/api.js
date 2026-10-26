@@ -78,6 +78,9 @@ export const api = {
   rereport: body => post('/v1/papers/report', body),  // recompute with teacher levels, no classifying
   plan: body => post('/v1/papers/plan', body),
   blueprints: () => req('/v1/blueprints', {}, 30000),
+  samples: () => req('/v1/samples', {}, 30000),
+  sample: id => req(`/v1/samples/${encodeURIComponent(id)}`, {}, 30000),
+  dataset: params => req('/v1/dataset?' + new URLSearchParams(Object.entries(params).filter(([, v]) => v != null && v !== '')), {}, 30000),
   classify: body => post('/v1/classify', body),
   analyze: question => post('/v1/analyze', { question }),
   rebalance: body => post('/v1/papers/rebalance', body),

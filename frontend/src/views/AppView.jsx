@@ -280,12 +280,31 @@ export function view(v) {
                           <button onClick={v.parsePaste} style={sx(`background:var(--ink);color:var(--bg);border:none;border-radius:10px;padding:11px 18px;font-weight:600;font-size:14px;cursor:pointer`)}>
                             {"Parse text"}
                           </button>
-                          <button onClick={v.useSample} style={sx(`background:transparent;color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:11px 18px;font-weight:600;font-size:14px;cursor:pointer`)}>
-                            {"Try the sample OS paper (50 marks)"}
-                          </button>
                         </div>
                       </div>
                     </div>
+                    <section aria-label={"Sample papers"} style={sx(`display:flex;flex-direction:column;gap:12px`)}>
+                      <div style={sx(`display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 14px`)}>
+                        <h2 style={sx(`font-family:'Newsreader',serif;font-weight:500;font-size:24px;margin:0`)}>
+                          {"Or try a sample paper"}
+                        </h2>
+                        <span style={sx(`font-size:13px;color:var(--ink3)`)}>
+                          {v.samplesNote}
+                        </span>
+                      </div>
+                      <div style={sx(`display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:12px`)}>
+                        {(v.samples || []).map((sm, sm_i) => (<React.Fragment key={sm_i}>
+                          <button onClick={sm.pick} style={sx(`display:flex;flex-direction:column;gap:6px;text-align:left;padding:16px 18px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:14px;cursor:pointer`)}>
+                            <span style={sx(`font-weight:600`)}>
+                              {sm.subject}
+                            </span>
+                            <span style={sx(`font-size:13px;color:var(--ink2)`)}>
+                              {sm.details}
+                            </span>
+                          </button>
+                        </React.Fragment>))}
+                      </div>
+                    </section>
                   </div>
                 </>) : null}
                 {v.checkParsing ? (<>
@@ -2300,6 +2319,122 @@ export function view(v) {
                     </tbody>
                   </table>
                 </div>
+                <section aria-label={"Browse the questions"} style={sx(`background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:24px;display:flex;flex-direction:column;gap:16px`)}>
+                  <div style={sx(`display:flex;flex-direction:column;gap:4px`)}>
+                    <h2 style={sx(`font-family:'Newsreader',serif;font-weight:500;font-size:26px;margin:0`)}>
+                      {"Browse the questions"}
+                    </h2>
+                    <span style={sx(`font-size:13px;color:var(--ink3)`)}>
+                      {v.dsSub}
+                    </span>
+                  </div>
+                  <div style={sx(`display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end`)}>
+                    <label style={sx(`display:flex;flex-direction:column;gap:6px;font-size:13px;font-weight:600;color:var(--ink2)`)}>
+                      {"Source"}
+                      <select aria-label={"Source"} value={v.dsSource} onChange={v.onDsSource} style={sx(`min-width:220px;font-size:14px;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:9px 10px`)}>
+                        {(v.dsSourceOpts || []).map((o, o_i) => (<React.Fragment key={o_i}>
+                          <option value={o.id}>
+                            {o.label}
+                          </option>
+                        </React.Fragment>))}
+                      </select>
+                    </label>
+                    <label style={sx(`display:flex;flex-direction:column;gap:6px;font-size:13px;font-weight:600;color:var(--ink2);flex:1 1 220px`)}>
+                      {"Search"}
+                      <input aria-label={"Search questions"} type={"search"} value={v.dsQuery} onChange={v.onDsQuery} placeholder={"a word, e.g. design or explain"} style={sx(`font-size:14px;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:9px 12px`)} />
+                    </label>
+                  </div>
+                  <div role={"radiogroup"} aria-label={"Bloom level"} style={sx(`display:flex;flex-wrap:wrap;gap:8px`)}>
+                    {(v.dsLevels || []).map((lv, lv_i) => (<React.Fragment key={lv_i}>
+                      <button role={"radio"} aria-checked={lv.checked} onClick={lv.pick} style={sx(`display:inline-flex;align-items:center;gap:8px;padding:7px 12px;border-radius:999px;border:1px solid ${lv.border};background:${lv.bg};color:var(--ink);font-size:13px;font-weight:600;cursor:pointer`)}>
+                        <span style={sx(`background:${lv.chipBg};color:${lv.chipFg};border-radius:999px;padding:1px 7px;font-size:12px`)}>
+                          {lv.tag}
+                        </span>
+                        {lv.name}
+                        <span style={sx(`font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink3)`)}>
+                          {lv.count}
+                        </span>
+                      </button>
+                    </React.Fragment>))}
+                  </div>
+                  <ol style={sx(`list-style:none;margin:0;padding:0;display:flex;flex-direction:column`)}>
+                    {(v.dsItems || []).map((it, it_i) => (<React.Fragment key={it_i}>
+                      <li style={sx(`display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 12px;align-items:baseline;padding:10px 0;border-top:1px solid var(--line)`)}>
+                        <span style={sx(`background:${it.chip.bg};color:${it.chip.fg};font-size:12px;font-weight:600;padding:2px 9px;border-radius:999px;white-space:nowrap`)}>
+                          {it.chip.n}{" "}{it.chip.name}
+                        </span>
+                        <span style={sx(`font-size:14px;text-wrap:pretty`)}>
+                          {it.question}
+                        </span>
+                        <span />
+                        <span style={sx(`font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink3)`)}>
+                          {it.source}
+                        </span>
+                      </li>
+                    </React.Fragment>))}
+                  </ol>
+                  {v.dsEmpty ? (<>
+                    <p style={sx(`margin:0;font-size:14px;color:var(--ink2)`)}>
+                      {v.dsEmptyText}
+                    </p>
+                  </>) : null}
+                  <div style={sx(`display:flex;flex-wrap:wrap;align-items:center;gap:12px`)}>
+                    <button onClick={v.dsPrev} disabled={v.dsPrevDisabled} style={sx(`background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:8px 14px;font-weight:600;cursor:pointer`)}>
+                      {"← Previous"}
+                    </button>
+                    <span style={sx(`font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--ink2)`)}>
+                      {v.dsRange}
+                    </span>
+                    <button onClick={v.dsNext} disabled={v.dsNextDisabled} style={sx(`background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:8px 14px;font-weight:600;cursor:pointer`)}>
+                      {"Next →"}
+                    </button>
+                  </div>
+                  <div style={sx(`overflow-x:auto`)}>
+                    <table style={sx(`width:100%;border-collapse:collapse;font-size:13px;min-width:560px`)}>
+                      <thead>
+                        <tr style={sx(`text-align:left;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink3)`)}>
+                          <th style={sx(`padding:8px 12px 8px 0`)}>
+                            {"Source"}
+                          </th>
+                          <th style={sx(`padding:8px 12px`)}>
+                            {"Licence"}
+                          </th>
+                          <th style={sx(`padding:8px 12px;text-align:right`)}>
+                            {"Questions"}
+                          </th>
+                          <th style={sx(`padding:8px 0 8px 12px`)}>
+                            {"On this page"}
+                          </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {(v.dsSources || []).map((ls, ls_i) => (<React.Fragment key={ls_i}>
+                          <tr style={sx(`border-top:1px solid var(--line);vertical-align:top`)}>
+                            <td style={sx(`padding:10px 12px 10px 0`)}>
+                              <span style={sx(`display:block;font-weight:600`)}>
+                                {ls.title}
+                              </span>
+                              <span style={sx(`display:block;font-size:12px;color:var(--ink3)`)}>
+                                {ls.citation}
+                              </span>
+                            </td>
+                            <td style={sx(`padding:10px 12px`)}>
+                              <a href={ls.licenceUrl} target={"_blank"} rel={"noopener noreferrer"} style={sx(`color:var(--accent)`)}>
+                                {ls.licence}
+                              </a>
+                            </td>
+                            <td style={sx(`padding:10px 12px;text-align:right;font-family:'JetBrains Mono',monospace`)}>
+                              {ls.rows}
+                            </td>
+                            <td style={sx(`padding:10px 0 10px 12px;color:${ls.shownColor}`)}>
+                              {ls.shown}
+                            </td>
+                          </tr>
+                        </React.Fragment>))}
+                      </tbody>
+                    </table>
+                  </div>
+                </section>
               </section>
             </>) : null}
             {v.isSheet ? (<>

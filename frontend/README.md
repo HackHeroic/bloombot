@@ -54,11 +54,21 @@ running, it says so and the API uses its template rewriter.
 
 | Screen | Live API calls |
 |---|---|
-| Check a paper | `POST /v1/papers/parse` (file) or `/parse-text` (paste, sample); edits and 🔒 locks are sent back; `POST /v1/papers/assess` with the chosen blueprint and profile |
+| Check a paper | `POST /v1/papers/parse` (file) or `/parse-text` (paste); samples from `GET /v1/samples` and `/v1/samples/{id}`; edits, 🔒 locks, duration, maximum marks and pace are sent with `POST /v1/papers/assess-job` (progress, cancellable); resolving a ⚑ question calls `POST /v1/papers/report` |
 | Rebalance | `POST /v1/papers/plan`, `POST /v1/papers/rebalance`, then `GET /v1/jobs/{id}` every 0.7 s: each agent step appears as it happens and rewrite cards land when they pass the Verifier |
+| Data | the data card, plus **Browse the questions**: `GET /v1/dataset` (source, level, search, paged) with every source's licence; the school-board test set is counts only |
 | Classify | `POST /v1/classify` + `POST /v1/analyze` for any typed question; the five example chips show recorded results instantly |
 | College profile | labels collected with keys 1–6; "Use in assessments" calls `POST /v1/profiles` (≥ 5 different questions) and sends `profile_id` with every later call |
-| How it works, Evaluation, Data | static: the verified numbers from `docs/RESULTS.md` and `docs/DATA.md` |
+| How it works, Evaluation | static: the verified numbers from `docs/RESULTS.md` and `docs/DATA.md` |
+
+**Offline (replay)**, every sample paper still works end to end: `src/recorded/samples.json` holds
+real runs of each sample against each blueprint (parsed paper, assessment with time and marks,
+plan, and the full rebalance job with its timed trace), and `src/recorded.js` serves them through
+the same code path as the live API; a rebalance replays on its own timeline (at most 20 s). The
+Data page filters a bundled, licence-safe sample (`src/recorded/dataset.json`: up to 20 questions
+per public source and level). Both load only when needed. Regenerate them, with `bloombot serve`
+and Ollama running, by `python scripts/record_samples.py`; a new file in `data/papers/` becomes a
+sample automatically.
 
 Accept / Edit / Reject decisions and the exports (paper `.md`, report `.md` / `.json`) happen in
 the browser; only accepted and edited rewrites are written into the exported paper.

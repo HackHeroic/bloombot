@@ -105,10 +105,15 @@ button,input,textarea,select{font-family:inherit}
 <textarea id="paste" value="{{ pasteText }}" onChange="{{ onPaste }}" rows="7" placeholder="1. (a) Define a process. [2] CO1 BT1&#10;    (b) List the states of a process. [2] CO1 BT1&#10;2. Explain the difference between preemptive and…" style="flex:1;font:13px/1.6 'JetBrains Mono',monospace;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:12px;resize:vertical"></textarea>
 <div style="display:flex;flex-wrap:wrap;gap:10px">
 <button onClick="{{ parsePaste }}" style="background:var(--ink);color:var(--bg);border:none;border-radius:10px;padding:11px 18px;font-weight:600;font-size:14px;cursor:pointer">Parse text</button>
-<button onClick="{{ useSample }}" style="background:transparent;color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:11px 18px;font-weight:600;font-size:14px;cursor:pointer">Try the sample OS paper (50 marks)</button>
 </div>
 </div>
 </div>
+<section aria-label="Sample papers" style="display:flex;flex-direction:column;gap:12px">
+<div style="display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 14px"><h2 style="font-family:'Newsreader',serif;font-weight:500;font-size:24px;margin:0">Or try a sample paper</h2><span style="font-size:13px;color:var(--ink3)">{{ samplesNote }}</span></div>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,260px),1fr));gap:12px">
+<sc-for list="{{ samples }}" as="sm" hint-placeholder-count="3"><button onClick="{{ sm.pick }}" style="display:flex;flex-direction:column;gap:6px;text-align:left;padding:16px 18px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:14px;cursor:pointer"><span style="font-weight:600">{{ sm.subject }}</span><span style="font-size:13px;color:var(--ink2)">{{ sm.details }}</span></button></sc-for>
+</div>
+</section>
 </div>
 </sc-if>
 <sc-if value="{{ checkParsing }}" hint-placeholder-val="{{ false }}">
@@ -676,6 +681,25 @@ button,input,textarea,select{font-family:inherit}
 </tbody>
 </table>
 </div>
+<section aria-label="Browse the questions" style="background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:24px;display:flex;flex-direction:column;gap:16px">
+<div style="display:flex;flex-direction:column;gap:4px"><h2 style="font-family:'Newsreader',serif;font-weight:500;font-size:26px;margin:0">Browse the questions</h2><span style="font-size:13px;color:var(--ink3)">{{ dsSub }}</span></div>
+<div style="display:flex;flex-wrap:wrap;gap:12px;align-items:flex-end">
+<label style="display:flex;flex-direction:column;gap:6px;font-size:13px;font-weight:600;color:var(--ink2)">Source<select aria-label="Source" value="{{ dsSource }}" onChange="{{ onDsSource }}" style="min-width:220px;font-size:14px;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:9px 10px"><sc-for list="{{ dsSourceOpts }}" as="o"><option value="{{ o.id }}">{{ o.label }}</option></sc-for></select></label>
+<label style="display:flex;flex-direction:column;gap:6px;font-size:13px;font-weight:600;color:var(--ink2);flex:1 1 220px">Search<input aria-label="Search questions" type="search" value="{{ dsQuery }}" onChange="{{ onDsQuery }}" placeholder="a word, e.g. design or explain" style="font-size:14px;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:9px 12px"></label>
+</div>
+<div role="radiogroup" aria-label="Bloom level" style="display:flex;flex-wrap:wrap;gap:8px">
+<sc-for list="{{ dsLevels }}" as="lv" hint-placeholder-count="7"><button role="radio" aria-checked="{{ lv.checked }}" onClick="{{ lv.pick }}" style="display:inline-flex;align-items:center;gap:8px;padding:7px 12px;border-radius:999px;border:1px solid {{ lv.border }};background:{{ lv.bg }};color:var(--ink);font-size:13px;font-weight:600;cursor:pointer"><span style="background:{{ lv.chipBg }};color:{{ lv.chipFg }};border-radius:999px;padding:1px 7px;font-size:12px">{{ lv.tag }}</span>{{ lv.name }}<span style="font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink3)">{{ lv.count }}</span></button></sc-for>
+</div>
+<ol style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column">
+<sc-for list="{{ dsItems }}" as="it" hint-placeholder-count="5"><li style="display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 12px;align-items:baseline;padding:10px 0;border-top:1px solid var(--line)"><span style="background:{{ it.chip.bg }};color:{{ it.chip.fg }};font-size:12px;font-weight:600;padding:2px 9px;border-radius:999px;white-space:nowrap">{{ it.chip.n }} {{ it.chip.name }}</span><span style="font-size:14px;text-wrap:pretty">{{ it.question }}</span><span></span><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink3)">{{ it.source }}</span></li></sc-for>
+</ol>
+<sc-if value="{{ dsEmpty }}"><p style="margin:0;font-size:14px;color:var(--ink2)">{{ dsEmptyText }}</p></sc-if>
+<div style="display:flex;flex-wrap:wrap;align-items:center;gap:12px"><button onClick="{{ dsPrev }}" disabled="{{ dsPrevDisabled }}" style="background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:8px 14px;font-weight:600;cursor:pointer">← Previous</button><span style="font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--ink2)">{{ dsRange }}</span><button onClick="{{ dsNext }}" disabled="{{ dsNextDisabled }}" style="background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:8px 14px;font-weight:600;cursor:pointer">Next →</button></div>
+<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:13px;min-width:560px">
+<thead><tr style="text-align:left;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--ink3)"><th style="padding:8px 12px 8px 0">Source</th><th style="padding:8px 12px">Licence</th><th style="padding:8px 12px;text-align:right">Questions</th><th style="padding:8px 0 8px 12px">On this page</th></tr></thead>
+<tbody><sc-for list="{{ dsSources }}" as="ls" hint-placeholder-count="7"><tr style="border-top:1px solid var(--line);vertical-align:top"><td style="padding:10px 12px 10px 0"><span style="display:block;font-weight:600">{{ ls.title }}</span><span style="display:block;font-size:12px;color:var(--ink3)">{{ ls.citation }}</span></td><td style="padding:10px 12px"><a href="{{ ls.licenceUrl }}" target="_blank" rel="noopener noreferrer" style="color:var(--accent)">{{ ls.licence }}</a></td><td style="padding:10px 12px;text-align:right;font-family:'JetBrains Mono',monospace">{{ ls.rows }}</td><td style="padding:10px 0 10px 12px;color:{{ ls.shownColor }}">{{ ls.shown }}</td></tr></sc-for></tbody>
+</table></div>
+</section>
 </section>
 </sc-if>
 <sc-if value="{{ isSheet }}" hint-placeholder-val="{{ false }}">

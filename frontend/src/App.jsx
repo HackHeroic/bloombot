@@ -8,7 +8,7 @@ import { view } from './views/AppView.jsx';
 import { BB } from './designData.js';
 import { api, apiBase, savedApi, saveApi, clearApi, connectTarget, whyUnreachable, REPLAY_BUILD } from './api.js';
 import * as A from './adapt.js';
-import { SAMPLE_OS_PAPER } from './samples.js';
+import { loadRecorded, loadDataset, recordedClient, datasetPage } from './recorded.js';
 
 export default class App extends React.Component {
   static defaultProps = { frame: 'auto', traceSpeed: 260 };
@@ -37,8 +37,14 @@ export default class App extends React.Component {
     this.onExit = () => { if (this.assessJobId) api.cancelJobOnExit(this.assessJobId); };
     window.addEventListener('resize', this.onResize); window.addEventListener('keydown', this.onKey); window.addEventListener('pagehide', this.onExit);
     this.apiReady = this.checkApi();
+    this.apiReady.then(() => this.loadSamples());
   }
   componentDidUpdate(_, prev) {
+    if (prev.online !== this.state.online && this.state.online !== null) {
+      this.loadSamples();
+      if (this.state.page === 'data' || this.state.ds) this.loadDataset();
+    }
+    if (prev.page !== this.state.page && this.state.page === 'data' && !this.state.ds) this.loadDataset();
     if (prev.jobN !== this.state.jobN) {  // keep the newest trace event in view
       const logEl = document.querySelector('[role="log"]');
       if (logEl) logEl.scrollTop = logEl.scrollHeight;
@@ -50,6 +56,51 @@ export default class App extends React.Component {
   // ---------- API ----------
   live() { return this.state.online === true; }
   set(patch) { return new Promise(r => this.setState(patch, r)); }
+  // The API to talk to: the live one, or the recorded runs of the sample being shown offline.
+  client() {
+    if (this.live()) return api;
+    return this.state.rec && this.R ? recordedClient(this.R, this.state.rec) : null;
+  }
+
+  async loadSamples() {
+    try {
+      const samples = this.live() ? await api.samples() : (this.R = await loadRecorded()).samples;
+      this.setState({ samples });
+    } catch (e) { /* the picker stays empty; uploading still works */ }
+  }
+
+  // A sample paper: parsed by the API when live, otherwise its recorded run.
+  async pickSample(id) {
+    await this.apiReady;
+    const meta = (this.state.samples || []).find(x => x.id === id);
+    this.setState({ checkStage: 'parsing', fileName: meta ? meta.subject : id, error: '' });
+    try {
+      let paper, rec = null;
+      if (this.live()) paper = await api.sample(id);
+      else { this.R = await loadRecorded(); paper = structuredClone(this.R.runs[id].paper); rec = id; }
+      await this.loadPaper(paper, { rec });
+    } catch (e) { this.setState({ checkStage: 'upload' }); this.fail(e); }
+  }
+
+  async loadPaper(paper, extra = {}) {
+    if (!paper.questions.length) throw new Error('No questions were found. Check the text has numbered questions (Q1, 1., 1 a) …).');
+    const rows = A.paperRows(paper);
+    await this.set({ checkStage: 'edit', apiPaper: paper, report: null, modelReport: null, paper: rows, resolved: {}, rec: null, ...extra,
+      duration: paper.duration_minutes ? String(paper.duration_minutes) : '', maxMarks: paper.max_marks ? String(paper.max_marks) : '',
+      D: { SECTIONS: A.sections(rows), TITLE: A.paperTitle(paper, rows), OR_NOTE: A.orNote(rows) } });
+  }
+
+  // Data page: live queries the API; offline filters the bundled licence-safe sample.
+  async loadDataset(patch = {}) {
+    const f = this.dsFilter = { source: '', level: '', q: '', offset: 0, ...this.dsFilter, ...patch };
+    const n = this.dsN = (this.dsN || 0) + 1;  // only the newest request may update the page
+    this.setState({ dsFilter: f });
+    try {
+      const page = this.live() ? await api.dataset({ ...f, limit: 25 }) : datasetPage(await loadDataset(), { ...f, limit: 25 });
+      if (n === this.dsN) this.setState({ ds: page });
+    } catch (e) { if (n === this.dsN) this.setState({ ds: { error: e.message } }); }
+  }
+
   async checkApi() {
     try {
       const m = await api.meta();
@@ -144,25 +195,19 @@ export default class App extends React.Component {
     await this.apiReady;
     this.setState({ checkStage: 'parsing', fileName: name || 'pasted text', error: '' });
     if (!this.live()) {
-      if (source !== 'sample') this.setState({ error: 'The API is not running, so BloomBot cannot read your own paper. Showing the recorded sample paper instead. Start it with `bloombot serve`.' });
-      clearTimeout(this.pt);
-      this.pt = setTimeout(() => this.setState({ checkStage: 'edit', apiPaper: null, report: null, D: {}, paper: BB.PAPER.map(q => ({ ...q })) }), 900);
+      await this.pickSample('os');
+      this.setState({ error: 'BloomBot is not connected, so it cannot read your own paper. Showing the recorded run of a sample paper instead. Click the Replay chip to connect BloomBot running on your computer.' });
       return;
     }
     try {
-      const paper = source && source.name ? await api.parseFile(source) : await api.parseText(source === 'sample' ? SAMPLE_OS_PAPER : this.state.pasteText,
-        source === 'sample' ? 'Operating Systems' : 'Pasted paper');
-      if (!paper.questions.length) throw new Error('No questions were found. Check the text has numbered questions (Q1, 1., 1 a) …).');
-      const rows = A.paperRows(paper);
-      await this.set({ checkStage: 'edit', apiPaper: paper, report: null, paper: rows, resolved: {},
-        duration: paper.duration_minutes ? String(paper.duration_minutes) : '', maxMarks: paper.max_marks ? String(paper.max_marks) : '',
-        D: { SECTIONS: A.sections(rows), TITLE: A.paperTitle(paper, rows), OR_NOTE: A.orNote(rows) } });
+      const paper = source && source.name ? await api.parseFile(source) : await api.parseText(this.state.pasteText, 'Pasted paper');
+      await this.loadPaper(paper);
     } catch (e) { this.setState({ checkStage: 'upload' }); this.fail(e); }
   }
 
   async assessPaper() {
     const s = this.state;
-    if (!this.live() || !s.apiPaper) {
+    if (!this.client() || !s.apiPaper) {
       this.setState({ checkStage: 'report', assessed: true }); this.anim('reportT'); try { window.scrollTo(0, 0); } catch (e) {}
       return true;
     }
@@ -195,7 +240,7 @@ export default class App extends React.Component {
   // Show a report: rows, sections, distribution and blueprint checks. `model` is the model's own
   // report (no teacher levels): the review queue and Undo come from it.
   async showReport(report, model, extra = {}) {
-    const bps = await (this.blueprints || (this.blueprints = api.blueprints()));
+    const bps = await this.client().blueprints();
     const bp = bps.find(b => b.id === this.bpId()), paper = report.paper;
     const flagged = new Set(model.needs_review), said = Object.fromEntries(model.items.map(it => [it.question.id, it.prediction.level]));
     const rows = A.paperRows(paper, report).map(r => ({ ...r, review: flagged.has(r.id), modelLevel: said[r.id],
@@ -221,7 +266,7 @@ export default class App extends React.Component {
 
   // Assessment runs as a job so a long paper can show how far the LLM has got.
   async assessJob(body, gen) {
-    const job = await api.assessJob(body);
+    const job = await this.client().assessJob(body);
     this.assessJobId = job.id;
     try {
       return await this.pollAssess(job, gen);
@@ -234,11 +279,11 @@ export default class App extends React.Component {
     for (;;) {
       await new Promise(r => setTimeout(r, 700));
       if (this.dead || gen !== this.assessGen) {  // superseded: free the LLM for the new request
-        api.cancelJob(job.id).catch(() => {});
+        this.client().cancelJob(job.id).catch(() => {});
         throw new Error('cancelled');
       }
       let j;
-      try { j = await api.job(job.id); } catch (e) { continue; }
+      try { j = await this.client().job(job.id); } catch (e) { continue; }
       const asked = j.trace.find(e => e.agent === 'Socrates' && e.action === 'asked');
       if (asked && gen === this.assessGen) this.setState({ assessProgress: { n: asked.detail.n, done: j.trace.filter(e => e.agent === 'Socrates' && e.action === 'answered').length } });
       if (j.status === 'failed' || j.status === 'cancelled') throw new Error(j.error || 'The assessment failed.');
@@ -263,7 +308,7 @@ export default class App extends React.Component {
 
   async startJob() {
     await this.apiReady;
-    if (this.live()) return this.startLiveJob();
+    if (this.live() || this.state.rec) return this.startLiveJob();
     const B = BB; clearTimeout(this.timer);
     const st = {}; B.RW.forEach(r => st[r.id] = 'pending');
     this.setState(s => ({ page: 'rebalance', jobStatus: 'running', jobN: 0, rwStatus: st, rwText: {}, assessed: true, D: {}, paper: B.PAPER.map(q => ({ ...q })) }));
@@ -283,24 +328,24 @@ export default class App extends React.Component {
     clearInterval(this.poll);
     this.setState({ page: 'rebalance', error: '' });
     try { window.scrollTo(0, 0); } catch (e) {}
-    if (!this.state.apiPaper) await this.parse('sample paper', 'sample');
+    if (!this.state.apiPaper) await this.pickSample('os');
     if (!this.state.report && !(await this.assessPaper())) return;
     await this.set({ page: 'rebalance' });
     const s = this.state;
     try {
       const paper = this.paperNow(s);
-      const jobs = await api.plan({ report: s.report, blueprint_id: this.bpId() });
+      const jobs = await this.client().plan({ report: s.report, blueprint_id: this.bpId() });
       const locked = new Set(s.paper.filter(q => q.locked).map(q => q.id));
       const plan = jobs.map(A.rwFromJob);
       const st = {}; plan.forEach(r => st[r.id] = 'pending');
       this.setState(x => ({ jobStatus: 'running', jobN: 0, rwStatus: st, rwText: {}, progress: 0.02,
         D: { ...x.D, TRACE: [], RW: plan, PLAN: plan, JOB_ID: '…', HANDBACK: null } }));
-      const job = await api.rebalance({ paper, blueprint_id: this.bpId(), use_llm: this.useLlm(), profile_id: s.profileId, pace: s.pace });
+      const job = await this.client().rebalance({ paper, blueprint_id: this.bpId(), use_llm: this.useLlm(), profile_id: s.profileId, pace: s.pace });
       this.setState(x => ({ D: { ...x.D, JOB_ID: job.id } }));
       const open = plan.filter(r => !locked.has(r.id)).length || 1;
       this.poll = setInterval(async () => {
         let j;
-        try { j = await api.job(job.id); } catch (e) { return; }
+        try { j = await this.client().job(job.id); } catch (e) { return; }
         if (this.dead) return;
         const trace = j.trace.filter(e => e.agent);
         const rows = trace.map(A.traceRow);
@@ -408,7 +453,7 @@ export default class App extends React.Component {
   }
 
   renderVals() {
-    const s = this.state, B = this.B(), live = this.live();
+    const s = this.state, B = this.B(), live = this.live(), driven = live || !!s.rec;  // driven: API-shaped data, live or recorded
     const narrow = this.props.frame === 'phone' || s.winW < 820;
     const base = { theme: s.theme, frameW: this.props.frame === 'phone' ? '390px' : '100%', frameShadow: this.props.frame === 'phone' ? '0 0 0 1px var(--line), 0 20px 60px rgba(0,0,0,.12)' : 'none',
       shellDir: narrow ? 'column' : 'row', pad: narrow ? '20px 16px 72px' : '36px 48px 96px', narrow, wide: !narrow, showRail: !narrow, showTopbar: narrow,
@@ -453,7 +498,7 @@ export default class App extends React.Component {
         flag: q.review && !res, resolvedFlag: !!res, resolvedTxt: res ? 'Teacher: ' + res : '', noFlag: !q.review && !res, bySource: res ? 'teacher' : 'predicted' }; });
     const reviewQueue = s.paper.filter(q => q.review).map(q => { const res = s.resolved[q.id];
       return { ...q, marks: q.marks == null ? '–' : q.marks, resolved: !!res, open: !res,
-        resolvedText: res ? `Resolved — you chose ${res}${q.modelLevel && q.modelLevel !== res ? ` (BloomBot said ${q.modelLevel})` : ''}.${live ? ' The distribution and verdict use your choice.' : ''}` : '',
+        resolvedText: res ? `Resolved — you chose ${res}${q.modelLevel && q.modelLevel !== res ? ` (BloomBot said ${q.modelLevel})` : ''}.${live ? ' The distribution and verdict use your choice.' : s.rec ? ' (Recorded run: connect BloomBot to update the report with it.)' : ''}` : '',
         votes: q.votes.map(v => ({ ...v, chip: chip(N(v.level)), confTxt: v.confidence.toFixed(2), role: { Lexis: 'Classifier · weight 1', Archivist: 'Evidence only · weight 0', Socrates: 'Local LLM · weight 0.5' }[v.agent] })),
         choices: [...new Set(q.votes.map(v => v.level))].map(l => ({ label: 'Use ' + l, pick: () => this.resolve(q.id, l) })),
         undo: () => this.resolve(q.id, null) }; });
@@ -466,7 +511,8 @@ export default class App extends React.Component {
       onFile: e => { const f = e.target.files[0]; if (f) this.parse(f.name, f); e.target.value = ''; },
       pasteText: s.pasteText, onPaste: e => this.setState({ pasteText: e.target.value }),
       parsePaste: () => { if (!s.pasteText.trim()) { this.setState({ error: 'Paste some questions first, or try the sample paper.' }); return; } this.parse('pasted text', 'paste'); },
-      useSample: () => this.parse('sample OS paper', 'sample'), fileName: s.fileName,
+      samples: (s.samples || []).map(x => ({ subject: x.subject, details: x.description.split(' · ').slice(1).join(' · '), pick: () => this.pickSample(x.id) })),
+      samplesNote: live ? 'Read and assessed live by your BloomBot.' : 'Recorded runs (with the LLM): they work without BloomBot running.', fileName: s.fileName,
       sections, tableWide: !narrow && s.winW >= 1240, tableNarrow: narrow || s.winW < 1240, rowCols: narrow ? '40px minmax(0,1fr) 56px' : '52px minmax(0,1fr) 64px 52px 118px 104px',
       blueprints, assess: () => { if (!s.busy || s.busy === 'assess') this.assessPaper(); }, assessLabel: s.busy === 'assess' ? (s.assessProgress ? `Assessing… ${s.assessProgress.done} / ${s.assessProgress.n}` : 'Assessing…') : 'Assess',
       backToEdit: () => this.setState({ checkStage: 'edit' }), uploadNew: () => this.setState({ checkStage: 'upload' }),
@@ -476,8 +522,8 @@ export default class App extends React.Component {
       maxMarksVal: s.maxMarks, onMaxMarks: e => this.setState({ maxMarks: e.target.value, report: null }),
       paces: [['faster', 'Faster'], ['typical', 'Typical'], ['slower', 'Slower']].map(([id, label]) => ({ label, checked: s.pace === id ? 'true' : 'false',
         pick: () => this.setState({ pace: id, report: null }), border: s.pace === id ? 'var(--accent)' : 'var(--line)', bg: s.pace === id ? 'var(--accent-soft)' : 'var(--surface)' })),
-      examNote: !this.live() ? 'Time and marks are checked with the live API.' : s.apiPaper && s.apiPaper.duration_minutes ? 'Duration read from the paper header; change it if needed.' : 'The duration is not printed on the paper: enter it to check that the paper fits the time.',
-      paperTitle, paperNote: s.apiPaper ? `Read from ${s.fileName}.` : 'Recorded sample paper (the API is not running).', orNote: B.OR_NOTE || 'OR-alternatives share one slot: Q2/Q3 are one 10-mark slot; if they get different levels, each counts 5 marks.',
+      examNote: s.rec ? 'Recorded run: it uses the duration printed on the paper. Connect BloomBot to change it.' : !this.live() ? 'Time and marks are checked with the live API.' : s.apiPaper && s.apiPaper.duration_minutes ? 'Duration read from the paper header; change it if needed.' : 'The duration is not printed on the paper: enter it to check that the paper fits the time.',
+      paperTitle, paperNote: s.rec ? `Recorded run of a sample paper: ${s.fileName}.` : s.apiPaper ? `Read from ${s.fileName}.` : 'Recorded sample paper (the API is not running).', orNote: B.OR_NOTE || 'OR-alternatives share one slot: Q2/Q3 are one 10-mark slot; if they get different levels, each counts 5 marks.',
       reviewQueue, openReviews, reviewTitle: openReviews ? `${openReviews} question${openReviews > 1 ? 's' : ''} to resolve first` : 'Review queue clear',
       tableRows, tableCols: '44px minmax(220px,1fr) 48px 96px 150px 52px 160px 92px',
       lockedNote: s.busy === 'assess' && s.assessProgress ? `The LLM is checking ${s.assessProgress.n} questions the classifier is unsure about (${s.assessProgress.done} done, a few seconds each). For an instant result, turn "LLM second opinion" off and press Assess again.` : lockedIds.length ? `${lockedIds.length} locked: ${lockedIds.map(i => 'Q' + i).join(', ')} — never rewritten.` : 'No questions locked.',
@@ -543,7 +589,7 @@ export default class App extends React.Component {
       return { name: st, showArrow: i > 0, bg: act ? 'var(--accent)' : done ? 'var(--accent-soft)' : 'var(--surface)', fg: act ? 'var(--accent-ink)' : done ? 'var(--ink)' : 'var(--ink3)', border: act || done ? 'var(--accent)' : 'var(--line)', anim: act ? 'bbpulse 1.2s infinite' : 'none', mark: done ? '✓' : act ? '●' : '○' }; });
     const rwVisibleAt = r => { const idx = TR.findIndex(e => e.agent === 'Verifier' && e.qid === r.id && e.passed); return idx >= 0 && n > idx; };
     const archIdx = TR.findIndex(e => e.agent === 'Architect');
-    const showPlan = live ? !!B.PLAN : (archIdx >= 0 && n > archIdx);
+    const showPlan = driven ? !!B.PLAN : (archIdx >= 0 && n > archIdx);
     const planSrc = B.PLAN || B.RW;
     const planRows = planSrc.map(r => { const q = qById(r.id); return { q: r.q, from: chip(r.from), to: chip(r.to), reason: (r.reason || '').replace('<=', '≤').replace('>=', '≥'), marks: r.marks != null ? r.marks + ' marks' : 'no marks', locked: !!(q && q.locked), open: !(q && q.locked) }; });
     const reasons = bp.checks.filter(c => !c.bOk).map(c => `${c.label} of marks — currently ${c.b}%`);
@@ -555,16 +601,16 @@ export default class App extends React.Component {
     const afterReview = B.AFTER_REVIEW || [];
     const hand = B.HANDBACK || BB.HANDBACK;
     const reb = { jobIdle: s.jobStatus === 'idle', jobRunning: s.jobStatus === 'running', jobDone: s.jobStatus === 'done', notIdle: s.jobStatus !== 'idle', startJob: () => this.startJob(),
-      startLabel: live ? (s.apiPaper ? 'Start rebalance job' : 'Start on the sample OS paper') : 'Replay the recorded job',
-      idleText: live ? (s.apiPaper ? `Rebalance ${paperTitle} against ${bp.name}. The job runs on the API and streams every agent step here; review each rewrite as it lands.` : 'Rebalance opens from a checked paper. Start it on the sample OS paper to watch the agents work live — the job runs on the API and you can review each rewrite as it lands.')
+      startLabel: s.rec ? 'Replay the recorded job' : live ? (s.apiPaper ? 'Start rebalance job' : 'Start on the sample OS paper') : 'Replay the recorded job',
+      idleText: s.rec ? `Replays the recorded rebalance of ${paperTitle} against ${bp.name}: every agent step on its real timeline, then the rewrites to review.` : live ? (s.apiPaper ? `Rebalance ${paperTitle} against ${bp.name}. The job runs on the API and streams every agent step here; review each rewrite as it lands.` : 'Rebalance opens from a checked paper. Start it on the sample OS paper to watch the agents work live — the job runs on the API and you can review each rewrite as it lands.')
         : 'The API is not running, so this replays a recorded run on the sample OS paper. Start `bloombot serve` (and Ollama) to run it live.',
-      jobLabel: s.jobStatus === 'running' ? (live ? `Running · ${n} events` : `Running · ${n} of ${TR.length} events`) : `Done · ${TR.length} events`, jobId: B.JOB_ID,
+      jobLabel: s.jobStatus === 'running' ? (driven ? `Running · ${n} events` : `Running · ${n} of ${TR.length} events`) : `Done · ${TR.length} events`, jobId: B.JOB_ID,
       afterReviewTxt: afterReview.length === 1 ? `After rewriting, Q${afterReview[0]} is flagged ⚑ for review — check it before you submit.`
         : afterReview.length ? `After rewriting, ${afterReview.length} questions are flagged ⚑ for review — check them before you submit: ${afterReview.slice(0, 10).map(i => 'Q' + i).join(', ')}${afterReview.length > 10 ? ` and ${afterReview.length - 10} more` : ''}.`
         : 'After rewriting, no question is flagged for review.',
-      stages, traceRows, totalMs: (cum / 1000).toFixed(1) + ' s', progressW: live ? Math.round(s.progress * 100) + '%' : Math.round(n / TR.length * 100) + '%',
+      stages, traceRows, totalMs: (cum / 1000).toFixed(1) + ' s', progressW: driven ? Math.round(s.progress * 100) + '%' : Math.round(n / TR.length * 100) + '%',
       showPlan, planRows, ...this.planText(planSrc, reasons, s),
-      rwCards, hasCards: rwCards.length > 0, showHandBack: !live || !!B.HANDBACK, handBack: { ...hand }, handStatus: s.rwStatus[hand.id] || 'pending',  // live: only a real hand-back
+      rwCards, hasCards: rwCards.length > 0, showHandBack: !driven || !!B.HANDBACK, handBack: { ...hand }, handStatus: s.rwStatus[hand.id] || 'pending',  // live: only a real hand-back
       onHand: st => this.setState(x => ({ rwStatus: { ...x.rwStatus, [hand.id]: st } })),
       acceptAll: () => this.setState(x => { const r = { ...x.rwStatus }; B.RW.forEach(w => { if (!(qById(w.id) || {}).locked && (r[w.id] || 'pending') === 'pending' && rwVisibleAt(w)) r[w.id] = 'accepted'; }); return { rwStatus: r }; }),
       pendingCount: pending, hasPending: pending > 0, pendingText: pending ? `${pending} rewrite${pending > 1 ? 's' : ''} waiting for your decision` : 'All rewrites decided',
@@ -626,7 +672,32 @@ export default class App extends React.Component {
       rwStats: E.rw.map(r => ({ k: r[0], v: r[1] })),
       evalExamples: [{ rw: BB.RW[3], status: 'accepted' }, { rw: BB.RW[1], status: 'accepted' }, { rw: BB.HANDBACK, status: 'pending' }]
     };
-    const data = { sources: E.sources.map(r => ({ name: r[0], rows: r[1].toLocaleString('en-IN'), role: r[2], test: r[2] !== 'train', lic: r[3], origin: r[4], roleBg: r[2] !== 'train' ? 'var(--warnbg)' : 'var(--surface2)' })) };
+    const ds = s.ds || {}, f = { source: '', level: '', q: '', offset: 0, ...s.dsFilter };
+    const fmt = n => Number(n).toLocaleString('en-IN');
+    const publicRows = (ds.sources || []).filter(x => x.public).reduce((a, x) => a + x.rows, 0);
+    const explorer = {
+      dsSub: ds.error ? `Could not load the questions: ${ds.error}` : !ds.sources ? 'Loading…'
+        : ds.sampled ? `A licence-safe sample bundled with this page: up to 20 questions per source and level. Connect BloomBot for all ${fmt(publicRows)} public questions. The school-board test set is shown as counts only.`
+        : `${fmt(publicRows)} questions from ${(ds.sources || []).filter(x => x.public).length} sources whose licences allow showing them. The school-board test set (CC BY-NC, held out) is shown as counts only.`,
+      dsSource: f.source, onDsSource: e => this.loadDataset({ source: e.target.value, offset: 0 }),
+      dsSourceOpts: [{ id: '', label: 'All public sources' }, ...(ds.sources || []).filter(x => x.public).map(x => ({ id: x.id, label: `${x.title} (${fmt((ds.by_source || {})[x.id] ?? x.rows)})` }))],
+      dsQuery: s.dsQueryText ?? f.q, onDsQuery: e => { const q = e.target.value; this.setState({ dsQueryText: q }); clearTimeout(this.dsT); this.dsT = setTimeout(() => this.loadDataset({ q, offset: 0 }), 250); },
+      dsLevels: [{ name: 'All levels', id: '', tag: '·' }, ...L.map((name, i) => ({ name, id: name, tag: i + 1 }))].map(lv => {
+        const on = f.level === lv.id, c = lv.id ? chip(lv.tag) : { bg: 'var(--surface2)', fg: 'var(--ink)' };
+        const count = lv.id ? (ds.by_level || {})[lv.id] : Object.values(ds.by_level || {}).reduce((a, b) => a + b, 0);
+        return { name: lv.name, tag: lv.tag, chipBg: c.bg, chipFg: c.fg, count: count == null ? '' : fmt(count), checked: on ? 'true' : 'false',
+          border: on ? 'var(--accent)' : 'var(--line)', bg: on ? 'var(--accent-soft)' : 'var(--surface)', pick: () => this.loadDataset({ level: lv.id, offset: 0 }) };
+      }),
+      dsItems: (ds.items || []).map(it => ({ question: it.question, source: it.source, chip: chip(L.indexOf(it.level) + 1) })),
+      dsEmpty: !!ds.sources && !(ds.items || []).length, dsEmptyText: f.q ? `No question contains “${f.q}” here.` : 'No questions match.',
+      dsRange: ds.total ? `${fmt(f.offset + 1)}–${fmt(Math.min(f.offset + 25, ds.total))} of ${fmt(ds.total)}` : '0 of 0',
+      dsPrev: () => this.loadDataset({ offset: Math.max(0, f.offset - 25) }), dsPrevDisabled: f.offset === 0,
+      dsNext: () => this.loadDataset({ offset: f.offset + 25 }), dsNextDisabled: !ds.total || f.offset + 25 >= ds.total,
+      dsSources: (ds.sources || []).map(x => ({ title: x.title, citation: x.citation, licence: x.licence, licenceUrl: x.licence_url || '#', rows: fmt(x.rows),
+        shown: x.public ? (ds.sampled ? 'questions (a sample) and counts' : 'questions and counts') : 'counts only (test set, non-commercial)',
+        shownColor: x.public ? 'var(--ink2)' : 'var(--warn)' })),
+    };
+    const data = { ...explorer, sources: E.sources.map(r => ({ name: r[0], rows: r[1].toLocaleString('en-IN'), role: r[2], test: r[2] !== 'train', lic: r[3], origin: r[4], roleBg: r[2] !== 'train' ? 'var(--warnbg)' : 'var(--surface2)' })) };
 
     const sv = B.BRIDGE.votes[2];
     const sheet = { sheetChips: L.map((nm, i) => chip(i + 1)), sampleProba: B.BRIDGE.proba, sampleTrace: BB.TRACE.slice(0, 6).map((e, i) => ({ i: String(i + 1).padStart(2, '0'), agent: e.agent, action: e.action, detail: e.detail, ms: e.ms >= 1000 ? (e.ms / 1000).toFixed(2) + ' s' : e.ms.toFixed(1) + ' ms', barW: Math.max(2, Math.min(100, Math.log10(1 + e.ms) / Math.log10(3000) * 100)) + '%' })),

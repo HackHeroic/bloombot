@@ -68,16 +68,19 @@ python -m spacy download en_core_web_sm
 
 bloombot data build          # downloads the 7 public sources (~3 MB) and builds data/processed/
 bloombot train               # trains the classifier (~30 s on a laptop)
-pytest                       # 57 tests, ~7 s, offline
+pytest                       # 75 tests, ~6 s, offline
 
 bloombot classify "Explain how you would design a database schema." "Evaluate the integral of 2x from 0 to 3."
-bloombot paper data/papers/sample_table_paper.txt --blueprint balanced-ug --rebalance --out results/demo
+bloombot samples             # the sample papers in data/papers
+bloombot paper table --blueprint balanced-ug --rebalance --out results/demo   # a sample id or a file path
 bloombot serve               # HTTP API on http://127.0.0.1:8000 (docs at /docs)
 ```
 
 Web UI (Next.js, in `frontend/`): `cd frontend && npm install && npm run build`, then
 `bloombot serve` also serves it at http://127.0.0.1:8000. It streams rebalance jobs live and falls
-back to recorded runs when the API is not running ([frontend/README.md](frontend/README.md)).
+back to recorded runs of every sample paper when the API is not running. Hosted at
+https://bloombot.muralimadhav.com, where **Connect to local BloomBot** switches it to your own
+server ([frontend/README.md](frontend/README.md)).
 
 Optional LLM (classification of hard cases, rewriting, verification):
 

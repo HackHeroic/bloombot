@@ -164,7 +164,7 @@ to local BloomBot**, and click Allow on Chrome's prompt. The chip turns green an
 that browser; **Disconnect** returns it to replay. Use Chrome or Edge; Safari blocks it.
 
 **In the web UI** the script below maps to: *Classify a question* (steps 1–2, "View parse"),
-*Check a paper → Try the sample OS paper → Assess* (step 3), *Rebalance this paper* (step 4: the
+*Check a paper → Or try a sample paper: Operating Systems → Assess* (step 3), *Rebalance this paper* (step 4: the
 pipeline streams every agent step live and each rewrite card lands as it passes its checks),
 *College profile* (step 5), *Evaluation* and *How it works* (step 6). The CLI commands below do the
 same from a terminal.
