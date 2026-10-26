@@ -49,7 +49,8 @@ button,input,textarea,select{font-family:inherit}
 <nav aria-label="Main" style="position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line);display:flex;flex-direction:column;gap:10px;padding:12px 16px 0">
 <div style="display:flex;align-items:center;gap:10px">
 <button onClick="{{ goCheck }}" style="display:flex;align-items:center;gap:8px;background:none;border:none;padding:0;color:var(--ink);cursor:pointer"><span aria-hidden="true" style="display:flex;flex-direction:column-reverse;gap:2px"><span style="width:6px;height:3px;background:var(--l1)"></span><span style="width:8px;height:3px;background:var(--l2)"></span><span style="width:10px;height:3px;background:var(--l3)"></span><span style="width:12px;height:3px;background:var(--l4)"></span><span style="width:14px;height:3px;background:var(--l5)"></span><span style="width:16px;height:3px;background:var(--l6)"></span></span><span style="font-family:'Newsreader',serif;font-size:21px;font-weight:600">BloomBot</span></button>
-<button onClick="{{ toggleLlm }}" aria-pressed="{{ llmPressed }}" title="GET /v1/meta → llm.available" style="margin-left:auto;display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:6px 10px;font-size:11px;font-weight:600;cursor:pointer;min-height:36px"><span style="width:8px;height:8px;border-radius:50%;background:{{ llmDot }}"></span>{{ llmLabel }}</button>
+<button onClick="{{ recheckApi }}" title="{{ apiTitle }}" style="margin-left:auto;display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:6px 10px;font-size:11px;font-weight:600;cursor:pointer;min-height:36px"><span style="width:8px;height:8px;border-radius:50%;background:{{ apiDot }}"></span>{{ apiShort }}</button>
+<button onClick="{{ toggleLlm }}" aria-pressed="{{ llmPressed }}" title="{{ llmTitle }}" style="display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:6px 10px;font-size:11px;font-weight:600;cursor:pointer;min-height:36px"><span style="width:8px;height:8px;border-radius:50%;background:{{ llmDot }}"></span>{{ llmLabel }}</button>
 <button onClick="{{ toggleTheme }}" aria-label="{{ themeLabel }}" style="width:40px;height:40px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;cursor:pointer;font-size:16px">{{ themeIcon }}</button>
 </div>
 <div style="display:flex;gap:4px;overflow-x:auto;padding-bottom:10px;margin:0 -16px;padding-left:16px;padding-right:16px">
@@ -61,11 +62,13 @@ button,input,textarea,select{font-family:inherit}
 <sc-if value="{{ showRail }}" hint-placeholder-val="{{ true }}">
 <header style="display:flex;align-items:center;gap:12px;padding:16px 48px;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5;background:var(--bg)">
 <span style="font-size:13px;color:var(--ink3)">BloomBot <span aria-hidden="true">/</span> <span style="color:var(--ink);font-weight:600">{{ pageTitle }}</span></span>
-<button onClick="{{ toggleLlm }}" aria-pressed="{{ llmPressed }}" title="GET /v1/meta → llm.available (click to simulate)" style="margin-left:auto;display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:7px 14px;font-size:13px;font-weight:600;cursor:pointer"><span style="width:8px;height:8px;border-radius:50%;background:{{ llmDot }}"></span>{{ llmLabel }}</button>
+<button onClick="{{ recheckApi }}" title="{{ apiTitle }}" style="margin-left:auto;display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:7px 14px;font-size:13px;font-weight:600;cursor:pointer"><span style="width:8px;height:8px;border-radius:50%;background:{{ apiDot }}"></span>{{ apiLabel }}</button>
+<button onClick="{{ toggleLlm }}" aria-pressed="{{ llmPressed }}" title="{{ llmTitle }}" style="display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:7px 14px;font-size:13px;font-weight:600;cursor:pointer"><span style="width:8px;height:8px;border-radius:50%;background:{{ llmDot }}"></span>{{ llmLabel }}</button>
 <button onClick="{{ toggleTheme }}" style="display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:7px 14px;font-size:13px;font-weight:600;cursor:pointer"><span aria-hidden="true">{{ themeIcon }}</span>{{ themeLabel }}</button>
 </header>
 </sc-if>
 <div style="padding:{{ pad }};width:100%;max-width:1200px;margin:0 auto;display:flex;flex-direction:column;gap:32px">
+<sc-if value="{{ hasError }}" hint-placeholder-val="{{ false }}"><div role="alert" style="display:flex;flex-wrap:wrap;align-items:center;gap:12px;background:var(--warnbg);border:1px solid var(--warn);border-radius:12px;padding:12px 16px;font-size:14px"><span aria-hidden="true">⚑</span><span style="flex:1 1 300px">{{ errorText }}</span><button onClick="{{ clearError }}" style="background:transparent;border:1px solid var(--line);color:var(--ink);border-radius:8px;padding:6px 12px;font-weight:600;cursor:pointer">Dismiss</button></div></sc-if>
 <sc-if value="{{ isCheck }}" hint-placeholder-val="{{ true }}">
 <section data-screen-label="01 Check a paper" style="display:flex;flex-direction:column;gap:28px">
 <sc-if value="{{ checkUpload }}" hint-placeholder-val="{{ true }}">
@@ -106,8 +109,8 @@ button,input,textarea,select{font-family:inherit}
 <div style="display:flex;flex-wrap:wrap;align-items:flex-end;gap:16px">
 <div style="display:flex;flex-direction:column;gap:6px;flex:1 1 360px">
 <span style="font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3)">Step 2 of 3 · Check what Scribe parsed</span>
-<h1 style="font-family:'Newsreader',serif;font-weight:500;font-size:{{ h1fs }};line-height:1.05;margin:0">Operating Systems · 50 marks</h1>
-<p style="margin:0;color:var(--ink2)">Every row is editable. Lock a question and BloomBot will never rewrite it. <span style="color:var(--ink3)">Demo: showing the sample OS paper.</span></p>
+<h1 style="font-family:'Newsreader',serif;font-weight:500;font-size:{{ h1fs }};line-height:1.05;margin:0">{{ paperTitle }}</h1>
+<p style="margin:0;color:var(--ink2)">Every row is editable. Lock a question and BloomBot will never rewrite it. <span style="color:var(--ink3)">{{ paperNote }}</span></p>
 </div>
 <button onClick="{{ uploadNew }}" style="background:transparent;color:var(--ink2);border:1px solid var(--line);border-radius:10px;padding:10px 16px;font-weight:600;cursor:pointer">Upload a different paper</button>
 </div>
@@ -140,18 +143,18 @@ button,input,textarea,select{font-family:inherit}
 </div>
 </div>
 <div style="display:flex;flex-wrap:wrap;align-items:center;gap:16px">
-<button onClick="{{ assess }}" style="background:var(--accent);color:var(--accent-ink);border:none;border-radius:12px;padding:14px 28px;font-size:16px;font-weight:600;cursor:pointer">Assess</button>
+<button onClick="{{ assess }}" style="background:var(--accent);color:var(--accent-ink);border:none;border-radius:12px;padding:14px 28px;font-size:16px;font-weight:600;cursor:pointer">{{ assessLabel }}</button>
 <span style="font-size:13px;color:var(--ink3)">{{ lockedNote }} · Profile: {{ profileName }}</span>
 </div>
 </div>
 </sc-if>
 <sc-if value="{{ checkReport }}" hint-placeholder-val="{{ false }}">
 <div style="display:flex;flex-direction:column;gap:24px">
-<div style="display:flex;flex-wrap:wrap;gap:24px;align-items:center;background:var(--badbg);border:1px solid var(--bad);border-radius:20px;padding:28px">
+<div style="display:flex;flex-wrap:wrap;gap:24px;align-items:center;background:{{ verdictBg }};border:1px solid {{ verdictBorder }};border-radius:20px;padding:28px">
 <div style="display:flex;flex-direction:column;gap:6px;flex:1 1 320px">
 <span style="font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink2)">Verdict · {{ bpName }}</span>
-<span style="font-family:'Newsreader',serif;font-size:{{ h1fs }};line-height:1;font-weight:500;color:var(--ink)"><span aria-hidden="true" style="color:var(--bad)">✗</span> Not compliant</span>
-<span style="color:var(--ink2)">{{ verdictSub }} Operating Systems · 50 marks.</span>
+<span style="font-family:'Newsreader',serif;font-size:{{ h1fs }};line-height:1;font-weight:500;color:var(--ink)"><span aria-hidden="true" style="color:{{ verdictBorder }}">{{ verdictIcon }}</span> {{ verdictText }}</span>
+<span style="color:var(--ink2)">{{ verdictSub }} {{ paperTitle }}.</span>
 </div>
 <div style="display:flex;flex-wrap:wrap;gap:10px">
 <button onClick="{{ rebalance }}" style="background:var(--accent);color:var(--accent-ink);border:none;border-radius:12px;padding:14px 24px;font-size:16px;font-weight:600;cursor:pointer">Rebalance this paper →</button>
@@ -160,7 +163,7 @@ button,input,textarea,select{font-family:inherit}
 </div>
 <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:20px">
 <div style="background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:24px;display:flex;flex-direction:column;gap:20px">
-<div style="display:flex;flex-direction:column;gap:4px"><h2 style="font-family:'Newsreader',serif;font-weight:500;font-size:26px;margin:0">Distribution by marks</h2><span style="font-size:13px;color:var(--ink3)">Dashed lines are the blueprint bounds. OR-alternatives share one slot: Q2/Q3 are one 10-mark slot; if they get different levels, each counts 5 marks.</span></div>
+<div style="display:flex;flex-direction:column;gap:4px"><h2 style="font-family:'Newsreader',serif;font-weight:500;font-size:26px;margin:0">Distribution by marks</h2><span style="font-size:13px;color:var(--ink3)">Dashed lines are the blueprint bounds. {{ orNote }}</span></div>
 <dc-import name="DistBar" dist="{{ distBefore }}" markers="{{ markers }}" hint-size="100%,150px"></dc-import>
 <ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px">
 <sc-for list="{{ checksBefore }}" as="c" hint-placeholder-count="3"><li style="display:grid;grid-template-columns:28px minmax(0,1fr) auto;gap:12px;align-items:center;padding:10px 12px;border-radius:10px;background:{{ c.bg }}"><span aria-hidden="true" style="width:24px;height:24px;border-radius:50%;background:{{ c.color }};color:var(--surface);font-weight:700;text-align:center;line-height:24px">{{ c.icon }}</span><span style="font-weight:600">{{ c.label }} of marks</span><span style="font-family:'JetBrains Mono',monospace;font-size:14px"><strong>{{ c.shareTxt }}</strong> <span style="color:var(--ink2)">· {{ c.note }}</span></span></li></sc-for>
@@ -232,11 +235,11 @@ button,input,textarea,select{font-family:inherit}
 <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center">
 <span style="font-size:12px;color:var(--ink3)">Examples</span>
 <sc-for list="{{ examples }}" as="e" hint-placeholder-count="5"><button onClick="{{ e.pick }}" aria-pressed="{{ e.pressed }}" style="border:1px solid var(--line);background:{{ e.bg }};color:{{ e.fg }};border-radius:999px;padding:7px 12px;font-size:13px;cursor:pointer;min-height:36px">{{ e.label }}</button></sc-for>
-<button onClick="{{ runClassify }}" style="margin-left:auto;background:var(--accent);color:var(--accent-ink);border:none;border-radius:10px;padding:11px 22px;font-weight:600;font-size:15px;cursor:pointer">Classify</button>
+<button onClick="{{ runClassify }}" style="margin-left:auto;background:var(--accent);color:var(--accent-ink);border:none;border-radius:10px;padding:11px 22px;font-weight:600;font-size:15px;cursor:pointer">{{ clsBtn }}</button>
 </div>
 </div>
 <sc-if value="{{ clsUnknown }}" hint-placeholder-val="{{ false }}">
-<div style="background:var(--surface2);border-radius:16px;padding:24px;color:var(--ink2)"><strong style="color:var(--ink)">Connect to the API to classify new questions.</strong> Run <code style="font-family:'JetBrains Mono',monospace;background:var(--surface);border:1px solid var(--line);border-radius:4px;padding:1px 6px">bloombot serve</code> and BloomBot will call <span style="font-family:'JetBrains Mono',monospace">POST /v1/classify</span>. In this demo, pick one of the five examples above.</div>
+<div style="background:var(--surface2);border-radius:16px;padding:24px;color:var(--ink2)"><strong style="color:var(--ink)">Connect to the API to classify new questions.</strong> Run <code style="font-family:'JetBrains Mono',monospace;background:var(--surface);border:1px solid var(--line);border-radius:4px;padding:1px 6px">bloombot serve</code> and BloomBot will call <span style="font-family:'JetBrains Mono',monospace">POST /v1/classify</span>. Until then, pick one of the five recorded examples above.</div>
 </sc-if>
 <sc-if value="{{ clsKnown }}" hint-placeholder-val="{{ true }}">
 <div style="display:flex;flex-direction:column;gap:20px">
@@ -313,13 +316,13 @@ button,input,textarea,select{font-family:inherit}
 <sc-if value="{{ isRebalance }}" hint-placeholder-val="{{ false }}">
 <section data-screen-label="03 Rebalance" style="display:flex;flex-direction:column;gap:24px">
 <div style="display:flex;flex-direction:column;gap:10px;max-width:760px">
-<span style="font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3)">Rebalance · Operating Systems · {{ bpName }}</span>
+<span style="font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3)">Rebalance · {{ paperTitle }} · {{ bpName }}</span>
 <h1 style="font-family:'Newsreader',serif;font-weight:500;font-size:{{ h1fs }};line-height:1.05;letter-spacing:-.015em;margin:0">Fewest rewrites. Every one checked. You approve.</h1>
 </div>
 <sc-if value="{{ jobIdle }}" hint-placeholder-val="{{ false }}">
 <div style="background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:32px;display:flex;flex-direction:column;gap:16px;align-items:flex-start">
-<p style="margin:0;color:var(--ink2);max-width:60ch">Rebalance opens from a checked paper. Run it on the sample OS paper to watch the agents work — the job runs in the background and you can review each rewrite as it lands.</p>
-<div style="display:flex;flex-wrap:wrap;gap:10px"><button onClick="{{ startJob }}" style="background:var(--accent);color:var(--accent-ink);border:none;border-radius:12px;padding:13px 24px;font-size:15px;font-weight:600;cursor:pointer">Start rebalance job</button><button onClick="{{ goCheck }}" style="background:transparent;color:var(--ink);border:1px solid var(--line);border-radius:12px;padding:12px 20px;font-weight:600;cursor:pointer">Check a paper first</button></div>
+<p style="margin:0;color:var(--ink2);max-width:60ch">{{ idleText }}</p>
+<div style="display:flex;flex-wrap:wrap;gap:10px"><button onClick="{{ startJob }}" style="background:var(--accent);color:var(--accent-ink);border:none;border-radius:12px;padding:13px 24px;font-size:15px;font-weight:600;cursor:pointer">{{ startLabel }}</button><button onClick="{{ goCheck }}" style="background:transparent;color:var(--ink);border:1px solid var(--line);border-radius:12px;padding:12px 20px;font-weight:600;cursor:pointer">Check a paper first</button></div>
 </div>
 </sc-if>
 <sc-if value="{{ notIdle }}" hint-placeholder-val="{{ false }}">
@@ -347,7 +350,7 @@ button,input,textarea,select{font-family:inherit}
 <ul style="list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:10px">
 <sc-for list="{{ planRows }}" as="p" hint-placeholder-count="4"><li style="display:flex;align-items:center;gap:8px;padding:8px 12px;border:1px solid var(--line);border-radius:12px;background:var(--bg)"><strong style="font-family:'JetBrains Mono',monospace">{{ p.q }}</strong><span style="background:{{ p.from.bg }};color:{{ p.from.fg }};font-size:12px;font-weight:600;padding:2px 8px;border-radius:999px;white-space:nowrap">{{ p.from.name }}</span><span aria-hidden="true">→</span><span style="background:{{ p.to.bg }};color:{{ p.to.fg }};font-size:12px;font-weight:600;padding:2px 8px;border-radius:999px;white-space:nowrap">{{ p.to.name }}</span><span style="font-size:12px;color:var(--ink3)">{{ p.marks }}</span><sc-if value="{{ p.locked }}"><span style="font-size:12px;font-weight:600;color:var(--ink2)">🔒 locked — skipped</span></sc-if></li></sc-for>
 </ul>
-<span style="font-size:12px;color:var(--ink2)">Why: lower order (Remember + Understand) ≤ 40% of marks — currently 90%; higher order (Evaluate + Create) ≥ 10% — currently 0%.</span>
+<span style="font-size:12px;color:var(--ink2)">{{ planWhy }}</span>
 </div>
 <sc-if value="{{ hasCards }}" hint-placeholder-val="{{ false }}">
 <div style="display:flex;flex-direction:column;gap:14px">
@@ -360,7 +363,7 @@ button,input,textarea,select{font-family:inherit}
 <sc-if value="{{ jobDone }}" hint-placeholder-val="{{ false }}">
 <div style="display:flex;flex-direction:column;gap:20px">
 <div style="background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:24px;display:flex;flex-direction:column;gap:20px">
-<div style="display:flex;flex-wrap:wrap;align-items:center;gap:12px"><h2 style="font-family:'Newsreader',serif;font-weight:500;font-size:30px;margin:0">Before vs after</h2><span style="margin-left:auto;font-size:14px;font-weight:700;color:var(--good);background:var(--goodbg);border-radius:999px;padding:6px 14px">✓ Compliant · {{ bpName }}</span></div>
+<div style="display:flex;flex-wrap:wrap;align-items:center;gap:12px"><h2 style="font-family:'Newsreader',serif;font-weight:500;font-size:30px;margin:0">Before vs after</h2><span style="margin-left:auto;font-size:14px;font-weight:700;color:{{ afterColor }};background:{{ afterBg }};border-radius:999px;padding:6px 14px">{{ afterBadge }}</span></div>
 <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr));gap:28px">
 <dc-import name="DistBar" dist="{{ distBefore }}" markers="{{ markers }}" label="Before" hint-size="100%,170px"></dc-import>
 <dc-import name="DistBar" dist="{{ distAfter }}" markers="{{ markers }}" label="After" hint-size="100%,170px"></dc-import>
@@ -368,9 +371,9 @@ button,input,textarea,select{font-family:inherit}
 <div role="table" aria-label="Bound checks" style="display:flex;flex-direction:column;border:1px solid var(--line);border-radius:12px;overflow:hidden">
 <sc-for list="{{ beforeAfter }}" as="b" hint-placeholder-count="3"><div role="row" style="display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr) 24px minmax(0,1fr);gap:10px;align-items:center;padding:12px 16px;border-bottom:1px solid var(--line);font-size:14px">
 <strong role="cell" style="font-weight:600">{{ b.label }}</strong>
-<span role="cell" style="color:var(--bad);font-family:'JetBrains Mono',monospace">✗ {{ b.b }} <span style="color:var(--ink3);font-family:'Instrument Sans',sans-serif;font-size:12px">{{ b.bn }}</span></span>
+<span role="cell" style="color:{{ b.bColor }};font-family:'JetBrains Mono',monospace">{{ b.bIcon }} {{ b.b }} <span style="color:var(--ink3);font-family:'Instrument Sans',sans-serif;font-size:12px">{{ b.bn }}</span></span>
 <span aria-hidden="true" style="color:var(--ink3)">→</span>
-<span role="cell" style="color:var(--good);font-family:'JetBrains Mono',monospace;font-weight:700">✓ {{ b.a }} <span style="color:var(--ink3);font-family:'Instrument Sans',sans-serif;font-size:12px;font-weight:400">{{ b.an }}</span></span>
+<span role="cell" style="color:{{ b.aColor }};font-family:'JetBrains Mono',monospace;font-weight:700">{{ b.aIcon }} {{ b.a }} <span style="color:var(--ink3);font-family:'Instrument Sans',sans-serif;font-size:12px;font-weight:400">{{ b.an }}</span></span>
 </div></sc-for>
 </div>
 <sc-if value="{{ afterWarn }}"><p style="margin:0;font-size:13px;background:var(--warnbg);border-radius:8px;padding:10px 12px">⚑ {{ afterNote }}</p></sc-if>
@@ -456,7 +459,7 @@ button,input,textarea,select{font-family:inherit}
 </div>
 <span style="font-size:12px;color:var(--ink2)">↺ Fail any check → Composer tries again. Up to 3 attempts, then the teacher.</span>
 </div>
-<span style="font-size:12px;color:var(--ink3)">Dashed border: Socrates is only asked when Lexis is unsure. Click any stage.</span>
+<span style="font-size:12px;color:var(--ink3)">Dashed border: Socrates is only asked when Lexis is unsure (confidence &lt; 0.6) or disagrees with the Archivist. Click any stage.</span>
 </div>
 <aside aria-live="polite" style="background:var(--ink);color:var(--bg);border-radius:18px;padding:28px;display:flex;flex-direction:column;gap:18px;position:sticky;top:80px">
 <div style="display:flex;flex-direction:column;gap:2px"><span style="font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;opacity:.75">Stage</span><span style="font-family:'Newsreader',serif;font-size:36px;line-height:1.05">{{ nodeName }}</span></div>
