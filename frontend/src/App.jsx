@@ -6,7 +6,7 @@
 import React from 'react';
 import { view } from './views/AppView.jsx';
 import { BB } from './designData.js';
-import { api, apiBase } from './api.js';
+import { api, apiBase, savedApi, saveApi, clearApi, connectTarget, whyUnreachable, REPLAY_BUILD } from './api.js';
 import * as A from './adapt.js';
 import { SAMPLE_OS_PAPER } from './samples.js';
 
@@ -53,8 +53,28 @@ export default class App extends React.Component {
   async checkApi() {
     try {
       const m = await api.meta();
-      this.setState({ online: true, llmAvailable: !!m.llm.available, llmModel: m.llm.model, llm: !!m.llm.available });
-    } catch (e) { this.setState({ online: false }); }
+      this.setState({ online: true, localDown: false, llmAvailable: !!m.llm.available, llmModel: m.llm.model, llm: !!m.llm.available });
+    } catch (e) { this.setState({ online: false, localDown: !!savedApi() }); }  // a saved local API that is down: say so quietly
+  }
+
+  // "Connect to local BloomBot": the only place the hosted page reaches for this computer.
+  async connect() {
+    const target = connectTarget();
+    this.setState({ connecting: true, connectError: null, online: null, connectOpen: true });
+    try {
+      const m = await api.probe(target);
+      if (REPLAY_BUILD) saveApi(target);
+      this.apiReady = Promise.resolve();
+      this.setState({ connecting: false, online: true, localDown: false, llmAvailable: !!m.llm.available, llmModel: m.llm.model, llm: !!m.llm.available });
+    } catch (e) {
+      const why = await whyUnreachable();
+      this.setState({ connecting: false, online: false, connectError: why });
+    }
+  }
+  disconnect() {
+    clearApi();
+    this.setState({ online: REPLAY_BUILD ? false : null, localDown: false, connectError: null, connectOpen: false, checkStage: 'upload', apiPaper: null, report: null, D: {} });
+    if (!REPLAY_BUILD) this.apiReady = this.checkApi();
   }
   useLlm() { return this.state.llm ? null : false; }
 
@@ -74,6 +94,38 @@ export default class App extends React.Component {
         planWhy: `The Bloom mix meets the blueprint. ${issues.join(' ')} Rewriting changes a question's level, not the paper's length: shorten or re-mark it (the longest questions are listed under Time and marks on Check a paper).` };
     }
     return { planTitle: 'No rewrites needed — the paper already meets the blueprint', planWhy: '' };
+  }
+
+  connectVals(s) {
+    const live = s.online === true, saved = savedApi();
+    const copy = (i, text) => () => {
+      try { navigator.clipboard.writeText(text); } catch (e) { /* clipboard blocked: the command is visible to copy by hand */ }
+      this.setState({ copied: i }); clearTimeout(this.copyT); this.copyT = setTimeout(() => this.setState({ copied: null }), 1500);
+    };
+    const commands = [
+      ['Start Ollama for the LLM second opinion (optional): open the Ollama app, or run', 'ollama serve'],
+      ['Start BloomBot, in the folder you cloned it into:', 'cd ~/bloombot && source .venv/bin/activate && bloombot serve'],
+    ].map(([label, cmd], i) => ({ n: i + 1, label, cmd, copy: copy(i, cmd), copyLabel: s.copied === i ? 'Copied ✓' : 'Copy' }));
+    const errors = {
+      down: ['BloomBot is not running on this computer', `Nothing answered at ${connectTarget()}. Run the commands above, wait for “Uvicorn running on http://127.0.0.1:8000”, then try again.`],
+      blocked: ['Chrome blocked this site from reaching your computer', 'Click the icon to the left of the address bar → Site settings → set “Local network access” to Allow, reload this page, then try again.'],
+      safari: ['Safari can’t connect a secure site to your computer', 'Use Chrome or Edge, or open http://127.0.0.1:8000 directly: BloomBot serves this same page there.'],
+    };
+    const err = s.connectError && errors[s.connectError];
+    const llmTxt = s.llmAvailable ? `LLM: ${s.llmModel} running.` : 'LLM: Ollama is not running, so BloomBot uses fast mode. Start the Ollama app or `ollama serve`, then Check again.';
+    return {
+      apiClick: () => this.setState(st => ({ connectOpen: !st.connectOpen })), connectExpanded: s.connectOpen ? 'true' : 'false',
+      connectOpen: !!s.connectOpen, closeConnect: () => this.setState({ connectOpen: false }),
+      connectKicker: live ? 'Live API' : 'Replay · recorded runs',
+      connectTitle: live ? (saved ? 'Connected to BloomBot on your computer' : 'Connected to BloomBot') : 'Use your own papers: run BloomBot on your computer',
+      connectSub: live ? `${saved || apiBase() || window.location.origin} · ${llmTxt}` : 'This page is showing recorded runs. Start BloomBot on this computer and connect: your papers never leave your machine.',
+      showCommands: !live, commands, hasConnectError: !!err, connectErrorTitle: err ? err[0] : '', connectErrorText: err ? err[1] : '',
+      showConnect: !live, connect: () => { if (!s.connecting) this.connect(); },
+      connectLabel: s.connecting ? 'Connecting… (the first time loads the models, ~20 s)' : err ? 'Try again' : 'Connect to local BloomBot',
+      showDisconnect: live && !!saved, disconnect: () => this.disconnect(), showRecheck: live && !saved,
+      connectNote: live ? (saved ? 'Remembered in this browser.' : '') : REPLAY_BUILD ? 'Chrome asks once to let this site reach your computer: click Allow.' : '',
+      localDown: !!s.localDown && !s.connectOpen, reconnect: () => this.connect(), dismissLocalDown: () => this.setState({ localDown: false }),
+    };
   }
   fail(e) { this.setState({ error: e.message || String(e), busy: '' }); }
   bpId() { return A.BPID[this.state.blueprint]; }
@@ -550,8 +602,9 @@ export default class App extends React.Component {
     const status = {
       apiLabel: { checking: 'Connecting…', live: 'Live API', replay: 'Replay · recorded' }[apiState], apiShort: { checking: '…', live: 'Live', replay: 'Replay' }[apiState],
       apiDot: { checking: 'var(--ink3)', live: 'var(--good)', replay: 'var(--warn)' }[apiState],
-      apiTitle: s.online ? `Connected to ${apiBase() || window.location.origin}. Click to re-check.` : apiBase() === null ? 'Hosted demo: showing recorded runs. Run BloomBot locally for the live API, or add ?api=http://host:port.' : `No API at ${apiBase() || 'this origin'} — showing recorded runs. Start \`bloombot serve\`, then click to re-check (or add ?api=http://host:port).`,
+      apiTitle: s.online ? `Connected to ${apiBase() || window.location.origin}. Click to re-check.` : apiBase() === null ? 'Recorded runs. Click to connect BloomBot running on your computer.' : `No API at ${apiBase() || 'this origin'} — showing recorded runs. Start \`bloombot serve\`, then click to re-check (or add ?api=http://host:port).`,
       recheckApi: () => { this.setState({ online: null }); this.apiReady = this.checkApi(); },
+      ...this.connectVals(s),
       hasError: !!s.error, errorText: s.error, clearError: () => this.setState({ error: '' }),
     };
     const llmOff = live && s.llmAvailable === false;

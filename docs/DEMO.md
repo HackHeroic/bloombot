@@ -158,6 +158,11 @@ Open http://127.0.0.1:8000 about a minute early: the first request loads the mod
 the header chip turns green ("Live API"). If the API cannot run on the demo machine, the same UI
 replays recorded runs (amber "Replay · recorded" chip), so nothing on stage depends on it.
 
+**From the hosted site instead** (https://bloombot.muralimadhav.com, e.g. on a borrowed screen):
+start Ollama and `bloombot serve` as above, click the amber **Replay · recorded** chip → **Connect
+to local BloomBot**, and click Allow on Chrome's prompt. The chip turns green and stays connected in
+that browser; **Disconnect** returns it to replay. Use Chrome or Edge; Safari blocks it.
+
 **In the web UI** the script below maps to: *Classify a question* (steps 1–2, "View parse"),
 *Check a paper → Try the sample OS paper → Assess* (step 3), *Rebalance this paper* (step 4: the
 pipeline streams every agent step live and each rewrite card lands as it passes its checks),

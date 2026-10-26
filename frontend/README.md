@@ -25,8 +25,27 @@ The header shows where the data comes from:
 | **Replay · recorded** (amber) | no API found; screens use the recorded runs in `src/designData.js` |
 | **Connecting…** | waiting for the API; the first call after a restart loads the models (~20 s) |
 
-Click the chip to check again. To point at another host, open the page with `?api=http://host:8000`
-(remembered in the browser); `NEXT_PUBLIC_BLOOMBOT_API` sets the default at build time.
+Click the chip to open the connection panel. To point at another host, open the page with
+`?api=http://host:8000` (remembered in the browser); `NEXT_PUBLIC_BLOOMBOT_API` sets the default at
+build time.
+
+### The hosted demo and "Connect to local BloomBot"
+
+https://bloombot.muralimadhav.com is built with `NEXT_PUBLIC_BLOOMBOT_API=replay` (Cloudflare Pages,
+redeployed on every push to `main`). It replays recorded runs and never contacts the visitor's
+computer on its own, so ordinary visitors get no browser prompt. To use your own papers there:
+
+1. start Ollama (the app, or `ollama serve`) for the LLM second opinion; optional
+2. `cd ~/bloombot && source .venv/bin/activate && bloombot serve` (it says whether Ollama answered)
+3. click the **Replay · recorded** chip, then **Connect to local BloomBot**; Chrome asks once to let
+   the site reach your computer: Allow
+
+The page then probes `http://127.0.0.1:8000/v1/meta`, switches to Live and remembers the server in
+`localStorage` (as `?api=` does). On later visits it tries that server quietly; if it is down, the
+page replays recorded runs with a small "Local BloomBot not running · Reconnect" notice. The panel
+explains a failed connection: nothing listening, Chrome's local-network permission denied (how to
+allow it), or Safari (which blocks an https page from calling http://127.0.0.1: use Chrome or Edge,
+or open http://127.0.0.1:8000 directly). **Disconnect (back to replay)** forgets the server.
 
 The LLM chip turns the second opinion off ("fast mode" sends `use_llm: false`). If Ollama is not
 running, it says so and the API uses its template rewriter.

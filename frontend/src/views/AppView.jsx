@@ -85,7 +85,7 @@ export function view(v) {
                   {"BloomBot"}
                 </span>
               </button>
-              <button onClick={v.recheckApi} title={v.apiTitle} style={sx(`margin-left:auto;display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:6px 10px;font-size:11px;font-weight:600;cursor:pointer;min-height:36px`)}>
+              <button onClick={v.apiClick} aria-expanded={v.connectExpanded} aria-controls={"connect"} title={v.apiTitle} style={sx(`margin-left:auto;display:inline-flex;align-items:center;gap:6px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:6px 10px;font-size:11px;font-weight:600;cursor:pointer;min-height:36px`)}>
                 <span style={sx(`width:8px;height:8px;border-radius:50%;background:${v.apiDot}`)} />
                 {v.apiShort}
               </button>
@@ -119,7 +119,7 @@ export function view(v) {
                   {v.pageTitle}
                 </span>
               </span>
-              <button onClick={v.recheckApi} title={v.apiTitle} style={sx(`margin-left:auto;display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:7px 14px;font-size:13px;font-weight:600;cursor:pointer`)}>
+              <button onClick={v.apiClick} aria-expanded={v.connectExpanded} aria-controls={"connect"} title={v.apiTitle} style={sx(`margin-left:auto;display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:999px;padding:7px 14px;font-size:13px;font-weight:600;cursor:pointer`)}>
                 <span style={sx(`width:8px;height:8px;border-radius:50%;background:${v.apiDot}`)} />
                 {v.apiLabel}
               </button>
@@ -148,6 +148,92 @@ export function view(v) {
                   {"Dismiss"}
                 </button>
               </div>
+            </>) : null}
+            {v.localDown ? (<>
+              <div role={"status"} style={sx(`display:flex;flex-wrap:wrap;align-items:center;gap:12px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 16px;font-size:14px`)}>
+                <span aria-hidden={"true"} style={sx(`width:8px;height:8px;border-radius:50%;background:var(--warn)`)} />
+                <span style={sx(`flex:1 1 260px`)}>
+                  {"Local BloomBot not running, so you are seeing recorded runs."}
+                </span>
+                <button onClick={v.reconnect} style={sx(`background:var(--accent);color:var(--accent-ink);border:none;border-radius:8px;padding:7px 14px;font-weight:600;cursor:pointer`)}>
+                  {"Reconnect"}
+                </button>
+                <button onClick={v.dismissLocalDown} style={sx(`background:transparent;border:1px solid var(--line);color:var(--ink);border-radius:8px;padding:6px 12px;font-weight:600;cursor:pointer`)}>
+                  {"Dismiss"}
+                </button>
+              </div>
+            </>) : null}
+            {v.connectOpen ? (<>
+              <section id={"connect"} aria-label={"Connect to local BloomBot"} style={sx(`background:var(--surface);border:1px solid var(--accent);border-radius:16px;padding:24px;display:flex;flex-direction:column;gap:16px`)}>
+                <div style={sx(`display:flex;align-items:flex-start;gap:12px`)}>
+                  <div style={sx(`display:flex;flex-direction:column;gap:4px;flex:1`)}>
+                    <span style={sx(`font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3)`)}>
+                      {v.connectKicker}
+                    </span>
+                    <h2 style={sx(`font-family:'Newsreader',serif;font-weight:500;font-size:26px;margin:0`)}>
+                      {v.connectTitle}
+                    </h2>
+                    <span style={sx(`font-size:14px;color:var(--ink2)`)}>
+                      {v.connectSub}
+                    </span>
+                  </div>
+                  <button onClick={v.closeConnect} aria-label={"Close"} style={sx(`background:transparent;border:1px solid var(--line);color:var(--ink);border-radius:999px;width:36px;height:36px;cursor:pointer;font-size:16px`)}>
+                    {"×"}
+                  </button>
+                </div>
+                {v.showCommands ? (<>
+                  <ol style={sx(`margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px`)}>
+                    {(v.commands || []).map((cm, cm_i) => (<React.Fragment key={cm_i}>
+                      <li style={sx(`display:flex;flex-direction:column;gap:6px`)}>
+                        <span style={sx(`font-size:14px;color:var(--ink2)`)}>
+                          <strong style={sx(`color:var(--ink)`)}>
+                            {cm.n}{"."}
+                          </strong>
+                          {" "}{cm.label}
+                        </span>
+                        <div style={sx(`display:flex;flex-wrap:wrap;gap:8px;align-items:center`)}>
+                          <code style={sx(`flex:1 1 280px;font:13px/1.5 'JetBrains Mono',monospace;background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px 12px;overflow-x:auto;white-space:nowrap`)}>
+                            {cm.cmd}
+                          </code>
+                          <button onClick={cm.copy} style={sx(`background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:10px;padding:9px 14px;font-weight:600;cursor:pointer;min-width:80px`)}>
+                            {cm.copyLabel}
+                          </button>
+                        </div>
+                      </li>
+                    </React.Fragment>))}
+                  </ol>
+                </>) : null}
+                {v.hasConnectError ? (<>
+                  <div role={"alert"} style={sx(`display:flex;flex-direction:column;gap:6px;background:var(--warnbg);border:1px solid var(--warn);border-radius:12px;padding:12px 16px;font-size:14px`)}>
+                    <strong>
+                      {v.connectErrorTitle}
+                    </strong>
+                    <span>
+                      {v.connectErrorText}
+                    </span>
+                  </div>
+                </>) : null}
+                <div style={sx(`display:flex;flex-wrap:wrap;align-items:center;gap:10px`)}>
+                  {v.showConnect ? (<>
+                    <button onClick={v.connect} style={sx(`background:var(--accent);color:var(--accent-ink);border:none;border-radius:12px;padding:12px 22px;font-size:15px;font-weight:600;cursor:pointer`)}>
+                      {v.connectLabel}
+                    </button>
+                  </>) : null}
+                  {v.showDisconnect ? (<>
+                    <button onClick={v.disconnect} style={sx(`background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:12px;padding:11px 20px;font-size:15px;font-weight:600;cursor:pointer`)}>
+                      {"Disconnect (back to replay)"}
+                    </button>
+                  </>) : null}
+                  {v.showRecheck ? (<>
+                    <button onClick={v.recheckApi} style={sx(`background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:12px;padding:11px 20px;font-size:15px;font-weight:600;cursor:pointer`)}>
+                      {"Check again"}
+                    </button>
+                  </>) : null}
+                  <span style={sx(`font-size:13px;color:var(--ink3)`)}>
+                    {v.connectNote}
+                  </span>
+                </div>
+              </section>
             </>) : null}
             {v.isCheck ? (<>
               <section data-screen-label={"01 Check a paper"} style={sx(`display:flex;flex-direction:column;gap:28px`)}>
