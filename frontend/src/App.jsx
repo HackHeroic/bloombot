@@ -6,7 +6,7 @@
 import React from 'react';
 import { view } from './views/AppView.jsx';
 import { BB } from './designData.js';
-import { api, apiBase, savedApi, saveApi, clearApi, connectTarget, whyUnreachable, REPLAY_BUILD } from './api.js';
+import { api, apiBase, savedApi, saveApi, clearApi, connectTarget, whyUnreachable, REPLAY_BUILD, HOSTED, PUBLIC_API, useDefaultApi, usingDefault } from './api.js';
 import * as A from './adapt.js';
 import { loadRecorded, loadDataset, recordedClient, datasetPage } from './recorded.js';
 
@@ -85,7 +85,7 @@ export default class App extends React.Component {
   async loadPaper(paper, extra = {}) {
     if (!paper.questions.length) throw new Error('No questions were found. Check the text has numbered questions (Q1, 1., 1 a) …).');
     const rows = A.paperRows(paper);
-    await this.set({ checkStage: 'edit', apiPaper: paper, report: null, modelReport: null, paper: rows, resolved: {}, rec: null, ...extra,
+    await this.set({ checkStage: 'edit', apiPaper: paper, report: null, modelReport: null, paper: rows, resolved: {}, rec: null, nothingToDo: false, ...extra,
       duration: paper.duration_minutes ? String(paper.duration_minutes) : '', maxMarks: paper.max_marks ? String(paper.max_marks) : '',
       D: { SECTIONS: A.sections(rows), TITLE: A.paperTitle(paper, rows), OR_NOTE: A.orNote(rows) } });
   }
@@ -104,8 +104,13 @@ export default class App extends React.Component {
   async checkApi() {
     try {
       const m = await api.meta();
-      this.setState({ online: true, localDown: false, llmAvailable: !!m.llm.available, llmModel: m.llm.model, llm: !!m.llm.available });
-    } catch (e) { this.setState({ online: false, localDown: !!savedApi() }); }  // a saved local API that is down: say so quietly
+      this.setState({ online: true, localDown: usingDefault() && !!savedApi(), llmAvailable: !!m.llm.available, llmModel: m.llm.model, llm: !!m.llm.available });
+    } catch (e) {
+      // a saved local API that is down: say so quietly, and fall back to the public server if there is one
+      const down = !!savedApi() && !usingDefault();
+      if (down && PUBLIC_API) { useDefaultApi(); this.setState({ localDown: true }); return this.checkApi(); }
+      this.setState({ online: false, localDown: down || !!this.state.localDown });
+    }
   }
 
   // "Connect to local BloomBot": the only place the hosted page reaches for this computer.
@@ -114,7 +119,7 @@ export default class App extends React.Component {
     this.setState({ connecting: true, connectError: null, online: null, connectOpen: true });
     try {
       const m = await api.probe(target);
-      if (REPLAY_BUILD) saveApi(target);
+      if (HOSTED) saveApi(target);
       this.apiReady = Promise.resolve();
       this.setState({ connecting: false, online: true, localDown: false, llmAvailable: !!m.llm.available, llmModel: m.llm.model, llm: !!m.llm.available });
     } catch (e) {
@@ -148,7 +153,8 @@ export default class App extends React.Component {
   }
 
   connectVals(s) {
-    const live = s.online === true, saved = savedApi();
+    const live = s.online === true, saved = savedApi() && !usingDefault();
+    const onLocal = live && !!saved, onPublic = live && !saved && PUBLIC_API, onOwn = live && !saved && !PUBLIC_API;
     const copy = (i, text) => () => {
       try { navigator.clipboard.writeText(text); } catch (e) { /* clipboard blocked: the command is visible to copy by hand */ }
       this.setState({ copied: i }); clearTimeout(this.copyT); this.copyT = setTimeout(() => this.setState({ copied: null }), 1500);
@@ -167,14 +173,17 @@ export default class App extends React.Component {
     return {
       apiClick: () => this.setState(st => ({ connectOpen: !st.connectOpen })), connectExpanded: s.connectOpen ? 'true' : 'false',
       connectOpen: !!s.connectOpen, closeConnect: () => this.setState({ connectOpen: false }),
-      connectKicker: live ? 'Live API' : 'Replay · recorded runs',
-      connectTitle: live ? (saved ? 'Connected to BloomBot on your computer' : 'Connected to BloomBot') : 'Use your own papers: run BloomBot on your computer',
-      connectSub: live ? `${saved || apiBase() || window.location.origin} · ${llmTxt}` : 'This page is showing recorded runs. Start BloomBot on this computer and connect: your papers never leave your machine.',
-      showCommands: !live, commands, hasConnectError: !!err, connectErrorTitle: err ? err[0] : '', connectErrorText: err ? err[1] : '',
-      showConnect: !live, connect: () => { if (!s.connecting) this.connect(); },
+      connectKicker: onPublic ? 'Live · public server' : live ? 'Live API' : 'Replay · recorded runs',
+      connectTitle: onLocal ? 'Connected to BloomBot on your computer' : onPublic ? 'Using the public BloomBot' : live ? 'Connected to BloomBot' : 'Use your own papers: run BloomBot on your computer',
+      connectSub: onPublic ? 'Hugging Face Space, fast mode (no LLM). Papers you upload are processed there in memory and not stored. For the LLM second opinion and LLM rewrites, or to keep papers on your computer, run BloomBot locally and connect:'
+        : live ? `${saved || apiBase() || window.location.origin} · ${llmTxt}` : 'This page is showing recorded runs. Start BloomBot on this computer and connect: your papers never leave your machine.',
+      showCommands: !live || onPublic, commands, hasConnectError: !!err, connectErrorTitle: err ? err[0] : '', connectErrorText: err ? err[1] : '',
+      showConnect: !live || onPublic, connect: () => { if (!s.connecting) this.connect(); },
       connectLabel: s.connecting ? 'Connecting… (the first time loads the models, ~20 s)' : err ? 'Try again' : 'Connect to local BloomBot',
-      showDisconnect: live && !!saved, disconnect: () => this.disconnect(), showRecheck: live && !saved,
-      connectNote: live ? (saved ? 'Remembered in this browser.' : '') : REPLAY_BUILD ? 'Chrome asks once to let this site reach your computer: click Allow.' : '',
+      showDisconnect: onLocal, disconnect: () => this.disconnect(), showRecheck: onOwn,
+      disconnectLabel: PUBLIC_API ? 'Disconnect (back to the public BloomBot)' : 'Disconnect (back to replay)',
+      localDownText: PUBLIC_API && live ? 'BloomBot on your computer is not running, so this visit uses the public BloomBot (fast mode).' : 'Local BloomBot not running, so you are seeing recorded runs.',
+      connectNote: onLocal ? 'Remembered in this browser.' : (!live || onPublic) && HOSTED ? 'Chrome asks once to let this site reach your computer: click Allow.' : '',
       localDown: !!s.localDown && !s.connectOpen, reconnect: () => this.connect(), dismissLocalDown: () => this.setState({ localDown: false }),
     };
   }
@@ -245,7 +254,7 @@ export default class App extends React.Component {
     const flagged = new Set(model.needs_review), said = Object.fromEntries(model.items.map(it => [it.question.id, it.prediction.level]));
     const rows = A.paperRows(paper, report).map(r => ({ ...r, review: flagged.has(r.id), modelLevel: said[r.id],
       votes: r.votes.filter(v => v.agent !== 'Teacher'), locked: (this.state.paper.find(x => x.id === r.id) || {}).locked }));
-    await this.set(st => ({ busy: '', assessProgress: null, report, modelReport: model, paper: rows, ...extra,
+    await this.set(st => ({ busy: '', assessProgress: null, report, modelReport: model, paper: rows, nothingToDo: false, ...extra,
       D: { ...st.D, SECTIONS: A.sections(rows), TITLE: A.paperTitle(paper, rows), OR_NOTE: A.orNote(rows), DIST_BEFORE: A.dist(report.distribution),
         BPAPI: bp, BP: { ...BB.BP, [st.blueprint]: A.blueprint(bp, report) } } }));
   }
@@ -335,6 +344,11 @@ export default class App extends React.Component {
     try {
       const paper = this.paperNow(s);
       const jobs = await this.client().plan({ report: s.report, blueprint_id: this.bpId() });
+      if (!jobs.length && !this.forceJob) {  // nothing to rewrite: don't run a pipeline that only re-checks the paper
+        this.setState(x => ({ jobStatus: 'idle', nothingToDo: true, D: { ...x.D, TRACE: [], RW: [], PLAN: [], JOB_ID: '—', HANDBACK: null } }));
+        return;
+      }
+      this.forceJob = false;
       const locked = new Set(s.paper.filter(q => q.locked).map(q => q.id));
       const plan = jobs.map(A.rwFromJob);
       const st = {}; plan.forEach(r => st[r.id] = 'pending');
@@ -512,7 +526,7 @@ export default class App extends React.Component {
       pasteText: s.pasteText, onPaste: e => this.setState({ pasteText: e.target.value }),
       parsePaste: () => { if (!s.pasteText.trim()) { this.setState({ error: 'Paste some questions first, or try the sample paper.' }); return; } this.parse('pasted text', 'paste'); },
       samples: (s.samples || []).map(x => ({ subject: x.subject, details: x.description.split(' · ').slice(1).join(' · '), pick: () => this.pickSample(x.id) })),
-      samplesNote: live ? 'Read and assessed live by your BloomBot.' : 'Recorded runs (with the LLM): they work without BloomBot running.', fileName: s.fileName,
+      samplesNote: live ? (PUBLIC_API && !(savedApi() && !usingDefault()) ? 'Read and assessed live on the public BloomBot.' : 'Read and assessed live by your BloomBot.') : 'Recorded runs (with the LLM): they work without BloomBot running.', fileName: s.fileName,
       sections, tableWide: !narrow && s.winW >= 1240, tableNarrow: narrow || s.winW < 1240, rowCols: narrow ? '40px minmax(0,1fr) 56px' : '52px minmax(0,1fr) 64px 52px 118px 104px',
       blueprints, assess: () => { if (!s.busy || s.busy === 'assess') this.assessPaper(); }, assessLabel: s.busy === 'assess' ? (s.assessProgress ? `Assessing… ${s.assessProgress.done} / ${s.assessProgress.n}` : 'Assessing…') : 'Assess',
       backToEdit: () => this.setState({ checkStage: 'edit' }), uploadNew: () => this.setState({ checkStage: 'upload' }),
@@ -600,9 +614,11 @@ export default class App extends React.Component {
     const afterCompliant = B.AFTER_COMPLIANT !== undefined ? B.AFTER_COMPLIANT : true;
     const afterReview = B.AFTER_REVIEW || [];
     const hand = B.HANDBACK || BB.HANDBACK;
-    const reb = { jobIdle: s.jobStatus === 'idle', jobRunning: s.jobStatus === 'running', jobDone: s.jobStatus === 'done', notIdle: s.jobStatus !== 'idle', startJob: () => this.startJob(),
-      startLabel: s.rec ? 'Replay the recorded job' : live ? (s.apiPaper ? 'Start rebalance job' : 'Start on the sample OS paper') : 'Replay the recorded job',
-      idleText: s.rec ? `Replays the recorded rebalance of ${paperTitle} against ${bp.name}: every agent step on its real timeline, then the rewrites to review.` : live ? (s.apiPaper ? `Rebalance ${paperTitle} against ${bp.name}. The job runs on the API and streams every agent step here; review each rewrite as it lands.` : 'Rebalance opens from a checked paper. Start it on the sample OS paper to watch the agents work live — the job runs on the API and you can review each rewrite as it lands.')
+    const reasonsNow = bp.checks.filter(c => !c.bOk).map(c => `${c.label} of marks — currently ${c.b}%`);
+    const reb = { jobIdle: s.jobStatus === 'idle', jobRunning: s.jobStatus === 'running', jobDone: s.jobStatus === 'done', notIdle: s.jobStatus !== 'idle', startJob: () => { this.forceJob = !!s.nothingToDo; this.startJob(); },
+      startLabel: s.nothingToDo ? 'Run the full job anyway' : s.rec ? 'Replay the recorded job' : live ? (s.apiPaper ? 'Start rebalance job' : 'Start on the sample OS paper') : 'Replay the recorded job',
+      idleText: s.nothingToDo ? (pt => `${pt.planTitle}. ${pt.planWhy ? pt.planWhy + ' ' : ''}So BloomBot did not start a rewrite job; the full job would only re-check the paper and stop.`)(this.planText([], reasonsNow, s))
+        : s.rec ? `Replays the recorded rebalance of ${paperTitle} against ${bp.name}: every agent step on its real timeline, then the rewrites to review.` : live ? (s.apiPaper ? `Rebalance ${paperTitle} against ${bp.name}. The job runs on the API and streams every agent step here; review each rewrite as it lands.` : 'Rebalance opens from a checked paper. Start it on the sample OS paper to watch the agents work live — the job runs on the API and you can review each rewrite as it lands.')
         : 'The API is not running, so this replays a recorded run on the sample OS paper. Start `bloombot serve` (and Ollama) to run it live.',
       jobLabel: s.jobStatus === 'running' ? (driven ? `Running · ${n} events` : `Running · ${n} of ${TR.length} events`) : `Done · ${TR.length} events`, jobId: B.JOB_ID,
       afterReviewTxt: afterReview.length === 1 ? `After rewriting, Q${afterReview[0]} is flagged ⚑ for review — check it before you submit.`
@@ -706,7 +722,7 @@ export default class App extends React.Component {
     // ---------- Header: API and LLM status ----------
     const apiState = s.online === null ? 'checking' : s.online ? 'live' : 'replay';
     const status = {
-      apiLabel: { checking: 'Connecting…', live: 'Live API', replay: 'Replay · recorded' }[apiState], apiShort: { checking: '…', live: 'Live', replay: 'Replay' }[apiState],
+      apiLabel: { checking: 'Connecting…', live: PUBLIC_API && !(savedApi() && !usingDefault()) ? 'Live · public' : 'Live API', replay: 'Replay · recorded' }[apiState], apiShort: { checking: '…', live: 'Live', replay: 'Replay' }[apiState],
       apiDot: { checking: 'var(--ink3)', live: 'var(--good)', replay: 'var(--warn)' }[apiState],
       apiTitle: s.online ? `Connected to ${apiBase() || window.location.origin}. Click to re-check.` : apiBase() === null ? 'Recorded runs. Click to connect BloomBot running on your computer.' : `No API at ${apiBase() || 'this origin'} — showing recorded runs. Start \`bloombot serve\`, then click to re-check (or add ?api=http://host:port).`,
       recheckApi: () => { this.setState({ online: null }); this.apiReady = this.checkApi(); },
@@ -718,7 +734,8 @@ export default class App extends React.Component {
       navTeacher, navDemo, navSheet, navAll: [...navTeacher, ...navDemo, ...navSheet], pageTitle: titles[s.page],
       isCheck: s.page === 'check', isClassify: s.page === 'classify', isRebalance: s.page === 'rebalance', isProfile: s.page === 'profile', isHow: s.page === 'how', isEval: s.page === 'eval', isData: s.page === 'data', isSheet: s.page === 'sheet',
       llmLabel: llmOff ? 'LLM not running · fast mode' : s.llm ? 'LLM second opinion on' : 'Fast mode (no LLM)', llmDot: !llmOff && s.llm ? 'var(--good)' : 'var(--ink3)', llmPressed: s.llm ? 'true' : 'false',
-      llmTitle: llmOff ? 'Ollama is not running, so Socrates and the LLM writer are off. Start `ollama serve`, then re-check the API.' : live ? `Socrates and the Composer use ${s.llmModel}. Click for fast mode (no LLM).` : 'Recorded runs used the LLM. Click to see fast mode.',
+      llmTitle: llmOff && PUBLIC_API && !(savedApi() && !usingDefault()) ? 'The public server runs without the LLM. Connect BloomBot on your computer (the Live chip) for the LLM second opinion and rewrites.'
+        : llmOff ? 'Ollama is not running, so Socrates and the LLM writer are off. Start `ollama serve`, then re-check the API.' : live ? `Socrates and the Composer use ${s.llmModel}. Click for fast mode (no LLM).` : 'Recorded runs used the LLM. Click to see fast mode.',
       toggleLlm: () => { if (!llmOff) this.setState({ llm: !s.llm }); },
       themeLabel: s.theme === 'light' ? 'Dark theme' : 'Light theme', themeIcon: s.theme === 'light' ? '◐' : '◑',
       toggleTheme: () => { const t = s.theme === 'light' ? 'dark' : 'light'; try { localStorage.setItem('bb.theme', t); } catch (e) {} this.setState({ theme: t }); },

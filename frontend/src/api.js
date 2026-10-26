@@ -1,36 +1,50 @@
 // Thin client for the BloomBot HTTP API (docs/API.md).
 //
-// Where the API lives: `?api=http://host:port` or a local server the teacher connected (both
-// remembered), else NEXT_PUBLIC_BLOOMBOT_API, else the same origin when the page is served by
-// `bloombot serve`, else http://127.0.0.1:8000.
-// NEXT_PUBLIC_BLOOMBOT_API=replay (the hosted demo) looks for no API at all until the teacher
-// clicks "Connect to local BloomBot", so ordinary visitors never see a local-network prompt.
+// Where the API lives, first match wins:
+//   1. `?api=http://host:port`, or a local server the teacher connected (both remembered);
+//   2. NEXT_PUBLIC_BLOOMBOT_API: a URL (the public server), "same-origin" (the page is served by the
+//      API, e.g. on Hugging Face), or "replay" (no API: recorded runs only);
+//   3. the same origin when the page is served by `bloombot serve` on :8000, else http://127.0.0.1:8000.
+// NEXT_PUBLIC_BLOOMBOT_HOSTED=1 marks a public page: "Connect to local BloomBot" then means this
+// computer, and the page never reaches for it on its own, so visitors see no local-network prompt.
 
 const KEY = 'bb.api';
 export const LOCAL_API = 'http://127.0.0.1:8000';
-export const REPLAY_BUILD = process.env.NEXT_PUBLIC_BLOOMBOT_API === 'replay';
+const ENV_API = process.env.NEXT_PUBLIC_BLOOMBOT_API;
+export const REPLAY_BUILD = ENV_API === 'replay';
+export const HOSTED = REPLAY_BUILD || process.env.NEXT_PUBLIC_BLOOMBOT_HOSTED === '1';
+export const PUBLIC_API = HOSTED && ENV_API && !REPLAY_BUILD;  // a public BloomBot is the default here
 
 export function savedApi() {
   try { return localStorage.getItem(KEY); } catch (e) { return null; }
 }
-export function saveApi(url) { try { localStorage.setItem(KEY, url.replace(/\/$/, '')); } catch (e) { /* storage blocked */ } }
-export function clearApi() { try { localStorage.removeItem(KEY); } catch (e) { /* storage blocked */ } }
+export function saveApi(url) { sessionBase = undefined; try { localStorage.setItem(KEY, url.replace(/\/$/, '')); } catch (e) { /* storage blocked */ } }
+export function clearApi() { sessionBase = undefined; try { localStorage.removeItem(KEY); } catch (e) { /* storage blocked */ } }
+
+function defaultBase() {
+  if (REPLAY_BUILD) return null;
+  if (ENV_API === 'same-origin') return '';
+  if (ENV_API) return ENV_API.replace(/\/$/, '');
+  return window.location.port === '8000' ? '' : LOCAL_API;
+}
+
+// A remembered local server that is down: this visit falls back to the default (not saved).
+let sessionBase;
+export function useDefaultApi() { sessionBase = defaultBase(); }
+export const usingDefault = () => sessionBase !== undefined;
 
 export function apiBase() {
   if (typeof window === 'undefined') return '';
+  if (sessionBase !== undefined) return sessionBase;
   try {
     const q = new URLSearchParams(window.location.search).get('api');
     if (q) { saveApi(q); return q.replace(/\/$/, ''); }
   } catch (e) { /* fall through */ }
-  const saved = savedApi();
-  if (saved) return saved;
-  if (REPLAY_BUILD) return null;
-  if (process.env.NEXT_PUBLIC_BLOOMBOT_API) return process.env.NEXT_PUBLIC_BLOOMBOT_API;
-  return window.location.port === '8000' ? '' : LOCAL_API;
+  return savedApi() || defaultBase();
 }
 
 // Where "Connect to local BloomBot" looks: the hosted demo always means this computer.
-export const connectTarget = () => (REPLAY_BUILD ? LOCAL_API : apiBase() ?? LOCAL_API);
+export const connectTarget = () => (HOSTED ? LOCAL_API : apiBase() ?? LOCAL_API);
 
 // Why a local API did not answer: "safari" (it blocks http://127.0.0.1 from an https page),
 // "blocked" (Chrome's local-network permission was denied) or "down" (nothing listening).

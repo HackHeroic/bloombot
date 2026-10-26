@@ -153,7 +153,7 @@ export function view(v) {
               <div role={"status"} style={sx(`display:flex;flex-wrap:wrap;align-items:center;gap:12px;background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:10px 16px;font-size:14px`)}>
                 <span aria-hidden={"true"} style={sx(`width:8px;height:8px;border-radius:50%;background:var(--warn)`)} />
                 <span style={sx(`flex:1 1 260px`)}>
-                  {"Local BloomBot not running, so you are seeing recorded runs."}
+                  {v.localDownText}
                 </span>
                 <button onClick={v.reconnect} style={sx(`background:var(--accent);color:var(--accent-ink);border:none;border-radius:8px;padding:7px 14px;font-weight:600;cursor:pointer`)}>
                   {"Reconnect"}
@@ -221,7 +221,7 @@ export function view(v) {
                   </>) : null}
                   {v.showDisconnect ? (<>
                     <button onClick={v.disconnect} style={sx(`background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:12px;padding:11px 20px;font-size:15px;font-weight:600;cursor:pointer`)}>
-                      {"Disconnect (back to replay)"}
+                      {v.disconnectLabel}
                     </button>
                   </>) : null}
                   {v.showRecheck ? (<>
