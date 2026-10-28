@@ -19,8 +19,8 @@ The client speaks plain HTTP, so any Ollama-compatible server works. No GPU is r
 Optionally, a Claude model (``BLOOMBOT_LLM=claude-sonnet-5-5``) takes the same roles through the
 Anthropic API. It returns no token log-probs, so its level becomes a smoothed one-hot
 distribution (``distribution_from_logprobs`` with no log-probs), and papers leave the machine.
-The key comes from ``ANTHROPIC_API_KEY``, an ``ant auth login`` profile, or the file named by
-``BLOOMBOT_ANTHROPIC_KEY_FILE`` (default ``~/.config/bloombot/anthropic_key``).
+The key comes from ``ANTHROPIC_API_KEY`` or ``~/.config/bloombot/anthropic_key`` (and an
+organisation key's workspace from ``ANTHROPIC_WORKSPACE_ID`` or ``~/.config/bloombot/anthropic_workspace``).
 """
 
 from __future__ import annotations
@@ -111,19 +111,31 @@ def _strict(schema: dict) -> dict:
 
 
 class AnthropicClient:
-    """The same interface as OllamaClient, for a Claude model through the Anthropic API."""
+    """The same interface as OllamaClient, for a Claude Sonnet model through the Anthropic API.
 
-    def __init__(self, model: str, timeout: float = 120.0):
+    Cost guards: Sonnet only, no extended thinking, low effort, a small output cap, no fallback to
+    another model, and at most ``BLOOMBOT_LLM_MAX_CALLS`` calls per server process (default 300);
+    past that, calls fail fast and the pipeline carries on with the CPU models alone."""
+
+    calls = 0
+    _lock = threading.Lock()
+
+    def __init__(self, model: str, timeout: float = 60.0):
         import anthropic
 
+        if not model.startswith("claude-sonnet-"):
+            raise LLMError(f"only Claude Sonnet models are enabled, not {model}")
         self.model = model
-        key = os.environ.get("ANTHROPIC_API_KEY")
-        key_file = Path(os.environ.get("BLOOMBOT_ANTHROPIC_KEY_FILE", "~/.config/bloombot/anthropic_key")).expanduser()
-        if not key and key_file.is_file():
-            key = key_file.read_text().strip() or None
+        conf = Path(os.environ.get("BLOOMBOT_ANTHROPIC_DIR", "~/.config/bloombot")).expanduser()
+        key = os.environ.get("ANTHROPIC_API_KEY") or _read(conf / "anthropic_key")
+        workspace = os.environ.get("ANTHROPIC_WORKSPACE_ID") or _read(conf / "anthropic_workspace")
+        self.max_calls = int(os.environ.get("BLOOMBOT_LLM_MAX_CALLS", "300"))
+        # gzip only: an older brotli/zstd decoder in the environment can fail on compressed replies
+        headers = {"accept-encoding": "gzip, deflate"}
+        if workspace:
+            headers["anthropic-workspace-id"] = workspace
         # with no key the SDK falls back to an `ant auth login` profile
-        self._client = anthropic.Anthropic(api_key=key, timeout=timeout, max_retries=2) if key else \
-            anthropic.Anthropic(timeout=timeout, max_retries=2)
+        self._client = anthropic.Anthropic(api_key=key, timeout=timeout, max_retries=1, default_headers=headers)
         self._available: bool | None = None
 
     def available(self) -> bool:
@@ -142,22 +154,26 @@ class AnthropicClient:
              max_tokens: int = 512, logprobs: bool = False, top_logprobs: int = 10, seed: int = 0) -> Completion:
         import anthropic
 
-        # temperature, seed and log-probs have no equivalent here: Claude Sonnet 5.5 rejects sampling
+        with self._lock:
+            if AnthropicClient.calls >= self.max_calls:
+                raise LLMError(f"Claude call budget used up ({self.max_calls} calls); continuing without the LLM")
+            AnthropicClient.calls += 1
+        # temperature, seed and log-probs have no equivalent: Claude Sonnet 5.5 rejects sampling
         # parameters and returns no log-probs
         system = "\n\n".join(m["content"] for m in messages if m["role"] == "system")
         turns = [m for m in messages if m["role"] != "system"]
-        kwargs: dict[str, Any] = {}
-        if system:
-            kwargs["system"] = system
+        kwargs: dict[str, Any] = {"system": system} if system else {}
         output_config: dict[str, Any] = {"effort": "low"}  # short, well-specified tasks
         if schema is not None:
             output_config["format"] = {"type": "json_schema", "schema": _strict(schema)}
         try:
-            resp = self._client.beta.messages.create(
-                model=self.model, max_tokens=max(4000, max_tokens), messages=turns, output_config=output_config,
-                betas=["server-side-fallback-2026-07-01"], fallbacks="default", **kwargs)
+            resp = self._client.messages.create(
+                model=self.model, max_tokens=min(max(max_tokens, 256), 1024), messages=turns,
+                thinking={"type": "between_tools"}, output_config=output_config, **kwargs)
         except anthropic.APIError as exc:
             raise LLMError(f"Claude request failed ({self.model}): {exc}") from exc
+        log.info("claude call %d/%d: %d in, %d out tokens", AnthropicClient.calls, self.max_calls,
+                 resp.usage.input_tokens, resp.usage.output_tokens)
         if resp.stop_reason == "refusal":
             raise LLMError(f"Claude declined the request ({self.model})")
         content = "".join(b.text for b in resp.content if b.type == "text")
@@ -168,6 +184,10 @@ class AnthropicClient:
             except json.JSONDecodeError:
                 data = None
         return Completion(content, data, None, resp.usage.output_tokens)
+
+
+def _read(path: Path) -> str | None:
+    return (path.read_text().strip() or None) if path.is_file() else None
 
 
 def llm_client(model: str = DEFAULT_LLM, host: str = DEFAULT_HOST) -> "OllamaClient | AnthropicClient":
