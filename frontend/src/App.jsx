@@ -486,12 +486,18 @@ export default class App extends React.Component {
 
     // ---------- Check ----------
     const lockedIds = s.paper.filter(q => q.locked).map(q => q.id);
+    // a column nobody printed (no COs, no Bloom tags) only takes room from the question text
+    const showCo = !narrow && s.paper.some(q => q.co), showTagCol = !narrow && s.paper.some(q => q.tag);
     const sections = B.SECTIONS.map(sec => {
       const qs = s.paper.filter(q => q.section === sec.id);
       return { ...sec, rows: qs.map((q, i) => {
         const inG = !!q.group, first = inG && (i === 0 || qs[i - 1].group !== q.group);
         const upd = patch => this.setState(st => ({ paper: st.paper.map(x => x.id === q.id ? { ...x, ...patch } : x), report: patch.locked === undefined ? null : st.report }));
-        return { ...q, marks: q.marks == null ? '' : q.marks, inGroup: inG, showOr: inG && !first, groupLabel: first ? `Answer either Q${q.id} or Q${qs[i + 1] ? qs[i + 1].id : ''} · ${q.marks ? `one ${q.marks}-mark slot` : 'one slot'}` : '', showGroupLabel: first,
+        const ch = q.choices || [], open = !!(s.openChoices || {})[q.id], len = (q.text || '').length;
+        return { ...q, marks: q.marks == null ? '' : q.marks, inGroup: inG,
+          rows: len > (narrow ? 40 : 95) ? 2 : 1, hasChoices: ch.length > 0, showChoices: open, choicesOpen: open ? 'true' : 'false',
+          choicesLabel: `${ch.length} options ${open ? '▴' : '▾'}`, choiceList: ch.map((t, j) => ({ k: 'ABCDEFGH'[j] || '·', t })),
+          toggleChoices: () => this.setState(st => ({ openChoices: { ...(st.openChoices || {}), [q.id]: !open } })), showOr: inG && !first, groupLabel: first ? `Answer either Q${q.id} or Q${qs[i + 1] ? qs[i + 1].id : ''} · ${q.marks ? `one ${q.marks}-mark slot` : 'one slot'}` : '', showGroupLabel: first,
           rowBg: inG ? 'var(--surface2)' : 'transparent', groupBorder: inG ? 'var(--accent)' : 'transparent',
           hasTag: !!q.tag, noTag: !q.tag, tagChip: q.tag ? chip(N(q.tag)) : chip(1), coTxt: q.co || '—', hasContext: !!q.context, onText: e => upd({ text: e.target.value }), onMarks: e => upd({ marks: e.target.value === '' ? null : +e.target.value || 0 }),
           toggleLock: () => upd({ locked: !q.locked }), lockLabel: q.locked ? '🔒 Locked' : 'Lock', lockPressed: q.locked ? 'true' : 'false',
@@ -527,7 +533,7 @@ export default class App extends React.Component {
       parsePaste: () => { if (!s.pasteText.trim()) { this.setState({ error: 'Paste some questions first, or try the sample paper.' }); return; } this.parse('pasted text', 'paste'); },
       samples: (s.samples || []).map(x => ({ subject: x.subject, details: x.description.split(' · ').slice(1).join(' · '), pick: () => this.pickSample(x.id) })),
       samplesNote: live ? (PUBLIC_API && !(savedApi() && !usingDefault()) ? 'Read and assessed live on the public BloomBot.' : 'Read and assessed live by your BloomBot.') : 'Recorded runs (with the LLM): they work without BloomBot running.', fileName: s.fileName,
-      sections, tableWide: !narrow && s.winW >= 1240, tableNarrow: narrow || s.winW < 1240, rowCols: narrow ? '40px minmax(0,1fr) 56px' : '52px minmax(0,1fr) 64px 52px 118px 104px',
+      sections, tableWide: !narrow && s.winW >= 1240, tableNarrow: narrow || s.winW < 1240, rowCols: narrow ? '40px minmax(0,1fr) 56px' : ['52px minmax(0,1fr) 64px', showCo && '52px', showTagCol && '118px', '104px'].filter(Boolean).join(' '), showCo, showTagCol,
       blueprints, assess: () => { if (!s.busy || s.busy === 'assess') this.assessPaper(); }, assessLabel: s.busy === 'assess' ? (s.assessProgress ? `Assessing… ${s.assessProgress.done} / ${s.assessProgress.n}` : 'Assessing…') : 'Assess',
       backToEdit: () => this.setState({ checkStage: 'edit' }), uploadNew: () => this.setState({ checkStage: 'upload' }),
       bpName: bp.name, markers: bp.markers, distBefore: B.DIST_BEFORE, checksBefore: checkRows('b', s.reportT),

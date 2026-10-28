@@ -22,7 +22,7 @@ export function paperRows(paper, report) {
     const p = items[q.id];
     return {
       id: q.id, number: q.number, text: q.text, context: q.context, marks: q.marks, section: q.section || 'A',
-      group: q.group, option: q.option, co: q.course_outcome, tag: q.tagged_level, locked: !!q.locked,
+      group: q.group, option: q.option, co: q.course_outcome, tag: q.tagged_level, locked: !!q.locked, choices: q.choices || [],
       pred: p ? levelN(p.level) : 0, conf: p ? r2(p.confidence) : 0, proba: p ? probaArr(p.proba) : [0, 0, 0, 0, 0, 0],
       review: p ? !!p.needs_review : false, votes: p ? p.votes.map(vote) : [], neighbours: p ? p.neighbours : [],
     };

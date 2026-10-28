@@ -351,12 +351,16 @@ export function view(v) {
                           <span>
                             {"Marks"}
                           </span>
-                          <span>
-                            {"CO"}
-                          </span>
-                          <span>
-                            {"Printed tag"}
-                          </span>
+                          {v.showCo ? (<>
+                            <span>
+                              {"CO"}
+                            </span>
+                          </>) : null}
+                          {v.showTagCol ? (<>
+                            <span>
+                              {"Printed tag"}
+                            </span>
+                          </>) : null}
                           <span />
                         </div>
                       </>) : null}
@@ -384,25 +388,46 @@ export function view(v) {
                                   <span style={sx(`flex:1;height:1px;background:var(--line)`)} />
                                 </div>
                               </>) : null}
-                              <div style={sx(`display:grid;grid-template-columns:${v.rowCols};gap:12px;align-items:center;padding:10px 16px;border-bottom:1px solid var(--line)`)}>
-                                <span style={sx(`font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700`)}>
+                              <div style={sx(`display:grid;grid-template-columns:${v.rowCols};gap:12px;align-items:start;padding:10px 16px;border-bottom:1px solid var(--line)`)}>
+                                <span style={sx(`font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;padding-top:8px`)}>
                                   {r.id}
                                 </span>
-                                <span style={sx(`display:flex;flex-direction:column;gap:2px;min-width:0`)}>
+                                <span style={sx(`display:flex;flex-direction:column;gap:4px;min-width:0`)}>
                                   {r.hasContext ? (<>
                                     <span style={sx(`font-size:12px;font-style:italic;color:var(--ink3);padding:0 8px`)}>
                                       {"Context: "}{r.context}
                                     </span>
                                   </>) : null}
-                                  <input aria-label={"Question text"} value={r.text} onChange={r.onText} style={sx(`width:100%;min-width:0;font-size:14px;color:var(--ink);background:transparent;border:1px solid transparent;border-radius:6px;padding:7px 8px`)} className="bb-focus" />
+                                  <textarea aria-label={"Question text"} value={r.text} onChange={r.onText} rows={r.rows} style={sx(`width:100%;min-width:0;font:14px/1.45 inherit;color:var(--ink);background:transparent;border:1px solid transparent;border-radius:6px;padding:6px 8px;resize:vertical;field-sizing:content;max-height:9.5em;overflow:auto`)} className="bb-focus" />
+                                  {r.hasChoices ? (<>
+                                    <span style={sx(`display:flex;flex-direction:column;gap:4px;padding:0 8px`)}>
+                                      <button onClick={r.toggleChoices} aria-expanded={r.choicesOpen} style={sx(`align-self:flex-start;display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;color:var(--ink2);background:var(--surface2);border:1px solid var(--line);border-radius:999px;padding:3px 10px;cursor:pointer`)}>
+                                        {r.choicesLabel}
+                                      </button>
+                                      {r.showChoices ? (<>
+                                        <ol style={sx(`margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:3px;font-size:13px;color:var(--ink2)`)}>
+                                          {(r.choiceList || []).map((c, c_i) => (<React.Fragment key={c_i}>
+                                            <li style={sx(`display:flex;gap:8px`)}>
+                                              <span style={sx(`font:700 12px 'JetBrains Mono',monospace;color:var(--ink3)`)}>
+                                                {c.k}
+                                              </span>
+                                              <span>
+                                                {c.t}
+                                              </span>
+                                            </li>
+                                          </React.Fragment>))}
+                                        </ol>
+                                      </>) : null}
+                                    </span>
+                                  </>) : null}
                                 </span>
                                 <input aria-label={"Marks"} type={"number"} min={"0"} value={r.marks} onChange={r.onMarks} style={sx(`width:100%;font:13px 'JetBrains Mono',monospace;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:7px 6px;text-align:center`)} />
-                                {v.wide ? (<>
+                                {v.showCo ? (<>
                                   <span style={sx(`font-family:'JetBrains Mono',monospace;font-size:12px;color:var(--ink2)`)}>
                                     {r.coTxt}
                                   </span>
                                 </>) : null}
-                                {v.wide ? (<>
+                                {v.showTagCol ? (<>
                                   <span title={"Printed on the paper; hidden from the classifier"} style={sx(`display:inline-flex;align-items:center;gap:6px;font-size:12px;color:var(--ink2)`)}>
                                     {r.hasTag ? (<>
                                       <span style={sx(`display:inline-flex;align-items:center;gap:6px`)}>
