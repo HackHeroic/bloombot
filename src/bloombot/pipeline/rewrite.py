@@ -77,7 +77,7 @@ class Rewriter:
     def __init__(self, assessor, llm_client=None, settings: Settings | None = None,
                  trace: list[TraceEvent] | None = None):
         self.assessor = assessor
-        self.client = llm_client  # an OllamaClient or None
+        self.client = llm_client  # an OllamaClient, an AnthropicClient or None
         self.settings = settings or get_settings()
         self.trace: list[TraceEvent] = trace if trace is not None else []
 

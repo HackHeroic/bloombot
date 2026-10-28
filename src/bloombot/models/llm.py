@@ -15,6 +15,12 @@ Design choices:
 
 The client speaks plain HTTP, so any Ollama-compatible server works. No GPU is required; a
 3-4B model at 4-bit runs on a laptop CPU/Apple silicon.
+
+Optionally, a Claude model (``BLOOMBOT_LLM=claude-sonnet-5-5``) takes the same roles through the
+Anthropic API. It returns no token log-probs, so its level becomes a smoothed one-hot
+distribution (``distribution_from_logprobs`` with no log-probs), and papers leave the machine.
+The key comes from ``ANTHROPIC_API_KEY``, an ``ant auth login`` profile, or the file named by
+``BLOOMBOT_ANTHROPIC_KEY_FILE`` (default ``~/.config/bloombot/anthropic_key``).
 """
 
 from __future__ import annotations
@@ -91,6 +97,82 @@ class OllamaClient:
             except json.JSONDecodeError:
                 data = None
         return Completion(content, data, out.get("logprobs"), out.get("eval_count", 0))
+
+
+def _strict(schema: dict) -> dict:
+    """Claude's structured outputs need every object closed (additionalProperties: false)."""
+    out = dict(schema)
+    if out.get("type") == "object":
+        out["additionalProperties"] = False
+        out["properties"] = {k: _strict(v) for k, v in out.get("properties", {}).items()}
+    if isinstance(out.get("items"), dict):
+        out["items"] = _strict(out["items"])
+    return out
+
+
+class AnthropicClient:
+    """The same interface as OllamaClient, for a Claude model through the Anthropic API."""
+
+    def __init__(self, model: str, timeout: float = 120.0):
+        import anthropic
+
+        self.model = model
+        key = os.environ.get("ANTHROPIC_API_KEY")
+        key_file = Path(os.environ.get("BLOOMBOT_ANTHROPIC_KEY_FILE", "~/.config/bloombot/anthropic_key")).expanduser()
+        if not key and key_file.is_file():
+            key = key_file.read_text().strip() or None
+        # with no key the SDK falls back to an `ant auth login` profile
+        self._client = anthropic.Anthropic(api_key=key, timeout=timeout, max_retries=2) if key else \
+            anthropic.Anthropic(timeout=timeout, max_retries=2)
+        self._available: bool | None = None
+
+    def available(self) -> bool:
+        if self._available is None:
+            import anthropic
+
+            try:
+                self._client.models.retrieve(self.model)
+                self._available = True
+            except anthropic.APIError as exc:
+                log.warning("Claude model %s not reachable: %s", self.model, exc)
+                self._available = False
+        return self._available
+
+    def chat(self, messages: list[dict], schema: dict | None = None, temperature: float = 0.0,
+             max_tokens: int = 512, logprobs: bool = False, top_logprobs: int = 10, seed: int = 0) -> Completion:
+        import anthropic
+
+        # temperature, seed and log-probs have no equivalent here: Claude Sonnet 5.5 rejects sampling
+        # parameters and returns no log-probs
+        system = "\n\n".join(m["content"] for m in messages if m["role"] == "system")
+        turns = [m for m in messages if m["role"] != "system"]
+        kwargs: dict[str, Any] = {}
+        if system:
+            kwargs["system"] = system
+        output_config: dict[str, Any] = {"effort": "low"}  # short, well-specified tasks
+        if schema is not None:
+            output_config["format"] = {"type": "json_schema", "schema": _strict(schema)}
+        try:
+            resp = self._client.beta.messages.create(
+                model=self.model, max_tokens=max(4000, max_tokens), messages=turns, output_config=output_config,
+                betas=["server-side-fallback-2026-07-01"], fallbacks="default", **kwargs)
+        except anthropic.APIError as exc:
+            raise LLMError(f"Claude request failed ({self.model}): {exc}") from exc
+        if resp.stop_reason == "refusal":
+            raise LLMError(f"Claude declined the request ({self.model})")
+        content = "".join(b.text for b in resp.content if b.type == "text")
+        data = None
+        if schema is not None:
+            try:
+                data = json.loads(content)
+            except json.JSONDecodeError:
+                data = None
+        return Completion(content, data, None, resp.usage.output_tokens)
+
+
+def llm_client(model: str = DEFAULT_LLM, host: str = DEFAULT_HOST) -> "OllamaClient | AnthropicClient":
+    """A Claude model name (``claude-...``) goes to the Anthropic API, anything else to Ollama."""
+    return AnthropicClient(model) if model.startswith("claude-") else OllamaClient(model, host)
 
 
 # --- classification --------------------------------------------------------------------------
@@ -249,9 +331,9 @@ class LLMClassifier(BloomClassifier):
         self.last_outputs: list[dict] = []
 
     @property
-    def client(self) -> OllamaClient:
+    def client(self) -> "OllamaClient | AnthropicClient":
         if getattr(self, "_client", None) is None:
-            self._client = OllamaClient(self.model, self.host)
+            self._client = llm_client(self.model, self.host)
         return self._client
 
     def fit(self, texts, y, sample_weight=None):
@@ -336,4 +418,4 @@ def level_names() -> str:
     return ", ".join(f"{i + 1}={lab}" for i, lab in enumerate(LABELS))
 
 
-__all__ = ["OllamaClient", "LLMClassifier", "LLMError", "ExampleRetriever", "Level", "level_names"]
+__all__ = ["OllamaClient", "AnthropicClient", "llm_client", "LLMClassifier", "LLMError", "ExampleRetriever", "Level", "level_names"]

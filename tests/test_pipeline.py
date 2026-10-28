@@ -322,3 +322,14 @@ def test_multiple_choice_has_no_writing_time():
     open_q = question_time("1", "Explain the attention mechanism.", "Understand", 0, 1.0, marks=10)
     mcq = question_time("2", "Explain the attention mechanism.", "Understand", 0, 1.0, marks=10, choices=["a b", "c d", "e f"])
     assert mcq.high < open_q.high and any("choose 1 of 3" in a for a in mcq.actions)
+
+
+def test_claude_model_names_use_the_anthropic_client(monkeypatch):
+    pytest.importorskip("anthropic")
+    from bloombot.models.llm import AnthropicClient, OllamaClient, _strict, classification_schema, llm_client
+
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "test-key")
+    assert isinstance(llm_client("claude-sonnet-5-5"), AnthropicClient)
+    assert isinstance(llm_client("qwen3:4b-instruct-2507-q4_K_M"), OllamaClient)
+    schema = _strict(classification_schema(cot=True))
+    assert schema["additionalProperties"] is False and schema["properties"]["level"]["enum"] == [1, 2, 3, 4, 5, 6]

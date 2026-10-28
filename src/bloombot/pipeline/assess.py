@@ -143,9 +143,9 @@ class Assessor:
             lexis, bank = train_lexis(s)
         llm = None
         if (use_llm if use_llm is not None else s.llm_policy != "never") and s.llm:
-            from bloombot.models.llm import LLMClassifier, OllamaClient
+            from bloombot.models.llm import LLMClassifier, llm_client
 
-            if OllamaClient(s.llm, s.ollama_host).available():
+            if llm_client(s.llm, s.ollama_host).available():
                 llm = LLMClassifier(s.llm, shots=s.llm_shots, cot=s.llm_cot, host=s.ollama_host)
             else:
                 log.warning("LLM %s not available at %s; Socrates disabled", s.llm, s.ollama_host)

@@ -33,6 +33,8 @@ dependencies = [
 [project.optional-dependencies]
 # Neural encoders (CPU or Apple-silicon MPS is enough; no CUDA GPU needed).
 neural = ["torch>=2.2", "transformers>=4.44", "sentence-transformers>=3.0", "safetensors>=0.4"]
+# Optional: a Claude model as the LLM (BLOOMBOT_LLM=claude-sonnet-5-5); papers are then sent to the Anthropic API.
+claude = ["anthropic>=2.3"]
 dev = ["pytest>=8", "ruff>=0.5"]
 
 [project.scripts]
