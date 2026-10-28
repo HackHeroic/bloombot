@@ -28,9 +28,10 @@ export default class App extends React.Component {
       theme: (() => { try { return localStorage.getItem('bb.theme') || 'light'; } catch (e) { return 'light'; } })() });
     this.onResize = () => this.setState({ winW: window.innerWidth });
     this.onKey = e => {
-      if (this.state.page !== 'profile') return;
       const tag = (e.target && e.target.tagName) || '';
       if (/INPUT|TEXTAREA|SELECT/.test(tag)) return;
+      if (this.state.page === 'how' && (e.key === 'ArrowRight' || e.key === 'ArrowLeft')) { e.preventDefault(); this.stepHow(e.key === 'ArrowRight' ? 1 : -1); return; }
+      if (this.state.page !== 'profile') return;
       const n = parseInt(e.key, 10); if (n >= 1 && n <= 6) { e.preventDefault(); this.label(n); }
     };
     // closing or reloading the page mid-assessment must not leave the LLM working for nobody
@@ -45,12 +46,13 @@ export default class App extends React.Component {
       if (this.state.page === 'data' || this.state.ds) this.loadDataset();
     }
     if (prev.page !== this.state.page && this.state.page === 'data' && !this.state.ds) this.loadDataset();
+    if (prev.page !== this.state.page && prev.page === 'how' && this.state.howPlay) { clearTimeout(this.playT); this.setState({ howPlay: false }); }
     if (prev.jobN !== this.state.jobN) {  // keep the newest trace event in view
       const logEl = document.querySelector('[role="log"]');
       if (logEl) logEl.scrollTop = logEl.scrollHeight;
     }
   }
-  componentWillUnmount() { clearInterval(this.poll); clearTimeout(this.timer); cancelAnimationFrame(this.raf); clearTimeout(this.pt); this.dead = true;
+  componentWillUnmount() { clearInterval(this.poll); clearTimeout(this.timer); clearTimeout(this.playT); cancelAnimationFrame(this.raf); clearTimeout(this.pt); this.dead = true;
     window.removeEventListener('resize', this.onResize); window.removeEventListener('keydown', this.onKey); window.removeEventListener('pagehide', this.onExit); }
 
   // ---------- API ----------
@@ -397,6 +399,24 @@ export default class App extends React.Component {
     } catch (e) { this.fail(e); }
   }
 
+  // How it works: follow any question through the agents (live API only).
+  async traceQuestion() {
+    const text = (this.state.howText || '').trim();
+    if (!text || !this.live() || this.state.busy) return;
+    this.setState({ busy: 'trace', error: '', howPlay: false });
+    try {
+      const [c, an] = await Promise.all([api.classify({ questions: [text], use_llm: this.useLlm(), profile_id: this.state.profileId }), api.analyze(text)]);
+      this.setState({ busy: '', howEx: A.example(c.predictions[0], an), step: 0 });
+    } catch (e) { this.fail(e); }
+  }
+  stepHow(d) { clearTimeout(this.playT); this.setState(st => ({ step: Math.max(0, Math.min(8, st.step + d)), howPlay: false })); }
+  playHow() {
+    clearTimeout(this.playT);
+    if (this.state.howPlay) { this.setState({ howPlay: false }); return; }
+    const tick = () => this.setState(st => (st.step >= 8 ? { howPlay: false } : { step: st.step + 1 }), () => { if (this.state.howPlay) this.playT = setTimeout(tick, 2600); });
+    this.setState(st => ({ howPlay: true, step: st.step >= 8 ? 0 : st.step }), () => { this.playT = setTimeout(tick, 2600); });
+  }
+
   async useProfile(id) {
     if (id === 'none' || !this.live()) { this.setState({ activeProfile: id, profileId: null }); return; }
     const ex = Object.entries(this.state.labels).map(([question, level]) => ({ question, level }));
@@ -662,18 +682,77 @@ export default class App extends React.Component {
         sel: s.activeProfile === p.id, notSel: s.activeProfile !== p.id, use: () => this.useProfile(p.id), border: s.activeProfile === p.id ? 'var(--accent)' : 'var(--line)' })) };
 
     // ---------- How ----------
-    const node = id => ({ id, sub: B.NODES[id].sub, pick: () => this.setState({ node: id }), bg: s.node === id ? 'var(--ink)' : 'var(--surface)', fg: s.node === id ? 'var(--bg)' : 'var(--ink)', subFg: s.node === id ? 'var(--bg)' : 'var(--ink3)',
-      borderStyle: id === 'Socrates' ? 'dashed' : 'solid', pressed: s.node === id ? 'true' : 'false' });
-    const how = { lane1: ['Scribe', 'Lexis', 'Archivist', 'Socrates', 'Arbiter'].map((id, i) => ({ ...node(id), showArrow: i > 0 })), lane2: ['Conductor', 'Architect', 'Composer'].map((id, i) => ({ ...node(id), showArrow: i > 0 })),
-      verifiers: ['Level check', 'Critic', 'Student'].map(node), nodeName: s.node, nodeInfo: B.NODES[s.node],
-      steps: B.STEPS.map((st, i) => ({ n: i + 1, title: st[0], pick: () => this.setState({ step: i }), bg: s.step === i ? 'var(--accent)' : i < s.step ? 'var(--accent-soft)' : 'var(--surface)', fg: s.step === i ? 'var(--accent-ink)' : 'var(--ink)', current: s.step === i ? 'step' : undefined })),
-      stepTitle: B.STEPS[s.step][0], stepCaption: B.STEPS[s.step][1], stepNum: s.step + 1,
-      prevStep: () => this.setState({ step: Math.max(0, s.step - 1) }), nextStep: () => this.setState({ step: Math.min(8, s.step + 1) }),
-      prevDisabled: s.step === 0, nextDisabled: s.step === 8,
-      bridgeText: B.BRIDGE.text, bridgeMasked: B.BRIDGE.masked, priorProba: B.BRIDGE.prior, lexisProba: B.BRIDGE.votes[0].proba, socratesProba: B.BRIDGE.votes[2].proba, archProba: B.BRIDGE.votes[1].proba, finalProba: B.BRIDGE.proba,
-      lexStepTxt: `Lexis · ${B.BRIDGE.votes[0].level} ${B.BRIDGE.votes[0].confidence.toFixed(2)}`, archStepTxt: `Archivist · ${B.BRIDGE.votes[1].level} ${B.BRIDGE.votes[1].confidence.toFixed(2)} · weight 0`, socStepTxt: `Socrates · ${B.BRIDGE.votes[2].level} ${B.BRIDGE.votes[2].confidence.toFixed(2)} · fooled by the trap`,
-      bridgeReasoning: B.BRIDGE.votes[2].reasoning };
+    // The question being followed: the recorded example (full dependency arcs), or one the visitor traced live.
+    const hx = s.howEx || { ...B.BRIDGE, parse: true };
+    const hv = ag => hx.votes.find(v => v.agent === ag);
+    const lexV = hv('Lexis'), archV = hv('Archivist'), socV = hv('Socrates');
+    const asked = !!socV;
+    // what the Arbiter returns: Lexis at weight 1, Socrates at 0.5, the Archivist at 0 (evidence only)
+    // (the recorded example stores Lexis' distribution, so pool it here; a live trace has the server's own result)
+    const finalP = hx.parse ? lexV.proba.map((p, i) => (p + 0.5 * (asked ? socV.proba[i] : p)) / 1.5) : hx.proba;
+    const ranked = finalP.map((p, i) => [p, i]).sort((x, y) => y[0] - x[0]);
+    const review = hx.parse ? ranked[0][0] - ranked[1][0] < 0.1 : !!hx.needsReview;
+    const unsure = lexV.confidence < 0.6 || (archV && archV.level !== lexV.level);
+    const fooled = asked && hx.embedded.length > 0 && socV.level !== lexV.level;
+    const why = lexV.confidence < 0.6 ? `Lexis is only ${lexV.confidence.toFixed(2)} sure (< 0.6)` : archV && archV.level !== lexV.level ? `Lexis (${lexV.level}) and the Archivist (${archV.level}) disagree` : 'Lexis is unsure';
+    const words = hx.text.split(/\s+/).filter(Boolean);
+    const key = w => w.toLowerCase().replace(/[^a-z\-]/g, '');
+    const dirVerb = hx.directive ? hx.directive.verb : null;
+    const dirIdx = dirVerb ? words.findIndex(w => { const k = key(w); return k === dirVerb || k.startsWith(dirVerb.slice(0, Math.max(4, dirVerb.length - 2))); }) : -1;
+    const toks = mark => words.map((w, i) => { const m = mark(i, key(w));
+      return { w, sp: i < words.length - 1 ? ' ' : '', bg: m === 'd' ? 'var(--accent-soft)' : 'transparent', bd: m === 'd' ? '2px solid var(--accent)' : m === 't' ? '2px dashed var(--warn)' : '0', fw: m ? 700 : 400 }; });
+    const stepStages = ['Scribe', 'Lexis', 'Lexis', 'Lexis', 'Lexis', 'Lexis', 'Lexis', asked ? 'Socrates' : 'Archivist', 'Arbiter'];
+    const curStage = stepStages[s.step];
+    const STAGE_HINT = { Scribe: 'cleaning', Lexis: 'NLP features and the fast classifier', Archivist: 'similar labelled questions', Socrates: 'the LLM second opinion', Arbiter: 'pooling the votes' };
+    const node = id => { const skipped = id === 'Socrates' && !asked, here = id === curStage || (s.step === 7 && id === 'Archivist');
+      return { id, sub: B.NODES[id].sub, hint: `What ${id} does`, pick: () => this.setState({ node: id }),
+        bg: s.node === id ? 'var(--ink)' : 'var(--surface)', fg: s.node === id ? 'var(--bg)' : 'var(--ink)', subFg: s.node === id ? 'var(--bg)' : 'var(--ink3)',
+        borderStyle: id === 'Socrates' ? 'dashed' : 'solid', pressed: s.node === id ? 'true' : 'false',
+        ring: here ? '0 0 0 3px var(--accent)' : 'none', opacity: skipped ? 0.45 : 1,
+        hasState: skipped || here, state: skipped ? 'skipped' : '● step ' + (s.step + 1), stateFg: s.node === id ? 'var(--bg)' : skipped ? 'var(--ink3)' : 'var(--accent)' }; };
+    const vertical = narrow || s.winW < 1000;
+    const stepTxt = [
+      ['Clean', hx.parse ? B.STEPS[0][1] : 'Numbering, marks and printed CO/BT tags are removed and spacing is normalised. A printed tag is the answer, so the classifier never sees it.'],
+      ['Dependency parse', hx.parse ? B.STEPS[1][1] : dirVerb ? `spaCy parses the sentence. Its main verb, “${words[dirIdx] || dirVerb}”, is the ROOT: the task the student must do.` : 'spaCy parses the sentence. There is no imperative main verb, so the question frame decides.'],
+      ['Directive found', hx.parse ? B.STEPS[2][1] : dirVerb ? `“${dirVerb}” — ${hx.directive.kind}${hx.directive.negated ? ', negated (so it is dropped)' : ', not negated'}. This is the task.` : `No directive verb${hx.frame ? `; the frame “${hx.frame}” sets the level` : ''}.`],
+      ['Embedded verb flagged', hx.parse ? B.STEPS[3][1] : hx.embedded.length ? `“${hx.embedded.join('”, “')}” ${hx.embedded.length > 1 ? 'are Bloom verbs' : 'is a Bloom verb'} inside the sentence, but not the task. Kept as a trap feature.` : 'No other Bloom verb in the sentence, so nothing here can trap the classifier.'],
+      B.STEPS[4], B.STEPS[5],
+      ['Classifier output', `Lexis (EmbedLex) combines the prior, the masked words and a sentence embedding in an ordinal model: ${lexV.level} ${lexV.confidence.toFixed(2)}.`],
+      asked ? ['Unsure, so the LLM is asked', hx.parse ? B.STEPS[7][1] : `${why}, so Socrates is asked. The Archivist says ${archV ? archV.level + ' ' + archV.confidence.toFixed(2) : '—'}; it is evidence only. Socrates says ${socV.level} ${socV.confidence.toFixed(2)}${fooled ? ': it falls for the trap' : ''}.`]
+        : unsure ? ['Unsure, but the LLM is off', `${why}, but the LLM second opinion is off or not running, so only Lexis counts and the question is left for the teacher to check.`]
+        : ['Confident, so the LLM is skipped', `Lexis is ${lexV.confidence.toFixed(2)} sure (≥ 0.6)${archV && archV.level === lexV.level ? ' and the Archivist agrees' : ''}, so no LLM call is needed. Most questions from a familiar college end here, in about a millisecond.`],
+      ['The Arbiter’s result', asked ? `Lexis (weight 1) + Socrates (weight 0.5); the Archivist has weight 0. ${B.L[ranked[0][1]]} ${ranked[0][0].toFixed(2)} vs ${B.L[ranked[1][1]]} ${ranked[1][0].toFixed(2)}${review ? ' — too close to call, so it is flagged ⚑ for the teacher' : ''}.`
+        : `Only Lexis counts: ${hx.level} ${hx.conf.toFixed(2)}${review ? ', flagged ⚑ for the teacher' : ''}.`]];
+    const howLive = this.live(), howText = s.howText == null ? '' : s.howText;
+    const how = { lane1: ['Scribe', 'Lexis', 'Archivist', 'Socrates', 'Arbiter'].map((id, i) => ({ ...node(id), showArrow: i > 0 })), lane2: ['Conductor', 'Architect', 'Composer'].map((id, i) => ({ ...node(id), showArrow: i > 0, hasState: false, ring: 'none', opacity: 1 })),
+      verifiers: ['Level check', 'Critic', 'Student'].map(id => ({ id, pick: () => this.setState({ node: id }), bg: s.node === id ? 'var(--ink)' : 'var(--surface)', fg: s.node === id ? 'var(--bg)' : 'var(--ink)', pressed: s.node === id ? 'true' : 'false' })),
+      nodeName: s.node, nodeInfo: B.NODES[s.node],
+      howCols: !narrow && s.winW >= 1240 ? 'minmax(0,3fr) minmax(300px,2fr)' : 'minmax(0,1fr)', asidePos: !narrow && s.winW >= 1240 ? 'sticky' : 'static',
+      laneDir: vertical ? 'column' : 'row', arrowGlyph: vertical ? '↓' : '→', lane2Align: vertical ? 'stretch' : 'center',
+      pathTxt: asked ? `This question: Scribe → Lexis → Archivist → Socrates → Arbiter (asked because ${why}).` : `This question: Scribe → Lexis → Archivist → Arbiter. Socrates was skipped: ${unsure ? 'the LLM is off' : `Lexis was ${lexV.confidence.toFixed(2)} sure`}.`,
+      howQ: hx.text, howText, onHowText: e => this.setState({ howText: e.target.value }), onHowKey: e => { if (e.key === 'Enter') { e.preventDefault(); this.traceQuestion(); } },
+      traceIt: () => this.traceQuestion(), traceDisabled: !howLive || !howText.trim() || s.busy === 'trace', traceOpacity: !howLive || !howText.trim() ? 0.55 : 1,
+      traceLabel: s.busy === 'trace' ? 'Tracing…' : 'Trace it', showUseExample: !!s.howEx, traceExample: () => this.setState({ howEx: null, step: 0 }),
+      hasTraceNote: !howLive || !!s.howEx, traceNote: !howLive ? 'Tracing your own question needs the live API; this is the recorded example.' : s.howEx ? `Traced live${s.llm && this.state.llmAvailable ? ', LLM second opinion on' : ', LLM off'}.` : '',
+      steps: stepTxt.map((st, i) => ({ n: i + 1, title: st[0], pick: () => this.setState({ step: i }), bg: s.step === i ? 'var(--accent)' : i < s.step ? 'var(--accent-soft)' : 'var(--surface)', fg: s.step === i ? 'var(--accent-ink)' : 'var(--ink)', current: s.step === i ? 'step' : undefined })),
+      stepTitle: stepTxt[s.step][0], stepCaption: stepTxt[s.step][1], stepNum: s.step + 1, stepStage: `${curStage} · ${STAGE_HINT[curStage]}`,
+      prevStep: () => this.stepHow(-1), nextStep: () => this.stepHow(1), prevDisabled: s.step === 0, nextDisabled: s.step === 8,
+      togglePlay: () => this.playHow(), playLabel: s.howPlay ? '❚❚ Pause' : '▶ Play', playPressed: s.howPlay ? 'true' : 'false',
+      step2Arc: s.step === 1 && !!hx.parse, step2Tokens: s.step === 1 && !hx.parse,
+      tokRoot: toks(i => (i === dirIdx ? 'd' : null)), rootTxt: dirVerb ? `ROOT = ${(words[dirIdx] || dirVerb).toLowerCase().replace(/[^a-z\-]/g, '')} (${hx.directive.kind})${hx.embedded.length ? ' · ' + hx.embedded.join(', ') + ' sits inside a clause' : ''}` : `no directive · frame: ${hx.frame || 'none'}`,
+      tokDir: toks(i => (i === dirIdx ? 'd' : null)), dirJson: dirVerb ? JSON.stringify({ lemma: dirVerb, kind: hx.directive.kind, negated: !!hx.directive.negated }) : JSON.stringify({ directive: null, frame: hx.frame || null }),
+      tokTrap: toks((i, k) => (i !== dirIdx && hx.embedded.includes(k) ? 't' : null)),
+      embChip: hx.embedded.length ? `embedded_bloom_verbs: ${JSON.stringify(hx.embedded)} · trap: not the task` : 'embedded_bloom_verbs: [] · no trap', embBg: hx.embedded.length ? 'var(--warnbg)' : 'var(--surface2)',
+      whFrame: `wh_word: ${hx.wh ? '"' + hx.wh + '"' : hx.parse ? '"how"' : 'null'} · frame: ${hx.frame ? '"' + hx.frame + '"' : 'null'}`,
+      howMasked: hx.masked, priorProba: hx.prior, priorStepTxt: `Lexicon prior from “${dirVerb || 'the frame'}” (Anderson & Krathwohl verb lists)`,
+      lexisProba: lexV.proba, archProba: archV ? archV.proba : [0, 0, 0, 0, 0, 0], socratesProba: asked ? socV.proba : [0, 0, 0, 0, 0, 0], finalProba: finalP,
+      lexStepTxt: `Lexis · ${lexV.level} ${lexV.confidence.toFixed(2)}`, archStepTxt: archV ? `Archivist · ${archV.level} ${archV.confidence.toFixed(2)} · weight 0` : 'Archivist',
+      socAsked: asked, socSkipped: !asked, socFg: fooled ? 'var(--bad)' : 'var(--ink)', socStepTxt: asked ? `Socrates · ${socV.level} ${socV.confidence.toFixed(2)}${fooled ? ' · fooled by the trap' : ''}` : '',
+      socSkipTxt: unsure ? 'The LLM second opinion is off or not running, so it was not asked.' : `Lexis was ${lexV.confidence.toFixed(2)} sure${archV && archV.level === lexV.level ? ' and the Archivist agreed' : ''}, so the LLM was not called.`,
+      hasReasoning: asked && !!socV.reasoning, howReasoning: asked ? socV.reasoning || '' : '',
+      finalTxt: asked ? `Pooled · ${B.L[ranked[0][1]]} ${ranked[0][0].toFixed(2)} vs ${B.L[ranked[1][1]]} ${ranked[1][0].toFixed(2)}` : `Final · ${hx.level} ${hx.conf.toFixed(2)}`, finalReview: review };
     for (let i = 0; i < 9; i++) how['step' + (i + 1)] = s.step === i;
+    how.step2 = false;
 
     // ---------- Eval ----------
     const E = B.EV, sx = (v, lo, hi) => ((v - lo) / (hi - lo) * 100) + '%';

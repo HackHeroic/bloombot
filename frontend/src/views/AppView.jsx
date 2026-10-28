@@ -1571,58 +1571,71 @@ export function view(v) {
                     {"Small agents, each with one job. The writer never grades itself."}
                   </h1>
                 </div>
-                <div style={sx(`display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,520px),1fr));gap:20px;align-items:start`)}>
-                  <div style={sx(`background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:24px;display:flex;flex-direction:column;gap:24px`)}>
+                <div style={sx(`display:grid;grid-template-columns:${v.howCols};gap:20px;align-items:start`)}>
+                  <div style={sx(`min-width:0;background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:24px;display:flex;flex-direction:column;gap:22px`)}>
                     <div style={sx(`display:flex;flex-direction:column;gap:10px`)}>
                       <span style={sx(`font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3)`)}>
                         {"Classify · every question"}
                       </span>
-                      <div style={sx(`display:flex;flex-wrap:wrap;align-items:center;gap:8px`)}>
+                      <div style={sx(`display:flex;flex-direction:${v.laneDir};align-items:stretch;gap:6px`)}>
                         {(v.lane1 || []).map((nd, nd_i) => (<React.Fragment key={nd_i}>
-                          <span style={sx(`display:flex;align-items:center;gap:8px`)}>
+                          <span style={sx(`display:contents`)}>
                             {nd.showArrow ? (<>
-                              <span aria-hidden={"true"} style={sx(`color:var(--ink3)`)}>
-                                {"→"}
+                              <span aria-hidden={"true"} style={sx(`flex:none;align-self:center;color:var(--ink3);font-size:15px`)}>
+                                {v.arrowGlyph}
                               </span>
                             </>) : null}
-                            <button onClick={nd.pick} aria-pressed={nd.pressed} style={sx(`display:flex;flex-direction:column;align-items:flex-start;padding:10px 14px;border-radius:12px;border:1.5px ${nd.borderStyle} var(--ink3);background:${nd.bg};color:${nd.fg};cursor:pointer;min-width:96px`)}>
+                            <button onClick={nd.pick} aria-pressed={nd.pressed} title={nd.hint} style={sx(`flex:1 1 0;min-width:0;display:flex;flex-direction:column;align-items:flex-start;gap:2px;padding:10px 12px;border-radius:12px;border:1.5px ${nd.borderStyle} var(--ink3);background:${nd.bg};color:${nd.fg};cursor:pointer;text-align:left;box-shadow:${nd.ring};opacity:${nd.opacity};transition:box-shadow .2s,opacity .2s`)}>
                               <span style={sx(`font-weight:700;font-size:14px`)}>
                                 {nd.id}
                               </span>
-                              <span style={sx(`font-size:11px;color:${nd.subFg};font-family:'JetBrains Mono',monospace`)}>
+                              <span style={sx(`font-size:11px;line-height:1.35;color:${nd.subFg};font-family:'JetBrains Mono',monospace;overflow-wrap:anywhere`)}>
                                 {nd.sub}
                               </span>
+                              {nd.hasState ? (<>
+                                <span style={sx(`font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:${nd.stateFg}`)}>
+                                  {nd.state}
+                                </span>
+                              </>) : null}
                             </button>
                           </span>
                         </React.Fragment>))}
                       </div>
+                      <span style={sx(`font-size:12px;color:var(--ink2)`)}>
+                        {v.pathTxt}
+                      </span>
                     </div>
                     <div style={sx(`display:flex;flex-direction:column;gap:10px;border-top:1px dashed var(--line);padding-top:20px`)}>
                       <span style={sx(`font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3)`)}>
                         {"Rebalance · when you ask"}
                       </span>
-                      <div style={sx(`display:flex;flex-wrap:wrap;align-items:center;gap:8px`)}>
+                      <div style={sx(`display:flex;flex-direction:${v.laneDir};align-items:${v.lane2Align};gap:6px`)}>
                         {(v.lane2 || []).map((nd, nd_i) => (<React.Fragment key={nd_i}>
-                          <span style={sx(`display:flex;align-items:center;gap:8px`)}>
+                          <span style={sx(`display:contents`)}>
                             {nd.showArrow ? (<>
-                              <span aria-hidden={"true"} style={sx(`color:var(--ink3)`)}>
-                                {"→"}
+                              <span aria-hidden={"true"} style={sx(`flex:none;align-self:center;color:var(--ink3);font-size:15px`)}>
+                                {v.arrowGlyph}
                               </span>
                             </>) : null}
-                            <button onClick={nd.pick} aria-pressed={nd.pressed} style={sx(`display:flex;flex-direction:column;align-items:flex-start;padding:10px 14px;border-radius:12px;border:1.5px solid var(--ink3);background:${nd.bg};color:${nd.fg};cursor:pointer;min-width:96px`)}>
+                            <button onClick={nd.pick} aria-pressed={nd.pressed} title={nd.hint} style={sx(`flex:1 1 0;min-width:0;display:flex;flex-direction:column;align-items:flex-start;gap:2px;padding:10px 12px;border-radius:12px;border:1.5px ${nd.borderStyle} var(--ink3);background:${nd.bg};color:${nd.fg};cursor:pointer;text-align:left;box-shadow:${nd.ring};opacity:${nd.opacity};transition:box-shadow .2s,opacity .2s`)}>
                               <span style={sx(`font-weight:700;font-size:14px`)}>
                                 {nd.id}
                               </span>
-                              <span style={sx(`font-size:11px;color:${nd.subFg};font-family:'JetBrains Mono',monospace`)}>
+                              <span style={sx(`font-size:11px;line-height:1.35;color:${nd.subFg};font-family:'JetBrains Mono',monospace;overflow-wrap:anywhere`)}>
                                 {nd.sub}
                               </span>
+                              {nd.hasState ? (<>
+                                <span style={sx(`font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:${nd.stateFg}`)}>
+                                  {nd.state}
+                                </span>
+                              </>) : null}
                             </button>
                           </span>
                         </React.Fragment>))}
-                        <span aria-hidden={"true"} style={sx(`color:var(--ink3)`)}>
-                          {"→"}
+                        <span aria-hidden={"true"} style={sx(`flex:none;align-self:center;color:var(--ink3);font-size:15px`)}>
+                          {v.arrowGlyph}
                         </span>
-                        <div style={sx(`display:flex;flex-direction:column;gap:6px;padding:10px;border:1px dashed var(--ink3);border-radius:14px`)}>
+                        <div style={sx(`flex:1.2 1 0;min-width:0;display:flex;flex-direction:column;gap:6px;padding:10px;border:1px dashed var(--ink3);border-radius:14px`)}>
                           <span style={sx(`font-size:11px;font-weight:600;color:var(--ink3)`)}>
                             {"Independent verifiers"}
                           </span>
@@ -1638,10 +1651,10 @@ export function view(v) {
                       </span>
                     </div>
                     <span style={sx(`font-size:12px;color:var(--ink3)`)}>
-                      {"Dashed border: Socrates is only asked when Lexis is unsure (confidence < 0.6) or disagrees with the Archivist. Click any stage."}
+                      {"Dashed border: Socrates is only asked when Lexis is unsure (confidence < 0.6) or disagrees with the Archivist. Click any stage to see what it does."}
                     </span>
                   </div>
-                  <aside aria-live={"polite"} style={sx(`background:var(--ink);color:var(--bg);border-radius:18px;padding:28px;display:flex;flex-direction:column;gap:18px;position:sticky;top:80px`)}>
+                  <aside aria-live={"polite"} style={sx(`background:var(--ink);color:var(--bg);border-radius:18px;padding:28px;display:flex;flex-direction:column;gap:18px;position:${v.asidePos};top:80px`)}>
                     <div style={sx(`display:flex;flex-direction:column;gap:2px`)}>
                       <span style={sx(`font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;opacity:.75`)}>
                         {"Stage"}
@@ -1681,14 +1694,30 @@ export function view(v) {
                     <span style={sx(`font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3)`)}>
                       {"Follow one question"}
                     </span>
-                    <p style={sx(`margin:0;font-family:'Newsreader',serif;font-size:26px`)}>
-                      {"“"}{v.bridgeText}{"”"}
+                    <p style={sx(`margin:0;font-family:'Newsreader',serif;font-size:26px;overflow-wrap:anywhere`)}>
+                      {"“"}{v.howQ}{"”"}
                     </p>
                   </div>
+                  <div style={sx(`display:flex;flex-wrap:wrap;gap:8px;align-items:center`)}>
+                    <input value={v.howText} onChange={v.onHowText} onKeyDown={v.onHowKey} placeholder={"Type any exam question and trace it…"} aria-label={"Your own question"} style={sx(`flex:1 1 300px;min-width:0;font-size:15px;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px 12px`)} className="bb-focus" />
+                    <button onClick={v.traceIt} disabled={v.traceDisabled} style={sx(`background:var(--accent);color:var(--accent-ink);border:none;border-radius:10px;padding:10px 16px;font-weight:600;cursor:pointer;opacity:${v.traceOpacity}`)}>
+                      {v.traceLabel}
+                    </button>
+                    {v.showUseExample ? (<>
+                      <button onClick={v.traceExample} style={sx(`background:transparent;color:var(--ink2);border:1px solid var(--line);border-radius:10px;padding:10px 14px;font-weight:600;cursor:pointer`)}>
+                        {"Back to the example"}
+                      </button>
+                    </>) : null}
+                  </div>
+                  {v.hasTraceNote ? (<>
+                    <span style={sx(`font-size:13px;color:var(--ink3);margin-top:-8px`)}>
+                      {v.traceNote}
+                    </span>
+                  </>) : null}
                   <ol aria-label={"Steps"} style={sx(`list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:6px`)}>
                     {(v.steps || []).map((st, st_i) => (<React.Fragment key={st_i}>
                       <li>
-                        <button onClick={st.pick} aria-current={st.current} title={st.title} style={sx(`display:flex;align-items:center;gap:8px;padding:7px 12px;border:1px solid var(--line);border-radius:999px;background:${st.bg};color:${st.fg};font-size:13px;font-weight:600;cursor:pointer;min-height:36px`)}>
+                        <button onClick={st.pick} aria-current={st.current} style={sx(`display:flex;align-items:center;gap:8px;padding:7px 12px;border:1px solid var(--line);border-radius:999px;background:${st.bg};color:${st.fg};font-size:13px;font-weight:600;cursor:pointer;min-height:36px`)}>
                           <span style={sx(`font-family:'JetBrains Mono',monospace`)}>
                             {st.n}
                           </span>
@@ -1700,7 +1729,7 @@ export function view(v) {
                   <div style={sx(`display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,300px),1fr));gap:24px;align-items:start;border-top:1px solid var(--line);padding-top:20px`)}>
                     <div style={sx(`display:flex;flex-direction:column;gap:10px`)}>
                       <span style={sx(`font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--accent);font-weight:700`)}>
-                        {"Step "}{v.stepNum}{" of 9"}
+                        {"Step "}{v.stepNum}{" of 9 · "}{v.stepStage}
                       </span>
                       <h3 style={sx(`font-family:'Newsreader',serif;font-weight:500;font-size:30px;margin:0;line-height:1.1`)}>
                         {v.stepTitle}
@@ -1708,63 +1737,102 @@ export function view(v) {
                       <p style={sx(`margin:0;color:var(--ink2)`)}>
                         {v.stepCaption}
                       </p>
-                      <div style={sx(`display:flex;gap:8px;margin-top:8px`)}>
+                      <div style={sx(`display:flex;flex-wrap:wrap;gap:8px;margin-top:8px`)}>
                         <button onClick={v.prevStep} disabled={v.prevDisabled} style={sx(`background:transparent;color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:9px 16px;font-weight:600;cursor:pointer`)}>
                           {"← Back"}
                         </button>
                         <button onClick={v.nextStep} disabled={v.nextDisabled} style={sx(`background:var(--accent);color:var(--accent-ink);border:none;border-radius:8px;padding:9px 16px;font-weight:600;cursor:pointer`)}>
                           {"Next →"}
                         </button>
+                        <button onClick={v.togglePlay} aria-pressed={v.playPressed} style={sx(`background:transparent;color:var(--ink2);border:1px solid var(--line);border-radius:8px;padding:9px 14px;font-weight:600;cursor:pointer`)}>
+                          {v.playLabel}
+                        </button>
                       </div>
+                      <span style={sx(`font-size:12px;color:var(--ink3)`)}>
+                        {"Tip: ← → keys step through."}
+                      </span>
                     </div>
-                    <div style={sx(`min-width:0;background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:20px;min-height:220px;display:flex;flex-direction:column;justify-content:center;gap:12px`)}>
+                    <div style={sx(`min-width:0;background:var(--bg);border:1px solid var(--line);border-radius:14px;padding:20px;display:flex;flex-direction:column;justify-content:flex-start;gap:12px`)}>
                       {v.step1 ? (<>
-                        <code style={sx(`font-family:'JetBrains Mono',monospace;font-size:15px;word-break:break-word`)}>
-                          {v.bridgeText}
-                        </code>
+                        <div style={sx(`display:flex;flex-direction:column;gap:10px`)}>
+                          <span style={sx(`font-size:12px;font-weight:600;color:var(--ink3)`)}>
+                            {"Text the classifier sees"}
+                          </span>
+                          <code style={sx(`font-family:'JetBrains Mono',monospace;font-size:15px;word-break:break-word`)}>
+                            {v.howQ}
+                          </code>
+                        </div>
                       </>) : null}
-                      {v.step2 ? (<>
+                      {v.step2Arc ? (<>
                         <div style={sx(`overflow-x:auto`)}>
                           {v.arc}
                         </div>
                       </>) : null}
-                      {v.step3 ? (<>
+                      {v.step2Tokens ? (<>
                         <div style={sx(`display:flex;flex-direction:column;gap:10px`)}>
-                          <p style={sx(`margin:0;font-family:'Newsreader',serif;font-size:22px`)}>
-                            <span style={sx(`background:var(--accent-soft);border-bottom:2px solid var(--accent);font-weight:700;padding:0 3px`)}>
-                              {"Explain"}
-                            </span>
-                            {" how engineers evaluate the safety of an old bridge."}
+                          <p style={sx(`margin:0;font-family:'Newsreader',serif;font-size:22px;line-height:1.6`)}>
+                            {(v.tokRoot || []).map((t, t_i) => (<React.Fragment key={t_i}>
+                              <span style={sx(`background:${t.bg};border-bottom:${t.bd};font-weight:${t.fw};padding:0 2px`)}>
+                                {t.w}
+                              </span>
+                              {t.sp}
+                            </React.Fragment>))}
                           </p>
                           <code style={sx(`font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--ink2)`)}>
-                            {"{\"lemma\": \"explain\", \"kind\": \"imperative\", \"negated\": false}"}
+                            {v.rootTxt}
+                          </code>
+                        </div>
+                      </>) : null}
+                      {v.step3 ? (<>
+                        <div style={sx(`display:flex;flex-direction:column;gap:10px`)}>
+                          <p style={sx(`margin:0;font-family:'Newsreader',serif;font-size:22px;line-height:1.6`)}>
+                            {(v.tokDir || []).map((t, t_i) => (<React.Fragment key={t_i}>
+                              <span style={sx(`background:${t.bg};border-bottom:${t.bd};font-weight:${t.fw};padding:0 2px`)}>
+                                {t.w}
+                              </span>
+                              {t.sp}
+                            </React.Fragment>))}
+                          </p>
+                          <code style={sx(`font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--ink2);word-break:break-word`)}>
+                            {v.dirJson}
                           </code>
                         </div>
                       </>) : null}
                       {v.step4 ? (<>
                         <div style={sx(`display:flex;flex-direction:column;gap:10px`)}>
-                          <p style={sx(`margin:0;font-family:'Newsreader',serif;font-size:22px`)}>
-                            {"Explain how engineers "}
-                            <span style={sx(`border-bottom:2px dashed var(--warn);font-weight:700;padding:0 3px`)}>
-                              {"evaluate"}
-                            </span>
-                            {" the safety of an old bridge."}
+                          <p style={sx(`margin:0;font-family:'Newsreader',serif;font-size:22px;line-height:1.6`)}>
+                            {(v.tokTrap || []).map((t, t_i) => (<React.Fragment key={t_i}>
+                              <span style={sx(`background:${t.bg};border-bottom:${t.bd};font-weight:${t.fw};padding:0 2px`)}>
+                                {t.w}
+                              </span>
+                              {t.sp}
+                            </React.Fragment>))}
                           </p>
-                          <span style={sx(`align-self:flex-start;font-size:12px;font-weight:700;background:var(--warnbg);padding:3px 10px;border-radius:999px`)}>
-                            {"embedded_bloom_verbs: [\"evaluate\"] · trap: not the task"}
+                          <span style={sx(`align-self:flex-start;font-size:12px;font-weight:700;background:${v.embBg};padding:3px 10px;border-radius:999px`)}>
+                            {v.embChip}
                           </span>
                           <code style={sx(`font-family:'JetBrains Mono',monospace;font-size:13px;color:var(--ink2)`)}>
-                            {"wh_word: \"how\" · frame: null"}
+                            {v.whFrame}
                           </code>
                         </div>
                       </>) : null}
                       {v.step5 ? (<>
-                        <code style={sx(`font-family:'JetBrains Mono',monospace;font-size:17px;word-break:break-word`)}>
-                          {v.bridgeMasked}
-                        </code>
+                        <div style={sx(`display:flex;flex-direction:column;gap:10px`)}>
+                          <span style={sx(`font-size:12px;font-weight:600;color:var(--ink3)`)}>
+                            {"Masked text"}
+                          </span>
+                          <code style={sx(`font-family:'JetBrains Mono',monospace;font-size:17px;word-break:break-word`)}>
+                            {v.howMasked}
+                          </code>
+                        </div>
                       </>) : null}
                       {v.step6 ? (<>
-                        <LevelLadder proba={v.priorProba} size={"lg"} />
+                        <div style={sx(`display:flex;flex-direction:column;gap:8px`)}>
+                          <span style={sx(`font-size:13px;font-weight:600`)}>
+                            {v.priorStepTxt}
+                          </span>
+                          <LevelLadder proba={v.priorProba} size={"lg"} />
+                        </div>
                       </>) : null}
                       {v.step7 ? (<>
                         <div style={sx(`display:flex;flex-direction:column;gap:8px`)}>
@@ -1782,24 +1850,40 @@ export function view(v) {
                             </span>
                             <LevelLadder proba={v.archProba} size={"md"} />
                           </div>
-                          <div style={sx(`display:flex;flex-direction:column;gap:8px`)}>
-                            <span style={sx(`font-size:13px;font-weight:600;color:var(--bad)`)}>
-                              {v.socStepTxt}
-                            </span>
-                            <LevelLadder proba={v.socratesProba} size={"md"} />
-                          </div>
-                          <blockquote style={sx(`grid-column:1/-1;margin:0;border-left:2px solid var(--bad);padding-left:12px;font-family:'Newsreader',serif;font-style:italic;color:var(--ink2);max-height:160px;overflow:auto;white-space:pre-line`)}>
-                            {v.bridgeReasoning}
-                          </blockquote>
+                          {v.socAsked ? (<>
+                            <div style={sx(`display:flex;flex-direction:column;gap:8px`)}>
+                              <span style={sx(`font-size:13px;font-weight:600;color:${v.socFg}`)}>
+                                {v.socStepTxt}
+                              </span>
+                              <LevelLadder proba={v.socratesProba} size={"md"} />
+                            </div>
+                          </>) : null}
+                          {v.socSkipped ? (<>
+                            <div style={sx(`display:flex;flex-direction:column;gap:6px;justify-content:center;border:1px dashed var(--ink3);border-radius:12px;padding:14px`)}>
+                              <span style={sx(`font-size:13px;font-weight:700`)}>
+                                {"Socrates · not asked"}
+                              </span>
+                              <span style={sx(`font-size:13px;color:var(--ink2)`)}>
+                                {v.socSkipTxt}
+                              </span>
+                            </div>
+                          </>) : null}
+                          {v.hasReasoning ? (<>
+                            <blockquote style={sx(`grid-column:1/-1;margin:0;border-left:2px solid ${v.socFg};padding-left:12px;font-family:'Newsreader',serif;font-style:italic;color:var(--ink2);max-height:160px;overflow:auto;white-space:pre-line`)}>
+                              {v.howReasoning}
+                            </blockquote>
+                          </>) : null}
                         </div>
                       </>) : null}
                       {v.step9 ? (<>
                         <div style={sx(`display:flex;flex-direction:column;gap:8px`)}>
                           <span style={sx(`display:flex;flex-wrap:wrap;gap:8px;align-items:center;font-size:13px;font-weight:600`)}>
-                            {"Pooled · Evaluate 0.37 vs Understand 0.34 "}
-                            <span style={sx(`font-size:12px;font-weight:700;background:var(--warnbg);border:1px solid var(--warn);border-radius:999px;padding:2px 8px`)}>
-                              {"⚑ needs teacher review"}
-                            </span>
+                            {v.finalTxt}
+                            {v.finalReview ? (<>
+                              <span style={sx(`font-size:12px;font-weight:700;background:var(--warnbg);border:1px solid var(--warn);border-radius:999px;padding:2px 8px`)}>
+                                {"⚑ needs teacher review"}
+                              </span>
+                            </>) : null}
                           </span>
                           <LevelLadder proba={v.finalProba} size={"lg"} />
                         </div>
