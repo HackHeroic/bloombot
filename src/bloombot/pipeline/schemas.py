@@ -31,6 +31,8 @@ class Question(BaseModel):
     option: str | None = Field(default=None, description="which alternative of the group this item belongs to")
     course_outcome: str | None = None
     tagged_level: LevelName | None = Field(default=None, description="level printed on the paper, if any")
+    choices: list[str] = Field(default_factory=list, description="multiple-choice options printed under the question; "
+                               "they are read but not written, and are not classified")
     locked: bool = Field(default=False, description="teacher marked it as not to be rewritten")
     teacher_level: LevelName | None = Field(default=None, description="level the teacher chose for a flagged question; "
                                             "overrides the prediction in the report and in rebalancing")

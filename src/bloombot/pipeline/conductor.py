@@ -98,6 +98,7 @@ class Conductor:
         accepted = {r.job.question_id: r.final_question for r in results if r.accepted and r.final_question}
         for q in final.questions:
             if q.id in accepted:
-                q.text, q.teacher_level = accepted[q.id], None  # a new question: the teacher's level no longer applies
+                # a new question: the teacher's level and the old multiple-choice options no longer apply
+                q.text, q.teacher_level, q.choices = accepted[q.id], None, []
         after = self.assess_paper(final, blueprint, use_llm, pace)
         return RebalanceResult(before=before, plan=jobs, rewrites=results, after=after, final_paper=final)

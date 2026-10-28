@@ -14,6 +14,8 @@ Time model (a transparent rule of thumb, not a measurement):
 * a written answer (explain, analyse, judge, create) also needs at least the time to plan and write
   as many words as its marks call for: about 25 words per mark, at 12-20 words a minute, plus
   17-23% for planning what to say
+* a multiple-choice question is read with its options and answered by choosing one: it takes its
+  thinking time but no writing time
 * the teacher's pace setting scales the result
 
 The ranges follow the per-item times in classroom-testing guides (Nitko 2001; Oosterhof 2001:
@@ -111,12 +113,12 @@ def fmt_minutes(m: float) -> str:
 
 
 def question_time(qid: str, text: str, level: str, stem_words: int, factor: float,
-                  marks: float | None = None) -> QuestionTime:
+                  marks: float | None = None, choices: list[str] | None = None) -> QuestionTime:
     acts = actions(text, level)
     basis = "verbs" if acts else "level"
     if not acts:
         acts = [f"{level.lower()}:{LEVEL_KIND[level]}"]
-    reading = (_words(text) + stem_words) / READING_WPM
+    reading = (_words(text) + stem_words + sum(_words(c) for c in choices or [])) / READING_WPM
     low = reading + sum(KINDS[a.split(":")[1]][0] for a in acts)
     high = reading + sum(KINDS[a.split(":")[1]][1] for a in acts)
     labels = []
@@ -124,7 +126,9 @@ def question_time(qid: str, text: str, level: str, stem_words: int, factor: floa
         verb, kind = a.split(":")
         lo, hi = KINDS[kind]
         labels.append(f"{verb} ({kind}) {lo * factor:.0f}-{hi * factor:.0f} min")
-    if marks and any(a.split(":")[1] in WRITTEN for a in acts):
+    if choices:
+        labels.append(f"choose 1 of {len(choices)} options, nothing to write")
+    elif marks and any(a.split(":")[1] in WRITTEN for a in acts):
         words = WORDS_PER_MARK * marks
         w_low = reading + words / WRITING_WPM[0] * (1 + PLANNING[0])
         w_high = reading + words / WRITING_WPM[1] * (1 + PLANNING[1])
@@ -144,7 +148,7 @@ def estimate(paper: Paper, predictions: list[Prediction], pace: Pace = "typical"
         stem = q.context if q.context and q.context not in seen_stems else None
         if stem:
             seen_stems.add(stem)
-        times.append(question_time(q.id, q.text, p.level, _words(stem), factor, q.marks))
+        times.append(question_time(q.id, q.text, p.level, _words(stem), factor, q.marks, q.choices))
 
     # A student answers one alternative of each OR-group: count the longest.
     low = high = 0.0

@@ -296,3 +296,29 @@ def test_dataset_explorer_hides_non_public_sources(tmp_path):
     assert query(tmp_path, q="DATABASE").total == 1 and query(tmp_path, level="Remember").total == 1
     assert all(i["source"] != "indian_boards" for i in bundle(tmp_path)["items"])
     _load.cache_clear()
+
+
+def test_quiz_headings_marks_options_and_footer():
+    text = (
+        "NLP Quiz\n25 questions · Answer all questions\n"
+        "QUESTION 1/25 · 2 marks\nA student claims that skip-gram learns rare words better.\n"
+        "Which correction is the most accurate?\nA It does, because each occurrence\nmakes several updates\n"
+        "B It does not\nC Only with negative sampling\nD Only for frequent words\n"
+        "NLP Quiz Page 1\n"
+        "QUESTION 2/25 · 4 marks\nCompute the memory needed for the score matrices.\nA 32 MiB\nB 256 MiB\nC 512 MiB\n"
+    )
+    paper = parse_text(text)
+    q1, q2 = paper.questions
+    assert (q1.marks, q2.marks) == (2, 4) and paper.total_marks == 6
+    assert q1.text.startswith("A student claims") and "/25" not in q1.text and "Page" not in q1.text
+    assert q1.choices == ["It does, because each occurrence makes several updates", "It does not",
+                          "Only with negative sampling", "Only for frequent words"]
+    assert q2.text == "Compute the memory needed for the score matrices." and len(q2.choices) == 3
+
+
+def test_multiple_choice_has_no_writing_time():
+    from bloombot.pipeline.feasibility import question_time
+
+    open_q = question_time("1", "Explain the attention mechanism.", "Understand", 0, 1.0, marks=10)
+    mcq = question_time("2", "Explain the attention mechanism.", "Understand", 0, 1.0, marks=10, choices=["a b", "c d", "e f"])
+    assert mcq.high < open_q.high and any("choose 1 of 3" in a for a in mcq.actions)

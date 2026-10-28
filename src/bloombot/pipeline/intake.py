@@ -41,6 +41,12 @@ _MAIN_Q = re.compile(r"^\s*q(?:uestion)?\s*\.?\s*(?:no\.?)?\s*(\d{1,2})\s*[.):\]
 _SUB = re.compile(r"^\s*(?:\(?\s*([a-h]|i{1,3}|iv|vi{0,3}|ix|x)\s*[.)\]]\s+|([a-h])(?:\s{2,}|\t))(.*)$", re.I)
 _Q_HEAD = re.compile(r"^\s*q(?:uestion)?\s*\.?\s*(?:no\.?)?\s*\d{1,2}\b", re.I)
 _INLINE_SUB = re.compile(r"^\s*(\d{1,2})\s*\(\s*([a-h]|i{1,3}|iv|vi{0,3}|ix|x)\s*\)\s*(.*)$", re.I)
+# What may follow "QUESTION 3" on a heading line: a count ("/25", "of 25") and the marks ("· 2 marks").
+_HEAD_COUNT = re.compile(r"^\s*(?:/\s*\d{1,3}|of\s+\d{1,3})\b\s*[·•|:,\-–]?\s*", re.I)
+_HEAD_MARKS = re.compile(r"^\s*[\(\[]?\s*(\d{1,3}(?:\.\d)?)\s*(?:marks?|mks?|pts?|points?)\s*[\)\]]?\s*[·•|:,\-–]?\s*", re.I)
+# Multiple-choice options: "A ...", "(B) ...", "C. ..." in order at the end of a question.
+_OPTION = re.compile(r"^\s*[\(\[]?([A-H])[\)\].:]?\s+\S")
+_PAGE_FOOTER = re.compile(r"\bpage\s+\d+(?:\s*(?:of|/)\s*\d+)?\s*$", re.I)
 
 _MARKS = [
     re.compile(r"[\(\[]\s*(\d{1,3}(?:\.\d)?)\s*(?:marks?|m)?\s*[\)\]]\s*$", re.I),
@@ -74,10 +80,30 @@ class _Item:
     section: str | None = None
     group: str | None = None
     children: list["_Item"] = field(default_factory=list)
+    marks: float | None = None  # printed on the heading line ("QUESTION 3/25 · 2 marks")
+    options: list[str] = field(default_factory=list)
 
     @property
     def raw(self) -> str:
         return " ".join(s.strip() for s in self.lines if s.strip())
+
+
+def _split_options(lines: list[str]) -> tuple[list[str], list[str]]:
+    """Cut multiple-choice options off the end of a question: the last run of lines that starts
+    "A", "B", "C" ... in order (at least three), each option keeping its wrapped lines."""
+    starts = [(i, m.group(1)) for i, ln in enumerate(lines) if (m := _OPTION.match(ln))]
+    for k in range(len(starts) - 1, -1, -1):
+        i, letter = starts[k]
+        run = [letter for _, letter in starts[k:]]
+        if letter == "A" and len(run) >= 3 and "".join(run) == "ABCDEFGH"[: len(run)]:
+            options: list[str] = []
+            for ln in lines[i:]:
+                if _OPTION.match(ln) and len(options) < len(run):
+                    options.append(re.sub(r"^\s*[\(\[]?[A-H][\)\].:]?\s+", "", ln).strip())
+                elif options:
+                    options[-1] += " " + ln.strip()
+            return lines[:i], options
+    return lines, []
 
 
 def _extract_meta(raw: str, scheme: str | None) -> tuple[str, float | None, str | None, str | None, bool]:
@@ -133,6 +159,8 @@ def parse_text(text: str, title: str = "", bt_scheme: str | None = "revised") ->
                 max_marks = float(m.group(1))
         if not ln.strip() or _NOISE.match(ln):
             continue
+        if current is not None and len(ln.split()) <= 12 and (_PAGE_FOOTER.search(ln) or (title and ln.strip() == title)):
+            continue  # running header or footer: "NLP Mid Term Examination Quiz Page 1"
         if _OR.match(ln):
             pending_or = True
             continue
@@ -173,10 +201,15 @@ def parse_text(text: str, title: str = "", bt_scheme: str | None = "revised") ->
             groups = mq.groups()
             num, rest = groups[0], groups[-1]
             part = groups[1] if len(groups) == 3 else None
+            head_marks = None
+            if _MAIN_Q.match(ln):  # "QUESTION 3/25 · 2 marks"
+                rest = _HEAD_COUNT.sub("", rest, count=1)
+                if hm := _HEAD_MARKS.match(rest):
+                    head_marks, rest = float(hm.group(1)), rest[hm.end():]
             lead = _SUB.match(rest) if part is None else None
             if lead:  # "Q.1 a) Define ..." or "1   a  Define ..." - the first sub-part shares the line
                 part, rest = _sub_parts(lead)
-            item = _Item(qid=num, number=f"Q{num}", lines=[], section=section)
+            item = _Item(qid=num, number=f"Q{num}", lines=[], section=section, marks=head_marks)
             if pending_or and mains:
                 prev = mains[-1]
                 prev.group = prev.group or f"g{prev.qid}"
@@ -220,7 +253,10 @@ def parse_text(text: str, title: str = "", bt_scheme: str | None = "revised") ->
     questions: list[Question] = []
     guessed: list[Question] = []
     for main in mains:
+        main.lines, main.options = _split_options(main.lines)
         stem, stem_marks, stem_co, stem_tag, stem_guess = _extract_meta(main.raw, bt_scheme)
+        if stem_marks is None or stem_guess:
+            stem_marks, stem_guess = (main.marks, False) if main.marks is not None else (stem_marks, stem_guess)
         if main.children:
             for c in main.children:
                 t, marks, co, tag, guess = _extract_meta(c.raw, bt_scheme)
@@ -237,7 +273,7 @@ def parse_text(text: str, title: str = "", bt_scheme: str | None = "revised") ->
         elif stem:
             questions.append(Question(id=main.qid, number=main.number, text=stem, marks=stem_marks, section=main.section,
                                       group=main.group, option=main.qid if main.group else None,
-                                      course_outcome=stem_co, tagged_level=stem_tag))
+                                      course_outcome=stem_co, tagged_level=stem_tag, choices=main.options))
             if stem_guess:
                 guessed.append(questions[-1])
     if not questions:
