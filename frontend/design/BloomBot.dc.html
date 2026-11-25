@@ -467,6 +467,28 @@ button,input,textarea,select{font-family:inherit}
 <p style="margin:0;font-size:14px;color:var(--ink2)">{{ kNowTxt }} Indian boards: 0.578 → 0.674.</p>
 </div>
 </div>
+<div style="background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:24px;display:flex;flex-direction:column;gap:18px">
+<div style="display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:12px">
+<div style="display:flex;flex-direction:column;gap:4px;max-width:72ch"><h2 style="font-family:'Newsreader',serif;font-weight:500;font-size:26px;margin:0">How your labels change the model</h2><span style="font-size:13px;color:var(--ink3)">A profile retrains BloomBot with your labelled questions, each counted 10&#215; an ordinary training question. Where you label differently from the generic model, that level gains or loses weight for questions like yours.</span></div>
+<button onClick="{{ demoFill }}" style="background:transparent;color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:8px 14px;font-weight:600;cursor:pointer;font-size:13px">Demo: fill 25 real labels from an Indian engineering college</button>
+</div>
+<sc-if value="{{ hasCmp }}" hint-placeholder-val="{{ true }}"><div style="display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:14px 16px;border-radius:12px;background:var(--bg);border:1px solid var(--line)">
+<span style="font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3)">Last label</span>
+<span style="font-size:13px;color:var(--ink2)">Generic model</span><span style="padding:3px 10px;border-radius:999px;background:{{ lastCmp.modelBg }};color:{{ lastCmp.modelFg }};font-weight:700;font-size:13px">{{ lastCmp.modelTxt }}</span>
+<span style="font-size:13px;color:var(--ink2)">You</span><span style="padding:3px 10px;border-radius:999px;background:{{ lastCmp.youBg }};color:{{ lastCmp.youFg }};font-weight:700;font-size:13px">{{ lastCmp.youTxt }}</span>
+<span style="flex:1 1 260px;font-size:14px;color:var(--ink)">{{ lastCmp.verdict }}</span>
+</div></sc-if>
+<sc-if value="{{ shiftNone }}" hint-placeholder-val="{{ false }}"><p style="margin:0;font-size:14px;color:var(--ink2)">Label a few questions, or use the demo button, to see where your convention differs from the generic model.</p></sc-if>
+<sc-if value="{{ shiftAny }}" hint-placeholder-val="{{ true }}"><div style="display:flex;flex-direction:column;gap:10px">
+<div style="display:flex;flex-wrap:wrap;gap:4px 12px;font-size:11px;color:var(--ink3);font-family:'JetBrains Mono',monospace"><span style="flex:0 0 124px"></span><div style="flex:1 1 160px;display:flex;justify-content:space-between"><span>&#8592; less</span><span>weight</span><span>more &#8594;</span></div><span style="flex:0 0 160px"></span></div>
+<sc-for list="{{ shiftRows }}" as="r" hint-placeholder-count="6"><div style="display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px">
+<span style="flex:0 0 124px;box-sizing:border-box;display:flex;gap:6px;align-items:center;padding:6px 10px;border-radius:8px;background:{{ r.bg }};color:{{ r.fg }};font-weight:700;font-size:13px"><span style="font-family:'JetBrains Mono',monospace;font-size:11px">{{ r.n }}</span>{{ r.name }}</span>
+<div style="flex:1 1 160px;display:flex;align-items:center;height:22px"><div style="flex:1;display:flex;justify-content:flex-end;height:100%"><div style="width:{{ r.downW }};background:var(--bad);border-radius:4px 0 0 4px;height:100%;transition:width .4s"></div></div><div style="width:2px;align-self:stretch;background:var(--ink3)"></div><div style="flex:1;display:flex;justify-content:flex-start;height:100%"><div style="width:{{ r.upW }};background:var(--accent);border-radius:0 4px 4px 0;height:100%;transition:width .4s"></div></div></div>
+<div style="flex:0 0 160px;display:flex;flex-direction:column;gap:2px"><strong style="font-size:13px;color:{{ r.effectColor }}">{{ r.effect }}</strong><span style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink3)">model {{ r.model }} &#183; you {{ r.you }}</span></div>
+</div></sc-for>
+<p style="margin:4px 0 0;font-size:14px;color:var(--ink2)">{{ shiftSummary }} <b>&#8593;</b> = you use the level more than the model does, so it will predict it more often; <b>&#8595;</b> = less often.</p>
+</div></sc-if>
+</div>
 <div style="background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:24px;display:flex;flex-direction:column;gap:12px">
 <h2 style="font-family:'Newsreader',serif;font-weight:500;font-size:26px;margin:0">Profiles</h2>
 <sc-for list="{{ profiles }}" as="p" hint-placeholder-count="2"><div style="display:flex;flex-wrap:wrap;align-items:center;gap:12px;padding:14px 16px;border:2px solid {{ p.border }};border-radius:12px">

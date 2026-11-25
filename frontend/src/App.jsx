@@ -197,8 +197,17 @@ export default class App extends React.Component {
     this.setState({ [key]: 0 }); this.raf = requestAnimationFrame(f); }
   go(p) { this.setState({ page: p, parseOpen: false }); try { window.scrollTo(0, 0); } catch (e) {} }
   label(n) {
-    const q = BB.POOL[this.state.labelIdx % BB.POOL.length];
-    this.setState(s => ({ labelCount: s.labelCount + 1, labelIdx: s.labelIdx + 1, lastLabel: n, labels: { ...s.labels, [q]: A.L[n - 1] } }));
+    const i = this.state.labelIdx % BB.POOL.length, q = BB.POOL[i];
+    this.setState(s => { const labels = { ...s.labels, [q]: A.L[n - 1] };
+      return { labelCount: Object.keys(labels).length, labelIdx: s.labelIdx + 1, lastLabel: n, lastQ: i, labels }; });
+  }
+  // Demo: label the next `n` questions with their real labels from the source college (Indian engineering).
+  fillDemo(n = 25) {
+    this.setState(s => { const labels = { ...s.labels }; let idx = s.labelIdx, done = 0, last = null, lastQ = s.lastQ, guard = 0;
+      while (done < n && guard++ < BB.POOL.length) { const i = idx % BB.POOL.length; idx++;
+        const lv = (BB.POOL_LBL || [])[i]; if (!lv) continue;
+        labels[BB.POOL[i]] = A.L[lv - 1]; done++; last = lv; lastQ = i; }
+      return { labels, labelCount: Object.keys(labels).length, labelIdx: idx, lastLabel: last || s.lastLabel, lastQ }; });
   }
 
   // Load a parsed paper (live) or the recorded sample (replay).
@@ -426,6 +435,36 @@ export default class App extends React.Component {
       const p = await api.createProfile('My college · CSE', ex);
       this.setState({ busy: '', activeProfile: 'mine', profileId: p.id, report: null });
     } catch (e) { this.fail(e); }
+  }
+
+  // College profile: where the teacher's labels differ from the generic model, level by level.
+  // A profile retrains the model with these questions weighted 10x, so it moves toward the teacher:
+  // levels the teacher uses more than the model get more weight (up), levels used less get less (down).
+  shiftView(B, L, FG) {
+    const s = this.state, pred = B.POOL_PRED || [], idxOf = {};
+    B.POOL.forEach((q, i) => { idxOf[q] = i; });
+    const top = p => p.reduce((b, v, j) => (v > p[b] ? j : b), 0);
+    const pairs = Object.entries(s.labels).map(([q, lv]) => ({ p: pred[idxOf[q]], you: L.indexOf(lv) })).filter(x => x.p && x.you >= 0);
+    const N = pairs.length, model = [0, 0, 0, 0, 0, 0], you = [0, 0, 0, 0, 0, 0];
+    let agree = 0;
+    pairs.forEach(x => { const t = top(x.p); model[t]++; you[x.you]++; if (t === x.you) agree++; });
+    const diffs = you.map((y, i) => y - model[i]), maxAbs = Math.max(1, ...diffs.map(Math.abs));
+    const shiftRows = L.map((nm, i) => { const d = diffs[i], w = `${Math.round(Math.abs(d) / maxAbs * 100)}%`;
+      return { n: i + 1, name: nm, bg: `var(--l${i + 1})`, fg: FG(i + 1), model: model[i], you: you[i],
+        upW: d > 0 ? w : '0%', downW: d < 0 ? w : '0%',
+        effect: d > 0 ? `↑ +${d} · more weight` : d < 0 ? `↓ −${-d} · less weight` : '= no change',
+        effectColor: d > 0 ? 'var(--accent)' : d < 0 ? 'var(--bad)' : 'var(--ink3)' }; });
+    let cmp = null;
+    if (s.lastQ != null && pred[s.lastQ] && s.labels[B.POOL[s.lastQ]]) {
+      const p = pred[s.lastQ], t = top(p), y = L.indexOf(s.labels[B.POOL[s.lastQ]]);
+      cmp = { q: B.POOL[s.lastQ], modelTxt: `${L[t]} · ${Math.round(p[t] * 100)}%`, modelBg: `var(--l${t + 1})`, modelFg: FG(t + 1),
+        youTxt: L[y], youBg: `var(--l${y + 1})`, youFg: FG(y + 1), same: t === y,
+        verdict: t === y ? 'Same as the generic model: this label confirms what it already does.'
+          : `Different: your profile pulls questions like this toward ${L[y]} ↑ and away from ${L[t]} ↓.` };
+    }
+    return { shiftRows, shiftAny: N > 0, shiftNone: N === 0, lastCmp: cmp, hasCmp: !!cmp,
+      shiftSummary: N ? `On your ${N} labelled question${N === 1 ? '' : 's'}, the generic model already agrees with you on ${agree} (${Math.round(agree / N * 100)}%). The other ${N - agree} are what your profile teaches it.` : '',
+      demoFill: () => this.fillDemo(25) };
   }
 
   download(name, text, type) { const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([text], { type })); a.download = name; document.body.appendChild(a); a.click(); a.remove(); }
@@ -677,6 +716,7 @@ export default class App extends React.Component {
       skip: () => this.setState(x => ({ labelIdx: x.labelIdx + 1 })),
       gain: s.page === 'profile' ? this.lineChart([{ name: 'Mean (6 targets)', values: B.GAIN.mean, color: 'var(--accent)', width: 3, bold: true }, { name: 'Indian boards', values: B.GAIN.boards, color: 'var(--l5)', width: 2 }], { xs: [0, 10, 25, 50, 100], proportional: true, min: 0.55, max: 0.72, step: 0.05, marker: kIdx, aria: 'Expected gain: mean weighted F1 from 0.627 at k=0 to 0.694 at k=100; Indian boards 0.578 to 0.674' }) : null,
       kNowTxt: `You are at k = ${k}. Expected mean weighted F1 at k = ${[0, 10, 25, 50, 100][kIdx]}: ${B.GAIN.mean[kIdx].toFixed(3)}.`,
+      ...this.shiftView(B, L, FG),
       profiles: [{ id: 'none', name: 'No profile (generic model)', count: 0 }, { id: 'mine', name: 'My college · CSE', count: Object.keys(s.labels).length }].map(p => ({ ...p,
         countTxt: p.id === 'mine' ? `${p.count} different questions labelled${s.profileId ? ' · profile ' + s.profileId : ''}` : 'built-in model',
         sel: s.activeProfile === p.id, notSel: s.activeProfile !== p.id, use: () => this.useProfile(p.id), border: s.activeProfile === p.id ? 'var(--accent)' : 'var(--line)' })) };

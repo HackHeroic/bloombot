@@ -1532,6 +1532,105 @@ export function view(v) {
                     </p>
                   </div>
                 </div>
+                <div style={sx(`background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:24px;display:flex;flex-direction:column;gap:18px`)}>
+                  <div style={sx(`display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:12px`)}>
+                    <div style={sx(`display:flex;flex-direction:column;gap:4px;max-width:72ch`)}>
+                      <h2 style={sx(`font-family:'Newsreader',serif;font-weight:500;font-size:26px;margin:0`)}>
+                        {"How your labels change the model"}
+                      </h2>
+                      <span style={sx(`font-size:13px;color:var(--ink3)`)}>
+                        {"A profile retrains BloomBot with your labelled questions, each counted 10× an ordinary training question. Where you label differently from the generic model, that level gains or loses weight for questions like yours."}
+                      </span>
+                    </div>
+                    <button onClick={v.demoFill} style={sx(`background:transparent;color:var(--ink);border:1px solid var(--line);border-radius:8px;padding:8px 14px;font-weight:600;cursor:pointer;font-size:13px`)}>
+                      {"Demo: fill 25 real labels from an Indian engineering college"}
+                    </button>
+                  </div>
+                  {v.hasCmp ? (<>
+                    <div style={sx(`display:flex;flex-wrap:wrap;align-items:center;gap:10px;padding:14px 16px;border-radius:12px;background:var(--bg);border:1px solid var(--line)`)}>
+                      <span style={sx(`font-size:12px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--ink3)`)}>
+                        {"Last label"}
+                      </span>
+                      <span style={sx(`font-size:13px;color:var(--ink2)`)}>
+                        {"Generic model"}
+                      </span>
+                      <span style={sx(`padding:3px 10px;border-radius:999px;background:${v.lastCmp.modelBg};color:${v.lastCmp.modelFg};font-weight:700;font-size:13px`)}>
+                        {v.lastCmp.modelTxt}
+                      </span>
+                      <span style={sx(`font-size:13px;color:var(--ink2)`)}>
+                        {"You"}
+                      </span>
+                      <span style={sx(`padding:3px 10px;border-radius:999px;background:${v.lastCmp.youBg};color:${v.lastCmp.youFg};font-weight:700;font-size:13px`)}>
+                        {v.lastCmp.youTxt}
+                      </span>
+                      <span style={sx(`flex:1 1 260px;font-size:14px;color:var(--ink)`)}>
+                        {v.lastCmp.verdict}
+                      </span>
+                    </div>
+                  </>) : null}
+                  {v.shiftNone ? (<>
+                    <p style={sx(`margin:0;font-size:14px;color:var(--ink2)`)}>
+                      {"Label a few questions, or use the demo button, to see where your convention differs from the generic model."}
+                    </p>
+                  </>) : null}
+                  {v.shiftAny ? (<>
+                    <div style={sx(`display:flex;flex-direction:column;gap:10px`)}>
+                      <div style={sx(`display:flex;flex-wrap:wrap;gap:4px 12px;font-size:11px;color:var(--ink3);font-family:'JetBrains Mono',monospace`)}>
+                        <span style={sx(`flex:0 0 124px`)} />
+                        <div style={sx(`flex:1 1 160px;display:flex;justify-content:space-between`)}>
+                          <span>
+                            {"← less"}
+                          </span>
+                          <span>
+                            {"weight"}
+                          </span>
+                          <span>
+                            {"more →"}
+                          </span>
+                        </div>
+                        <span style={sx(`flex:0 0 160px`)} />
+                      </div>
+                      {(v.shiftRows || []).map((r, r_i) => (<React.Fragment key={r_i}>
+                        <div style={sx(`display:flex;flex-wrap:wrap;align-items:center;gap:6px 12px`)}>
+                          <span style={sx(`flex:0 0 124px;box-sizing:border-box;display:flex;gap:6px;align-items:center;padding:6px 10px;border-radius:8px;background:${r.bg};color:${r.fg};font-weight:700;font-size:13px`)}>
+                            <span style={sx(`font-family:'JetBrains Mono',monospace;font-size:11px`)}>
+                              {r.n}
+                            </span>
+                            {r.name}
+                          </span>
+                          <div style={sx(`flex:1 1 160px;display:flex;align-items:center;height:22px`)}>
+                            <div style={sx(`flex:1;display:flex;justify-content:flex-end;height:100%`)}>
+                              <div style={sx(`width:${r.downW};background:var(--bad);border-radius:4px 0 0 4px;height:100%;transition:width .4s`)} />
+                            </div>
+                            <div style={sx(`width:2px;align-self:stretch;background:var(--ink3)`)} />
+                            <div style={sx(`flex:1;display:flex;justify-content:flex-start;height:100%`)}>
+                              <div style={sx(`width:${r.upW};background:var(--accent);border-radius:0 4px 4px 0;height:100%;transition:width .4s`)} />
+                            </div>
+                          </div>
+                          <div style={sx(`flex:0 0 160px;display:flex;flex-direction:column;gap:2px`)}>
+                            <strong style={sx(`font-size:13px;color:${r.effectColor}`)}>
+                              {r.effect}
+                            </strong>
+                            <span style={sx(`font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--ink3)`)}>
+                              {"model "}{r.model}{" · you "}{r.you}
+                            </span>
+                          </div>
+                        </div>
+                      </React.Fragment>))}
+                      <p style={sx(`margin:4px 0 0;font-size:14px;color:var(--ink2)`)}>
+                        {v.shiftSummary}{" "}
+                        <b>
+                          {"↑"}
+                        </b>
+                        {" = you use the level more than the model does, so it will predict it more often; "}
+                        <b>
+                          {"↓"}
+                        </b>
+                        {" = less often."}
+                      </p>
+                    </div>
+                  </>) : null}
+                </div>
                 <div style={sx(`background:var(--surface);border:1px solid var(--line);border-radius:18px;padding:24px;display:flex;flex-direction:column;gap:12px`)}>
                   <h2 style={sx(`font-family:'Newsreader',serif;font-weight:500;font-size:26px;margin:0`)}>
                     {"Profiles"}
